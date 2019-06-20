@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:state_pressed="true">
+		<layer-list>//表示使用图形层级
+			<item>
+				<shape>
+					<corners android:radius="100dp" />
+					<solid android:color="@color/unableColor"/>
+					<size android:width="50dp" android:height="50dp" />
+				</shape>
+			</item>
+			<item android:bottom="23dp" android:left="10dp" android:right="10dp" android:top="23dp">
+				<shape android:shape="rectangle">
+					<solid android:color="@color/white"/>
+					<corners android:radius="100dp"/>
+				</shape>
+			</item>
+			<item android:bottom="10dp" android:left="23dp" android:right="23dp" android:top="10dp">
+				<shape android:shape="rectangle">
+					<solid android:color="@color/white"/>
+					<corners android:radius="100dp"/>
+				</shape>
+			</item>
+		</layer-list>
+	</item>
+	<item>
+		<layer-list>//表示使用图形层级
+			<item>
+				<shape>
+					<corners android:radius="100dp" />
+					<solid android:color="@color/baseColor"/>
+					<size android:width="50dp" android:height="50dp" />
+				</shape>
+			</item>
+			<item android:bottom="23dp" android:left="10dp" android:right="10dp" android:top="23dp">
+				<shape android:shape="rectangle">
+					<solid android:color="@color/white"/>
+					<corners android:radius="100dp"/>
+				</shape>
+			</item>
+			<item android:bottom="10dp" android:left="23dp" android:right="23dp" android:top="10dp">
+				<shape android:shape="rectangle">
+					<solid android:color="@color/white"/>
+					<corners android:radius="100dp"/>
+				</shape>
+			</item>
+		</layer-list>
+	</item>
+</selector>

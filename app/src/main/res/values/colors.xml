@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name="transparent">#00000000</color>
+    <color name="half_transparent">#77000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#969FAA</color>
+    <color name="light_gray">#E4E4E6</color>
+    <color name="dark_gray">#D9DFE6</color>
+    <color name="black">#000000</color>
+    <color name="orange">#FF9052</color>
+    <color name="light_orange">#F8BB98</color>
+    <color name="red">#F95F62</color>
+    <color name="light_red">#F78D90</color>
+    <color name="light_black">#302E2E</color>
+    <color name="baseColor">#55C8B9</color>
+    <color name="background_color">#F3F3F3</color>
+    <color name="unableColor">#b2d9d9</color>
+    <color name="input_background_color1">#E2E9F2</color>
+    <color name="input_line_color1">#969FAA</color>
+    <color name="bottom_menu_color">#343F4B</color>
+</resources>

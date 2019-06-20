@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="ITButtonLayout">
+		<attr name="image_width" format="dimension" />
+		<attr name="image_height" format="dimension" />
+		<attr name="text_size" format="dimension" />
+		<attr name="text" format="string" />
+		<attr name="image" format="reference" />
+		<attr name="image_not_select" format="reference" />
+		<attr name="text_color" format="color" />
+		<attr name="text_not_select_color" format="color" />
+		<attr name="selected" format="boolean" />
+	</declare-styleable>
+	
+	<declare-styleable name="Circle_Rectangle_Image_View">
+		<attr name="radius" format="dimension"/>
+		<attr name="left_top_radius" format="dimension"/>
+		<attr name="right_top_radius" format="dimension"/>
+		<attr name="right_bottom_radius" format="dimension"/>
+		<attr name="left_bottom_radius" format="dimension"/>
+	</declare-styleable>
+</resources>

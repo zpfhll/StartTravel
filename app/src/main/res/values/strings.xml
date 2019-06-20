@@ -1,0 +1,56 @@
+<resources>
+	<string name="app_name">StartTravel</string>
+	
+	<string name="splash_001">追寻自己的足迹</string>
+	
+	<string name="login_001">注册</string>
+	<string name="login_002">邮箱</string>
+	<string name="login_003">密码</string>
+	<string name="login_004">确认密码</string>
+	<string name="login_005">登录</string>
+	
+	<string name="sign_up_001">登录</string>
+	<string name="sign_up_002">邮箱</string>
+	<string name="sign_up_003">密码</string>
+	<string name="sign_up_004">找回密码</string>
+	<string name="sign_up_005">注册</string>
+	
+	<string name="home_001">旅途</string>
+	<string name="home_002">标记</string>
+	<string name="home_003">足迹</string>
+	<string name="home_004">我</string>
+	<string name="home_005">旅途</string>
+	<string name="home_006">记录花销</string>
+	<string name="home_007">随心旅行</string>
+	
+	<string name="me_001">简介：</string>
+	<string name="me_002">注册邮箱：</string>
+	<string name="me_003">帮助</string>
+	<string name="me_004">关于</string>
+	<string name="me_005">退出登录</string>
+	<string name="me_006">暂无介绍</string>
+	
+	<string name="history_001">日期</string>
+	<string name="history_002">开始日</string>
+	<string name="history_003">结束日</string>
+	<string name="history_004">地点</string>
+	<string name="history_005">城市</string>
+	<string name="history_006">全世界</string>
+	<string name="history_007">确认</string>
+	<string name="history_008">选择地点</string>
+	<string name="history_009">详细</string>
+	<string name="history_010">人</string>
+	<string name="history_011">元</string>
+	
+	<string name="travel_001">启程</string>
+	<string name="travel_002">结束</string>
+	<string name="travel_003">标语</string>
+	<string name="travel_004">消费金额(元):￥</string>
+	<string name="travel_005">同行者:</string>
+	
+	
+	<string name="list_dialog_001">取消</string>
+	
+	
+
+</resources>
