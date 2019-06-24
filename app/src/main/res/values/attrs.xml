@@ -19,4 +19,16 @@
 		<attr name="right_bottom_radius" format="dimension"/>
 		<attr name="left_bottom_radius" format="dimension"/>
 	</declare-styleable>
+
+	<declare-styleable name="Custom_Switch_View">
+		<attr name="left_text" format="string"/>
+		<attr name="right_text" format="string"/>
+		<attr name="left_text_size" format="dimension"/>
+		<attr name="right_text_size" format="dimension"/>
+		<attr name="selected_view_color" format="reference"/>
+		<attr name="selected_text_color" format="color"/>
+		<attr name="unselected_text_color" format="color"/>
+		<attr name="switch_background_color" format="reference"/>
+		<attr name="switch_init_left" format="boolean"/>
+	</declare-styleable>
 </resources>

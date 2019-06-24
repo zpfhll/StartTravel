@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -189,7 +190,7 @@ class HomeActivity : BaseActivity() {
                closeAddPlatform()
             }
             R.id.travel_money_btn -> {//记录花销
-
+                startActivity(Intent(this,AddTravelActivity::class.java))
                 closeAddPlatform()
             }
             R.id.travel_only_btn -> {//随心旅行

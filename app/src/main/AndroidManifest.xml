@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="hll.zpf.starttravel">
-    
+
     <uses-permission android:name="android.permission.INTERNET"/>
-    
+
     <application
             android:name=".base.BaseApplication"
             android:allowBackup="true"
@@ -14,14 +14,14 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        
+
         <activity
                 android:name=".MainActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/ThemeSplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -40,6 +40,10 @@
                 android:name=".page.HomeActivity"
                 android:exported="false"
                 android:screenOrientation="portrait"/>
+        <activity android:name=".page.AddTravelActivity"
+                  android:exported="false"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="stateHidden|stateUnchanged"/>
     </application>
 
 </manifest>

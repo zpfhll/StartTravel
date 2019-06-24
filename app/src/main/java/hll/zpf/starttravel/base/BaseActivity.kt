@@ -7,6 +7,8 @@ import hll.zpf.starttravel.R
 import android.os.Bundle
 import android.view.WindowManager
 import android.view.KeyEvent
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
@@ -93,6 +95,45 @@ open class BaseActivity: AppCompatActivity() {
      * 端末の戻るボタンの挙動
      */
     open fun onKeyCodeBackListener(){
+
+    }
+
+    /**
+     * 设定标题
+     *
+     * title：标题文本
+     * isShowRightButton：是否表示右侧按钮
+     * rightButtonText：右侧按钮的文本
+     * leftButtonBackground：左侧按钮的背景
+     * clickBlock：按钮的点击事件
+     */
+    open fun setTitle(title:String,
+                      isShowRightButton:Boolean,
+                      rightButtonText:String? = null,
+                      leftButtonBackground:Int? = null,
+                      clickBlock:(View) -> Unit){
+        val leftButtonItem:TextView = findViewById(R.id.left_button_item)
+        val leftBt:LinearLayout = findViewById(R.id.left_button)
+        val rightBt:TextView = findViewById(R.id.right_button)
+        val titleText:TextView = findViewById(R.id.title_text)
+
+        titleText.text = title
+
+        if (!isShowRightButton) rightBt.visibility = View.GONE
+
+        rightButtonText?.let {
+            rightBt.text = it
+        }
+        leftButtonBackground?.let {
+            leftButtonItem.setBackgroundResource(it)
+        }
+
+        leftBt.setOnClickListener {
+            clickBlock(it)
+        }
+        rightBt.setOnClickListener {
+            clickBlock(it)
+        }
 
     }
 

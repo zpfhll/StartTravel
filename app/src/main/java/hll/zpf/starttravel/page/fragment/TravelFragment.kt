@@ -42,21 +42,22 @@ class TravelFragment : Fragment() {
 
     private fun initData() : ArrayList<TravelItemFragment>{
         val data = ArrayList<TravelItemFragment>()
-//        for (it in 1..6){
-//            val travel = TravelBean()
-//            travel.travelDate = "2019年02月0${it}日"
-//            travel.travelName = "旅途$it"
-//            travel.travelMemo = "一次难忘的旅行"
-//            travel.travelMoney = 3000.8f
-//            travel.travelPersonNumber = 4
-//            val fragment = TravelItemFragment()
-//            fragment.initDate = travel
-//            data.add(fragment)
-//        }
+        for (it in 1..6){
+            val travel = TravelBean()
+            travel.travelDate = "2019年02月0${it}日"
+            travel.travelName = "旅途$it"
+            travel.travelMemo = "一次难忘的旅行"
+            travel.travelMoney = 3000.8f
+            travel.travelPersonNumber = 4
+            val fragment = TravelItemFragment()
+            fragment.initDate = travel
+            fragment.type = 0
+            data.add(fragment)
+        }
 
-        val fragment = TravelItemFragment()
-        fragment.type = 1
-        data.add(fragment)
+//        val fragment = TravelItemFragment()
+//        fragment.type = 1
+//        data.add(fragment)
 
         return  data
     }
