@@ -107,7 +107,7 @@
 			android:layout_width="70dp"
 			android:layout_height="70dp"
 			android:src="@mipmap/simple"
-			android:id="@+id/travel_image"
+			android:id="@+id/partner_image"
 			app:layout_constraintTop_toTopOf="@+id/constraintLayout3"
 			app:layout_constraintBottom_toBottomOf="@+id/constraintLayout3"
 			app:layout_constraintStart_toStartOf="parent"

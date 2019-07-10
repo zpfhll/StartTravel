@@ -12,7 +12,7 @@
 			android:src="@mipmap/welcome"
 			android:layout_width="0dp"
 			android:layout_height="150dp"
-			android:id="@+id/travel_image"
+			android:id="@+id/partner_image"
 			android:scaleType="centerCrop"
 			app:left_top_radius="10dp"
 			app:right_top_radius="10dp"
@@ -46,7 +46,7 @@
 			android:layout_marginEnd="5dp"
 			android:layout_marginStart="5dp"
 			android:layout_marginTop="3dp"
-			app:layout_constraintTop_toBottomOf="@+id/travel_image"
+			app:layout_constraintTop_toBottomOf="@+id/partner_image"
 			android:layout_marginBottom="8dp"
 			app:layout_constraintBottom_toTopOf="@+id/travel_action_bt"/>
 	
@@ -74,7 +74,7 @@
 			app:layout_constraintHorizontal_bias="0.5"
 			app:layout_constraintEnd_toEndOf="parent"
 			android:layout_marginTop="8dp"
-			app:layout_constraintTop_toBottomOf="@+id/travel_image"
+			app:layout_constraintTop_toBottomOf="@+id/partner_image"
 			android:layout_marginBottom="8dp"
 			app:layout_constraintBottom_toTopOf="@+id/textView12"/>
 	

@@ -49,7 +49,7 @@ class HistoryAdapter: RecyclerView.Adapter<HistoryAdapter.HistoryViewHodler>() {
          var travelMemoTv:TextView = itemView.findViewById(R.id.travel_memo_tv)
          var travelPersonNumberTv:TextView = itemView.findViewById(R.id.travel_person_number)
          var travelMoneyTv:TextView = itemView.findViewById(R.id.travel_money_tv)
-         var travelImage:CRImageView = itemView.findViewById(R.id.travel_image)
+         var travelImage:CRImageView = itemView.findViewById(R.id.partner_image)
          var travelDetailBt:Button = itemView.findViewById(R.id.travel_detail_bt)
 
     }

@@ -5,6 +5,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'zsh'
+            keyPassword '123456'
+            storeFile file('/Users/zhaopengfei/Documents/workspace/Android/ZSH.jks')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "hll.zpf.starttravel"
@@ -13,6 +21,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk{
+            abiFilters "armeabi","armeabi-v7a","armeabi64-v8a"
+        }
     }
     buildTypes {
         release {
@@ -23,13 +34,13 @@ android {
             buildConfigField("String", "SERVER_DOMAIN", "${SERVER_DOMAIN}")
             buildConfigField("String", "LOGIN_PATH", "${LOGIN_PATH}")
             buildConfigField("String", "SIGN_IN_PATH", "${SIGN_IN_PATH}")
-
+            signingConfig signingConfigs.config
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -40,8 +51,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata:2.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
-
+    implementation 'com.amap.api:map2d:latest.integration'
+    implementation 'com.amap.api:search:latest.integration'
+    implementation 'com.amap.api:location:latest.integration'
     testImplementation 'androidx.legacy:legacy-support-v4:1.0.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

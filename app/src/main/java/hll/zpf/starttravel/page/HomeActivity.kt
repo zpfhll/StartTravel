@@ -17,6 +17,7 @@ import hll.zpf.starttravel.base.BaseActivity
 import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.components.ITButton
+import hll.zpf.starttravel.common.enums.TravelTypeEnum
 import hll.zpf.starttravel.page.fragment.HistoryFragment
 import hll.zpf.starttravel.page.fragment.MapFragment
 import hll.zpf.starttravel.page.fragment.MeFragment
@@ -65,6 +66,8 @@ class HomeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        setStatusBarColor(R.color.gray)
 
         selectedView = findViewById(R.id.selected_view)
         travelButton = findViewById(R.id.travel_bt)
@@ -190,11 +193,15 @@ class HomeActivity : BaseActivity() {
                closeAddPlatform()
             }
             R.id.travel_money_btn -> {//记录花销
-                startActivity(Intent(this,AddTravelActivity::class.java))
+                val moneyIntent = Intent(this,AddTravelActivity::class.java)
+                moneyIntent.putExtra("travelType",TravelTypeEnum.MONEY_TRAVEL)
+                startActivity(moneyIntent)
                 closeAddPlatform()
             }
             R.id.travel_only_btn -> {//随心旅行
-
+                val freeIntent = Intent(this,AddTravelActivity::class.java)
+                freeIntent.putExtra("travelType",TravelTypeEnum.FREE_TRAVEL)
+                startActivity(freeIntent)
                 closeAddPlatform()
             }
         }

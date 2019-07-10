@@ -24,8 +24,6 @@
                 android:background="@drawable/close_button_background" android:id="@+id/left_button_item"/>
     </LinearLayout>
 
-
-
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="24dp"
@@ -43,7 +41,7 @@
             android:layout_width="44dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:textColor="@color/baseColor"
+            android:textColor="@drawable/textview_font_color"
             android:id="@+id/right_button"
             android:background="@drawable/circle_round_edge_white"
             app:layout_constraintEnd_toEndOf="parent"

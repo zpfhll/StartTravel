@@ -95,4 +95,8 @@ class Utils {
         dialog.show()
     }
 
+    fun DPToPX(dp:Float) : Float{
+        return dp * getScreenDensity() + 0.5f
+    }
+
 }
