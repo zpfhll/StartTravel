@@ -12,6 +12,7 @@ import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import hll.zpf.starttravel.common.Utils
+import hll.zpf.starttravel.common.database.entity.Member
 import hll.zpf.starttravel.common.enums.TravelTypeEnum
 import hll.zpf.starttravel.common.model.MemberModel
 
@@ -19,8 +20,8 @@ import hll.zpf.starttravel.common.model.MemberModel
 class MemberInfoDialog(context: Context,memberType: TravelTypeEnum) : Dialog(context),View.OnClickListener{
 
 
-    var member: MemberModel? = null
-    var callBack:((View,Boolean) -> Unit)? = null
+    var member: Member? = null
+    var callBack:((View,Member?) -> Unit)? = null
 
     private var mMemberName = ""
     private var mMemberMoney = ""
@@ -36,7 +37,7 @@ class MemberInfoDialog(context: Context,memberType: TravelTypeEnum) : Dialog(con
         memberName = rootView.findViewById(R.id.member_name)
         memberMoney = rootView.findViewById(R.id.member_money)
         memberMoney.visibility = if (mMemberType == TravelTypeEnum.MONEY_TRAVEL) View.VISIBLE else View.GONE
-        member?.getMemberData()?.value?.let {
+        member?.let {
             it.imageBitmap?.let {bitmap ->
                 memberImageView.setImageBitmap(bitmap)
             }
@@ -91,21 +92,19 @@ class MemberInfoDialog(context: Context,memberType: TravelTypeEnum) : Dialog(con
        when(v?.id){
            R.id.close_button -> {
                callBack?.let {
-                   it(v,false)
+                   it(v,null)
                }
                this.dismiss()
            }
            R.id.commit_button -> {
                member?.let {
-                   val newMember = it.getMemberData().value!!
                    if (mMemberType == TravelTypeEnum.MONEY_TRAVEL) {
-                       newMember.money = memberMoney.text.toString().toFloat()
+                       it.money = memberMoney.text.toString().toFloat()
                    }
-                   newMember.name = memberName.text.toString()
-                   it.getMemberData().value = newMember
+                   it.name = memberName.text.toString()
                }
                callBack?.let {
-                   it(v,true)
+                   it(v,member)
                }
                this.dismiss()
            }

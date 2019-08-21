@@ -16,6 +16,7 @@ import hll.zpf.starttravel.base.BaseActivity
 import hll.zpf.starttravel.common.EventBusMessage
 import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.Utils
+import hll.zpf.starttravel.common.components.CustomConstraintLayout
 import hll.zpf.starttravel.common.components.CustomSwitchView
 import hll.zpf.starttravel.common.components.MemberInfoDialog
 import hll.zpf.starttravel.common.database.entity.Member
@@ -128,6 +129,7 @@ class AddTravelActivity : BaseActivity() {
             HLogger.instance().e("mAddTravelPartnerClick--->","view: ${view.id}")
             when (view.id) {
                 R.id.delete_partner_bt -> {
+
                    deleteTravelPartnerView(item)
                 }
             }
@@ -163,7 +165,6 @@ class AddTravelActivity : BaseActivity() {
             R.id.add_travel_partner_text,R.id.add_travel_partner_btn -> {//添加伙伴
                 mRootView.requestFocus()
                 val memberInfoDialog = MemberInfoDialog(context,travelType)
-                val memberModel = ViewModelProviders.of(this).get(MemberModel::class.java)
                 val member = Member()
                 val imageId = Random().nextInt(100)
                 when(imageId % 4){
@@ -180,18 +181,21 @@ class AddTravelActivity : BaseActivity() {
                         member.imageBitmap = Utils.instance().drawableToBitmap(context.getDrawable(R.mipmap.user_image4))
                     }
                 }
-                memberModel.getMemberData().value = member
-                memberInfoDialog.member = memberModel
-                val memberView = addTravelPartnerView(memberModel,mAddTravelPartnerClick)
-                memberInfoDialog.callBack = {view,commit ->
-                    if (!commit){
+                memberInfoDialog.member = member
+                val memberView = addTravelPartnerView(member,mAddTravelPartnerClick)
+                memberInfoDialog.callBack = {view,member ->
+                    if (member == null){
                        deleteTravelPartnerView(memberView)
+                    }else{
+                        EventBus.getDefault().post(member)
                     }
                 }
                 memberInfoDialog.setCancelable(false)
                 memberInfoDialog.show()
 
                 addTravelPartnerPlatform.addView(memberView,addTravelPartnerPlatform.childCount - 1)
+
+
                 val startValue = partnerPlatformHeight
                 partnerPlatformHeight += Utils.instance().DPToPX(50f).toInt()
                 changeViewHeightByAnimation(addTravelPartnerPlatform,startValue,partnerPlatformHeight,400){
@@ -213,7 +217,9 @@ class AddTravelActivity : BaseActivity() {
      */
     private fun deleteTravelPartnerView(view:View){
         mRootView.requestFocus()
-        addTravelPartnerPlatform.removeView(view)
+        val subView = view as CustomConstraintLayout
+        subView.unRegistEventBus()
+        addTravelPartnerPlatform.removeView(subView)
         val startValue = partnerPlatformHeight
         partnerPlatformHeight -= Utils.instance().DPToPX(50f).toInt()
         changeViewHeightByAnimation(addTravelPartnerPlatform,startValue,partnerPlatformHeight,200){
@@ -228,15 +234,38 @@ class AddTravelActivity : BaseActivity() {
      * member：伙伴的名字
      * click：删除按钮的回调
      */
-    private fun addTravelPartnerView(member:MemberModel,click:((View,View) -> Unit)? = null) : View{
-        val mView = LayoutInflater.from(this).inflate(R.layout.travel_partner_item_layout,addTravelPartnerPlatform,false);
+    private fun addTravelPartnerView(member:Member,click:((View,View) -> Unit)? = null) : View{
+        val mView = LayoutInflater.from(this).inflate(R.layout.travel_partner_item_layout,addTravelPartnerPlatform,false) as CustomConstraintLayout
         val mPartnerNameTextView:TextView = mView.findViewById(R.id.partner_name)
         val mPartnerMoneyView:TextView = mView.findViewById(R.id.partner_add_money)
         val mDeleteButton:TextView = mView.findViewById(R.id.delete_partner_bt)
         val mPartnerImage:ImageView = mView.findViewById(R.id.partner_image)
-        member.getMemberData().observe(this, Observer {
-            it.imageBitmap?.let { bitmap: Bitmap ->
-                mPartnerImage.setImageBitmap(bitmap)
+
+        member.imageBitmap?.let {
+            mPartnerImage.setImageBitmap(it)
+        }
+        when(travelType){
+            TravelTypeEnum.FREE_TRAVEL ->{
+                mPartnerMoneyView.visibility = View.GONE
+            }
+            TravelTypeEnum.MONEY_TRAVEL ->{
+                mPartnerMoneyView.visibility = View.VISIBLE
+                mPartnerMoneyView.text = String.format(getString(R.string.money_label),Utils.instance().transMoneyToString(member.money))
+            }
+        }
+        member.name?.let {
+            mPartnerNameTextView.text = it
+        }
+
+        mDeleteButton.setOnClickListener {view ->
+            click?.let{
+                it(view,mView)
+            }
+        }
+        mView.registEventBus()
+        mView.update = {updateMember ->
+            updateMember.imageBitmap?.let {
+                mPartnerImage.setImageBitmap(it)
             }
             when(travelType){
                 TravelTypeEnum.FREE_TRAVEL ->{
@@ -244,14 +273,11 @@ class AddTravelActivity : BaseActivity() {
                 }
                 TravelTypeEnum.MONEY_TRAVEL ->{
                     mPartnerMoneyView.visibility = View.VISIBLE
-                    mPartnerMoneyView.text = String.format(getString(R.string.money_label),Utils.instance().transMoneyToString(it.money))
+                    mPartnerMoneyView.text = String.format(getString(R.string.money_label),Utils.instance().transMoneyToString(updateMember.money))
                 }
             }
-            mPartnerNameTextView.text = it.name
-        })
-        mDeleteButton.setOnClickListener {view ->
-            click?.let{
-                it(view,mView)
+            updateMember.name?.let {
+                mPartnerNameTextView.text = it
             }
         }
         mView.tag = member
