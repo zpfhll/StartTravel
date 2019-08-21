@@ -8,7 +8,7 @@
 		android:splitMotionEvents="false"
 		android:background="@color/white"
 		tools:context=".page.LoginActivity">
-	
+
 	<ScrollView
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
@@ -17,13 +17,13 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			>
-		
+			android:id="@+id/scrollView2">
+
 		<androidx.constraintlayout.widget.ConstraintLayout
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				tools:context=".page.LoginActivity">
-			
+
 			<ImageView
 					android:layout_width="0dp"
 					android:layout_height="200dp"
@@ -34,7 +34,7 @@
 					app:layout_constraintEnd_toEndOf="parent"
 					android:scaleType="centerCrop"
 					app:layout_constraintBottom_toTopOf="@+id/title"/>
-			
+
 			<TextView
 					android:text="@string/sign_up_001"
 					android:layout_width="0dp"
@@ -50,8 +50,8 @@
 					android:layout_marginStart="10dp"
 					app:layout_constraintEnd_toEndOf="parent"
 					android:layout_marginEnd="10dp"/>
-			
-			
+
+
 			<androidx.constraintlayout.widget.ConstraintLayout
 					android:layout_width="match_parent"
 					android:layout_height="121dp"
@@ -61,7 +61,7 @@
 					android:layout_marginEnd="50dp"
 					android:background="@drawable/input_background1"
 					android:id="@+id/constraintLayout">
-				
+
 				<ImageView
 						android:layout_width="20dp"
 						android:layout_height="20dp"
@@ -73,7 +73,7 @@
 						android:layout_marginStart="10dp"
 						app:layout_constraintEnd_toStartOf="@+id/mail_et"
 						android:layout_marginEnd="8dp"/>
-				
+
 				<EditText
 						android:layout_width="0dp"
 						android:layout_height="0dp"
@@ -90,7 +90,7 @@
 						android:background="@color/transparent"
 						app:layout_constraintStart_toEndOf="@+id/imageView2"
 						android:importantForAutofill="no"/>
-				
+
 				<TextView
 						android:layout_width="0dp"
 						android:layout_height="0dp"
@@ -103,7 +103,7 @@
 						android:layout_marginEnd="5dp"
 						android:background="@color/input_line_color1"
 						android:id="@+id/textView2"/>
-				
+
 				<EditText
 						android:layout_width="0dp"
 						android:layout_height="0dp"
@@ -120,7 +120,7 @@
 						android:textColorHint="@color/gray"
 						android:layout_marginEnd="70dp"
 						app:layout_constraintBottom_toBottomOf="parent"/>
-				
+
 				<ImageView
 						android:layout_width="20dp"
 						android:layout_height="0dp"
@@ -132,26 +132,26 @@
 						android:layout_marginStart="10dp"
 						app:layout_constraintEnd_toStartOf="@+id/password_et"
 						android:layout_marginEnd="8dp"/>
-			
+
 			</androidx.constraintlayout.widget.ConstraintLayout>
-			
-				
-				<Button
-						android:layout_width="61dp"
-						android:layout_height="61dp"
-						android:id="@+id/sign_in_bt"
-						android:onClick="clickAction"
-						android:background="@drawable/button_background3"
-						app:layout_constraintTop_toTopOf="@+id/constraintLayout"
-						app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
-						app:layout_constraintEnd_toEndOf="parent"
-						android:layout_marginEnd="25dp"
-						android:layout_marginTop="30dp"
-						android:textStyle="bold"
-						android:textColor="@color/white"
-						android:text="@string/sign_up_001"
-						android:layout_marginBottom="30dp"/>
-			
+
+
+			<Button
+					android:layout_width="61dp"
+					android:layout_height="61dp"
+					android:id="@+id/sign_in_bt"
+					android:onClick="clickAction"
+					android:background="@drawable/button_background3"
+					app:layout_constraintTop_toTopOf="@+id/constraintLayout"
+					app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
+					app:layout_constraintEnd_toEndOf="parent"
+					android:layout_marginEnd="25dp"
+					android:layout_marginTop="30dp"
+					android:textStyle="bold"
+					android:textColor="@color/white"
+					android:text="@string/sign_up_001"
+					android:layout_marginBottom="30dp"/>
+
 			<Button
 					android:text="@string/sign_up_005"
 					android:textColor="@color/white"
@@ -163,10 +163,22 @@
 					android:onClick="clickAction"
 					android:layout_marginTop="85dp"
 					app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-					app:layout_constraintBottom_toBottomOf="parent"
-					android:layout_marginBottom="24dp"
 					app:layout_constraintEnd_toEndOf="parent"/>
-			
+
+			<Button
+					android:text="@string/sign_up_006"
+					android:textColor="@color/white"
+					android:textStyle="bold"
+					android:layout_width="120dp"
+					android:layout_height="50dp"
+					android:id="@+id/skip_bt"
+					android:background="@drawable/button_background8"
+					android:onClick="clickAction"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/login_bt" android:layout_marginTop="16dp"
+					android:layout_marginBottom="32dp"/>
+
 			<ImageView
 					android:src="@mipmap/pw_back"
 					android:layout_width="25dp"
@@ -176,7 +188,7 @@
 					android:layout_marginStart="24dp"
 					android:layout_marginTop="24dp"
 					app:layout_constraintTop_toBottomOf="@+id/constraintLayout"/>
-			
+
 			<TextView
 					android:text="@string/sign_up_004"
 					android:layout_width="59dp"
@@ -188,7 +200,7 @@
 					android:layout_marginStart="5dp"
 					android:layout_marginTop="28dp"
 					app:layout_constraintTop_toBottomOf="@+id/constraintLayout"/>
-			
+
 			<ImageView
 					android:layout_width="15dp"
 					android:layout_height="15dp"
@@ -197,7 +209,7 @@
 					android:transitionName="foot_left"
 					app:layout_constraintEnd_toStartOf="@+id/foot_right"
 					app:layout_constraintTop_toBottomOf="@+id/imageView"/>
-			
+
 			<ImageView
 					android:layout_width="15dp"
 					android:layout_height="15dp"
@@ -209,8 +221,17 @@
 					app:layout_constraintEnd_toEndOf="parent"
 					android:layout_marginEnd="64dp"/>
 		</androidx.constraintlayout.widget.ConstraintLayout>
-	
+
 	</ScrollView>
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:id="@+id/loading"
+			android:background="@color/half_transparent"
+			android:visibility="gone">
+		<include layout="@layout/loading"/>
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

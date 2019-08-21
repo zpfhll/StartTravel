@@ -1,6 +1,8 @@
 package hll.zpf.starttravel.base
 
 import android.app.ActivityOptions
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.view.View
 import hll.zpf.starttravel.R
@@ -8,17 +10,39 @@ import android.os.Bundle
 import android.view.WindowManager
 import android.view.KeyEvent
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.github.ybq.android.spinkit.style.DoubleBounce
+import hll.zpf.starttravel.common.UserData
+import hll.zpf.starttravel.common.database.DataManager
+import hll.zpf.starttravel.common.database.entity.User
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
+import hll.zpf.starttravel.page.HomeActivity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 open class BaseActivity: AppCompatActivity() {
 
+    lateinit var context:BaseActivity
+
+    /**
+     * 登录页面的类型
+     */
+    val PAGE_TYPE_NO_SKIP = "noSkip"
+
+    /**
+     * 添加旅行的类型
+     */
+    val TRAVEL_TYPE = "travelType"
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStatusBarColor(R.color.baseColor)
+        context = this
+        setStatusBarColor(R.color.gray)
         setupWindowAnimations()
     }
 
@@ -136,5 +160,51 @@ open class BaseActivity: AppCompatActivity() {
         }
 
     }
+
+
+    /**
+     * メッセージを表示する
+     */
+    fun showMessageAlertDialog(title:String, message:String, onClick:((DialogInterface, Int)->Unit)? = null){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setCancelable(false)
+        builder.setNegativeButton(getString(R.string.alert_button_text)){dialog, index ->
+            if(onClick == null){
+                dialog.dismiss()
+            }else{
+                onClick(dialog,index)
+            }
+        }
+        builder.show()
+    }
+
+
+    fun showProgressBar(progressBar : ProgressBar){
+        var indeter = DoubleBounce()
+        indeter.color = getColor(R.color.baseColor)
+        progressBar.indeterminateDrawable = indeter
+        progressBar.visibility = View.VISIBLE
+    }
+
+    fun closeProgressBar(progressBar : ProgressBar){
+        progressBar.visibility = View.VISIBLE
+    }
+
+    fun skipToHome(){
+        GlobalScope.launch {
+            val user = User()
+            user.isVisitor = true
+            val manager = DataManager()
+            val result = manager.insertUser(user)
+            if(result != -1L){
+                UserData.instance().saveLoginUser(user.id)
+                val  intent = Intent(context, HomeActivity::class.java)
+                baseStartActivity(intent,ActivityMoveEnum.START_FROM_RIGHT)
+            }
+        }
+    }
+
 
 }

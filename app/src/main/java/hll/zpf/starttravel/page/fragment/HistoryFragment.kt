@@ -21,7 +21,8 @@ import hll.zpf.starttravel.R
 import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.components.ListDialog
-import hll.zpf.starttravel.common.bean.TravelBean
+import hll.zpf.starttravel.common.database.entity.Member
+import hll.zpf.starttravel.common.database.entity.Travel
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -101,7 +102,7 @@ class HistoryFragment : Fragment(),View.OnClickListener {
         adapter.travelData = initData()
         adapter.mContext = context
         adapter.callback = {
-            HLogger.instance().e("listDialog",adapter.travelData[it].travelName)
+            HLogger.instance().e("listDialog",adapter.travelData[it].name)
         }
         historyListView.adapter = adapter
         historyListView.layoutManager = LinearLayoutManager(context)
@@ -191,15 +192,15 @@ class HistoryFragment : Fragment(),View.OnClickListener {
 
     }
 
-    private fun initData() : List<TravelBean>{
-        var datas = ArrayList<TravelBean>()
+    private fun initData() : List<Travel>{
+        var datas = ArrayList<Travel>()
         for (i in 0..5){
-             var info = TravelBean()
-            info.travelPersonNumber = i + 2
-            info.travelName = "旅行$i"
-            info.travelDate = "2019年12月0${i}日"
-            info.travelMemo = "メモ$i"
-            info.travelMoney = i * 200f
+             var info = Travel()
+            info.memberList = ArrayList<Member>()
+            info.name = "旅行$i"
+            info.startDate = "20190213123334123"
+            info.memo = "メモ$i"
+            info.money = i * 200f
             datas.add(info)
         }
         return datas

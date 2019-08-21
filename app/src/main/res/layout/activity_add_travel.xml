@@ -76,6 +76,7 @@
                     android:layout_height="150dp"
                     android:inputType="textMultiLine"
                     android:ems="10"
+                    android:maxLength="100"
                     android:id="@+id/travel_memo_editText"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
@@ -206,6 +207,7 @@
                                 android:id="@+id/add_travel_partner_btn"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
+                                android:onClick="clickAction"
                                 android:background="@drawable/add_travel_partner_button_background"/>
                         <TextView
                                 android:layout_width="wrap_content"

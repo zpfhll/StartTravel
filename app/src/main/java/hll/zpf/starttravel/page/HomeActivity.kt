@@ -14,14 +14,17 @@ import androidx.fragment.app.FragmentTransaction
 import android.view.View
 import hll.zpf.starttravel.R
 import hll.zpf.starttravel.base.BaseActivity
+import hll.zpf.starttravel.common.EventBusMessage
 import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.Utils
+import hll.zpf.starttravel.common.bean.StepBean
 import hll.zpf.starttravel.common.components.ITButton
 import hll.zpf.starttravel.common.enums.TravelTypeEnum
 import hll.zpf.starttravel.page.fragment.HistoryFragment
 import hll.zpf.starttravel.page.fragment.MapFragment
 import hll.zpf.starttravel.page.fragment.MeFragment
 import hll.zpf.starttravel.page.fragment.TravelFragment
+import org.greenrobot.eventbus.EventBus
 
 
 class HomeActivity : BaseActivity() {
@@ -193,14 +196,18 @@ class HomeActivity : BaseActivity() {
                closeAddPlatform()
             }
             R.id.travel_money_btn -> {//记录花销
+                val event = EventBusMessage.instance(TRAVEL_TYPE)
+                event.travelType = TravelTypeEnum.MONEY_TRAVEL
+                EventBus.getDefault().postSticky(event)
                 val moneyIntent = Intent(this,AddTravelActivity::class.java)
-                moneyIntent.putExtra("travelType",TravelTypeEnum.MONEY_TRAVEL)
                 startActivity(moneyIntent)
                 closeAddPlatform()
             }
             R.id.travel_only_btn -> {//随心旅行
+                val event = EventBusMessage.instance(TRAVEL_TYPE)
+                event.travelType = TravelTypeEnum.FREE_TRAVEL
+                EventBus.getDefault().postSticky(event)
                 val freeIntent = Intent(this,AddTravelActivity::class.java)
-                freeIntent.putExtra("travelType",TravelTypeEnum.FREE_TRAVEL)
                 startActivity(freeIntent)
                 closeAddPlatform()
             }
@@ -241,6 +248,72 @@ class HomeActivity : BaseActivity() {
                 }
                 2 -> {
                     mapFragment = MapFragment()
+
+                    var steps = ArrayList<StepBean>()
+                    var step1 = StepBean()
+                    step1.latitude =28.112444
+                    step1.longitude = 112.98381
+                    step1.stepName   = "湖南省长沙市"
+                    step1.stepMemo = "湖南省长沙市"
+                    var step2 = StepBean()
+                    step2.latitude =30.651651
+                    step2.longitude = 104.075931
+                    step2.stepName  = "四川省成都市"
+                    step2.stepMemo = "四川省成都市"
+                    var step3 = StepBean()
+                    step3.latitude =34.265472
+                    step3.longitude = 108.954239
+                    step3.stepName  = "陕西省西安市"
+                    step3.stepMemo = "陕西省西安市"
+                    var step4 = StepBean()
+                    step4.latitude =36.620901
+                    step4.longitude = 101.780199
+                    step4.stepName  = "青海省西宁市"
+                    step4.stepMemo = "青海省西宁市"
+                    var step5 = StepBean()
+                    step5.latitude =39.630867
+                    step5.longitude = 118.180193
+                    step5.stepName  = "河北省唐山市"
+                    step5.stepMemo = "河北省唐山市"
+                    var step6 = StepBean()
+                    step6.latitude =32.916287
+                    step6.longitude = 117.389719
+                    step6.stepName  = "安徽省蚌埠市"
+                    step6.stepMemo = "安徽省蚌埠市"
+                    var step7 = StepBean()
+                    step7.latitude =32.061707
+                    step7.longitude = 118.763232
+                    step7.stepName  = "江苏省南京市"
+                    step7.stepMemo = "江苏省南京市"
+                    var step8 = StepBean()
+                    step8.latitude =28.112444
+                    step8.longitude = 112.98381
+                    step8.stepName   = "湖南省长沙市"
+                    step8.stepMemo = "湖南省长沙市"
+                    var step9 = StepBean()
+                    step9.latitude =30.546498
+                    step9.longitude = 114.341861
+                    step9.stepName  = "湖北省武汉市"
+                    step9.stepMemo = "湖北省武汉市"
+                    var step10 = StepBean()
+                    step10.latitude =29.874556
+                    step10.longitude = 121.550357
+                    step10.stepName = "浙江省宁波市"
+                    step10.stepMemo = "浙江省宁波市"
+                    steps.add(step1)
+                    steps.add(step2)
+                    steps.add(step3)
+                    steps.add(step4)
+                    steps.add(step5)
+                    steps.add(step6)
+                    steps.add(step7)
+                    steps.add(step8)
+                    steps.add(step9)
+                    steps.add(step10)
+
+                    (mapFragment as MapFragment).steps = steps
+
+
                     mTransaction.add(R.id.home_page_fly,mapFragment!!)
                 }
                 3 -> {

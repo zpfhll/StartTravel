@@ -1,7 +1,6 @@
 package hll.zpf.starttravel.page.fragment
 
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,15 +13,14 @@ import androidx.lifecycle.ViewModelProviders
 
 import hll.zpf.starttravel.R
 import hll.zpf.starttravel.common.Utils
-import hll.zpf.starttravel.common.bean.TravelBean
-import hll.zpf.starttravel.common.enums.TravelStateEnum
+import hll.zpf.starttravel.common.database.entity.Travel
 import hll.zpf.starttravel.common.model.TravelModel
 
 class TravelItemFragment : Fragment() {
 
     var travelModel:TravelModel? = null
 
-    var initDate:TravelBean? = null
+    var initDate: Travel? = null
 
     /**
      * frameのタイプ　０：普通　１：情報なし
@@ -47,11 +45,11 @@ class TravelItemFragment : Fragment() {
                 travelModel?.getTravelData()?.value = initDate
 
                 travelModel?.getTravelData()?.observe(this, Observer {
-                    view.findViewById<TextView>(R.id.travel_name_tv).text = it.travelName
-                    view.findViewById<TextView>(R.id.travel_start_date).text = it.travelDate
-                    view.findViewById<TextView>(R.id.travel_memo_tv).text = it.travelMemo
-                    view.findViewById<TextView>(R.id.travel_person_number_tv).text = "${it.travelPersonNumber}"
-                    view.findViewById<TextView>(R.id.travel_money_tv).text = Utils.instance().transMoneyToString(it.travelMoney)
+                    view.findViewById<TextView>(R.id.travel_name_tv).text = it.name
+                    view.findViewById<TextView>(R.id.travel_start_date).text = Utils.instance().getDateStringByFormatAndDateString("yyyy年MM月dd日 hh:mm",it.startDate)
+                    view.findViewById<TextView>(R.id.travel_memo_tv).text = it.memo
+                    view.findViewById<TextView>(R.id.travel_person_number_tv).text = "${it.memberList.size}"
+                    view.findViewById<TextView>(R.id.travel_money_tv).text = Utils.instance().transMoneyToString(it.money)
                 })
 
                 view.findViewById<Button>(R.id.travel_action_bt).setOnClickListener {

@@ -19,7 +19,7 @@
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
-			android:background="@drawable/top_circle_round_title"/>
+			android:background="@drawable/dialog_top_circle_round_title"/>
 
 	<ListView
 			android:layout_width="300dp"

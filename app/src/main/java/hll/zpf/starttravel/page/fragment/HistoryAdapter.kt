@@ -10,11 +10,11 @@ import android.widget.TextView
 import hll.zpf.starttravel.R
 import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.components.CRImageView
-import hll.zpf.starttravel.common.bean.TravelBean
+import hll.zpf.starttravel.common.database.entity.Travel
 
 class HistoryAdapter: RecyclerView.Adapter<HistoryAdapter.HistoryViewHodler>() {
 
-    var travelData:List<TravelBean> = ArrayList()
+    var travelData:List<Travel> = ArrayList()
     var mContext:Context? = null
     var callback:((Int) -> Unit)? = null
 
@@ -29,12 +29,12 @@ class HistoryAdapter: RecyclerView.Adapter<HistoryAdapter.HistoryViewHodler>() {
 
     override fun onBindViewHolder(holder: HistoryViewHodler, position: Int) {
         val history = travelData[position]
-        holder.travelNameTv.text = history.travelName
-        holder.travelMemoTv.text = history.travelMemo
+        holder.travelNameTv.text = history.name
+        holder.travelMemoTv.text = history.memo
         val numberStr = mContext!!.getString(R.string.history_010)
-        holder.travelPersonNumberTv.text = "${history.travelPersonNumber} $numberStr"
-        holder.travelDateTv.text = history.travelDate
-        holder.travelMoneyTv.text = Utils.instance().transMoneyToString(history.travelMoney)
+        holder.travelPersonNumberTv.text = "${history.memberList.size} $numberStr"
+        holder.travelDateTv.text = Utils.instance().getDateStringByFormatAndDateString("yyyy年MM月dd日 hh:mm",history.startDate)
+        holder.travelMoneyTv.text = Utils.instance().transMoneyToString(history.money)
 
         holder.travelDetailBt.setOnClickListener {
             callback?.let {

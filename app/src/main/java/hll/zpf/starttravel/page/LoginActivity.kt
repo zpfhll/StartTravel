@@ -1,10 +1,15 @@
 package hll.zpf.starttravel.page
 
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.media.Image
 import android.os.Bundle
 import android.view.View
 import hll.zpf.starttravel.R
 import hll.zpf.starttravel.base.BaseActivity
+import hll.zpf.starttravel.base.BaseApplication
+import hll.zpf.starttravel.common.HLogger
+import hll.zpf.starttravel.common.database.entity.User
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
 
 class LoginActivity : BaseActivity() {
@@ -18,6 +23,7 @@ class LoginActivity : BaseActivity() {
         super.baseClickAction(view)
         when (view.id){
             R.id.sign_in_bt -> moveToSignUp()
+            R.id.skip_bt -> skipToHome()
         }
     }
 

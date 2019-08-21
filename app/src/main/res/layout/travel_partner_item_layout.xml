@@ -2,14 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
     <hll.zpf.starttravel.common.components.CRImageView
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:src="@mipmap/simple"
+            android:src="@mipmap/user_image1"
             android:id="@+id/partner_image"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -29,7 +28,6 @@
             app:layout_constraintTop_toTopOf="@+id/partner_image"
             app:layout_constraintBottom_toBottomOf="@+id/partner_image"/>
     <TextView
-            android:text="+ 0,000元"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/partner_add_money"
@@ -37,7 +35,7 @@
             app:layout_constraintTop_toTopOf="@+id/partner_image"
             app:layout_constraintBottom_toBottomOf="@+id/partner_image"
             app:layout_constraintEnd_toStartOf="@+id/delete_partner_bt"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="24dp" android:text="￥0"/>
     <Button
             android:layout_width="25dp"
             android:layout_height="25dp"

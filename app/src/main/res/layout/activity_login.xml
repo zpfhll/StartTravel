@@ -19,12 +19,12 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
 			>
-		
+
 		<androidx.constraintlayout.widget.ConstraintLayout
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				tools:context=".page.LoginActivity">
-			
+
 			<ImageView
 					android:layout_width="0dp"
 					android:layout_height="200dp"
@@ -35,7 +35,7 @@
 					app:layout_constraintEnd_toEndOf="parent"
 					android:scaleType="centerCrop"
 					app:layout_constraintBottom_toTopOf="@+id/title"/>
-			
+
 			<TextView
 					android:text="@string/login_001"
 					android:layout_width="0dp"
@@ -50,8 +50,8 @@
 					android:layout_marginStart="10dp"
 					app:layout_constraintEnd_toEndOf="parent"
 					android:layout_marginEnd="10dp"/>
-			
-			
+
+
 			<androidx.constraintlayout.widget.ConstraintLayout
 					android:layout_width="match_parent"
 					android:layout_height="182dp"
@@ -61,7 +61,7 @@
 					android:layout_marginEnd="50dp"
 					android:background="@drawable/input_background1"
 					android:id="@+id/constraintLayout">
-				
+
 				<ImageView
 						android:layout_width="20dp"
 						android:layout_height="20dp"
@@ -73,7 +73,7 @@
 						android:layout_marginStart="10dp"
 						app:layout_constraintEnd_toStartOf="@+id/mail_et"
 						android:layout_marginEnd="8dp"/>
-				
+
 				<EditText
 						android:layout_width="0dp"
 						android:layout_height="0dp"
@@ -90,7 +90,7 @@
 						android:background="@color/transparent"
 						app:layout_constraintStart_toEndOf="@+id/imageView2"
 						android:importantForAutofill="no"/>
-				
+
 				<TextView
 						android:layout_width="0dp"
 						android:layout_height="0dp"
@@ -103,7 +103,7 @@
 						android:layout_marginEnd="5dp"
 						android:background="@color/input_line_color1"
 						android:id="@+id/textView2"/>
-				
+
 				<EditText
 						android:layout_width="0dp"
 						android:layout_height="0dp"
@@ -120,7 +120,7 @@
 						android:textColorHint="@color/gray"
 						android:textColor="@color/black"
 						android:layout_marginEnd="70dp"/>
-				
+
 				<TextView
 						android:layout_width="0dp"
 						android:layout_height="0dp"
@@ -133,7 +133,7 @@
 						android:layout_marginEnd="5dp"
 						android:background="@color/input_line_color1"
 						android:id="@+id/textView3"/>
-				
+
 				<ImageView
 						android:layout_width="20dp"
 						android:layout_height="0dp"
@@ -147,7 +147,7 @@
 						android:layout_marginStart="10dp"
 						app:layout_constraintEnd_toStartOf="@+id/password_et"
 						android:layout_marginEnd="8dp"/>
-				
+
 				<ImageView
 						android:layout_width="20dp"
 						android:layout_height="20dp"
@@ -159,7 +159,7 @@
 						android:layout_marginStart="10dp"
 						app:layout_constraintEnd_toStartOf="@+id/password_et_s"
 						android:layout_marginEnd="8dp"/>
-				
+
 				<EditText
 						android:layout_width="0dp"
 						android:layout_height="0dp"
@@ -177,7 +177,7 @@
 						android:textColor="@color/black"
 						android:layout_marginEnd="70dp"/>
 			</androidx.constraintlayout.widget.ConstraintLayout>
-				
+
 			<Button
 					android:layout_width="60dp"
 					android:layout_height="60dp"
@@ -194,7 +194,7 @@
 					android:textColor="@color/white"
 					android:gravity="center"
 					android:background="@drawable/button_background3"/>
-			
+
 			<Button
 					android:text="@string/login_005"
 					android:textColor="@color/white"
@@ -209,6 +209,20 @@
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintBottom_toBottomOf="parent"
 					android:layout_marginBottom="24dp"/>
+
+			<Button
+					android:text="@string/sign_up_006"
+					android:textColor="@color/white"
+					android:textStyle="bold"
+					android:layout_width="120dp"
+					android:layout_height="50dp"
+					android:id="@+id/skip_bt"
+					android:background="@drawable/button_background8"
+					android:onClick="clickAction"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintTop_toTopOf="@+id/sign_in_bt"
+					app:layout_constraintBottom_toBottomOf="@+id/sign_in_bt"/>
+
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	
 	</ScrollView>

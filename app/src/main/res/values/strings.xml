@@ -8,12 +8,14 @@
     <string name="login_003">密码</string>
     <string name="login_004">确认密码</string>
     <string name="login_005">登录</string>
+    <string name="login_006">跳过</string>
 
     <string name="sign_up_001">登录</string>
     <string name="sign_up_002">邮箱</string>
     <string name="sign_up_003">密码</string>
     <string name="sign_up_004">找回密码</string>
     <string name="sign_up_005">注册</string>
+    <string name="sign_up_006">跳过</string>
 
     <string name="home_001">旅途</string>
     <string name="home_002">标记</string>
@@ -22,6 +24,10 @@
     <string name="home_005">旅途</string>
     <string name="home_006">记录花销</string>
     <string name="home_007">随心旅行</string>
+
+    <string name="map_001">查找地点</string>
+    <string name="map_002">搜索</string>
+
 
     <string name="me_001">简介：</string>
     <string name="me_002">注册邮箱：</string>
@@ -52,9 +58,9 @@
     <string name="add_travel_002">提交</string>
     <string name="add_travel_003">名称:</string>
     <string name="add_travel_004">简介:</string>
-    <string name="add_travel_005">启动资金:</string>
+    <string name="add_travel_005">你的启动资金:</string>
     <string name="add_travel_006">模式:</string>
-    <string name="add_travel_007">同伴:</string>
+    <string name="add_travel_007">同伴:(%1$d人  %2$s元)</string>
     <string name="add_travel_008">添加</string>
     <string name="add_travel_009">编辑</string>
     <string name="add_travel_010">元</string>
@@ -63,11 +69,30 @@
     <string name="add_travel_013">单人</string>
     <string name="add_travel_014">多人</string>
     <string name="add_travel_015">0</string>
+    <string name="add_travel_e01">给这次旅行起个名字吧！</string>
+    <string name="add_travel_e02">启动资金我们只接受人民币,拒绝假币！</string>
+    <string name="add_travel_e03">你好像忘记你的伙伴了，没有伙伴的时候就让我们独自勇敢向前吧！</string>
 
     <string name="list_dialog_001">取消</string>
+
+    <string name="member_info_dialog_001">伙伴信息</string>
+    <string name="member_info_dialog_002">确认</string>
+    <string name="member_info_dialog_003">姓名</string>
+    <string name="member_info_dialog_004">金额</string>
+
 
     <string name="custom_switch_on">开</string>
     <string name="custom_switch_off">关</string>
 
+    <string name="alert_button_text">关闭</string>
+    <string name="loading_text">努力奔跑中...</string>
 
+    <string name="money_label">￥%1$s</string>
+
+
+
+    <!--错误信息-->
+    <string name="E00001">请确认您的网络已经处于正常状态！</string>
+    <string name="E00002">服务器出小差了，请您稍后再试！</string>
+    <string name="E00003">服务器出小差了，请您稍后再试！</string>
 </resources>

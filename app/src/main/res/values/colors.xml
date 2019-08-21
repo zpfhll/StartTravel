@@ -11,6 +11,7 @@
     <color name="orange">#FF9052</color>
     <color name="title_color">#5A6978</color>
     <color name="light_orange">#F8BB98</color>
+    <color name="light_orange_unable">#FACFB7</color>
     <color name="red">#F95F62</color>
     <color name="light_red">#F78D90</color>
     <color name="light_black">#302E2E</color>
@@ -20,4 +21,5 @@
     <color name="input_background_color1">#E2E9F2</color>
     <color name="input_line_color1">#969FAA</color>
     <color name="bottom_menu_color">#343F4B</color>
+    <color name="dialog_base_color">#60CCB1</color>
 </resources>
