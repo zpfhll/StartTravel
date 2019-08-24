@@ -60,7 +60,8 @@
     <string name="add_travel_004">简介:</string>
     <string name="add_travel_005">你的启动资金:</string>
     <string name="add_travel_006">模式:</string>
-    <string name="add_travel_007">同伴:(%1$d人  %2$s元)</string>
+    <string name="add_travel_007">同伴:(%1$d人%2$s%3$s元)</string>
+    <string name="add_travel_007_1">同伴:(%1$d人)</string>
     <string name="add_travel_008">添加</string>
     <string name="add_travel_009">编辑</string>
     <string name="add_travel_010">元</string>
@@ -95,4 +96,5 @@
     <string name="E00001">请确认您的网络已经处于正常状态！</string>
     <string name="E00002">服务器出小差了，请您稍后再试！</string>
     <string name="E00003">服务器出小差了，请您稍后再试！</string>
+    <string name="E00004">刚才有点走神儿，请再来一遍吧！</string>
 </resources>

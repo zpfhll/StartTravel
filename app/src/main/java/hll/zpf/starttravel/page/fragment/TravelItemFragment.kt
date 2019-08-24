@@ -46,8 +46,12 @@ class TravelItemFragment : Fragment() {
 
                 travelModel?.getTravelData()?.observe(this, Observer {
                     view.findViewById<TextView>(R.id.travel_name_tv).text = it.name
-                    view.findViewById<TextView>(R.id.travel_start_date).text = Utils.instance().getDateStringByFormatAndDateString("yyyy年MM月dd日 hh:mm",it.startDate)
-                    view.findViewById<TextView>(R.id.travel_memo_tv).text = it.memo
+                    it.startDate?.let {startDateS ->
+                        view.findViewById<TextView>(R.id.travel_start_date).text = Utils.instance().getDateStringByFormatAndDateString("yyyy年MM月dd日 hh:mm",startDateS)
+                    }
+                    it.memo?.let {memoS ->
+                        view.findViewById<TextView>(R.id.travel_memo_tv).text = memoS
+                    }
                     view.findViewById<TextView>(R.id.travel_person_number_tv).text = "${it.memberList.size}"
                     view.findViewById<TextView>(R.id.travel_money_tv).text = Utils.instance().transMoneyToString(it.money)
                 })

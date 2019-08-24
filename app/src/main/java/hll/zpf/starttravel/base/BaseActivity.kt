@@ -30,14 +30,19 @@ open class BaseActivity: AppCompatActivity() {
     lateinit var context:BaseActivity
 
     /**
-     * 登录页面的类型
+     * 登录页面的类型(EventBus 消息)
      */
     val PAGE_TYPE_NO_SKIP = "noSkip"
 
     /**
-     * 添加旅行的类型
+     * 添加旅行的类型(EventBus 消息)
      */
     val TRAVEL_TYPE = "travelType"
+
+    /**
+     * 刷新旅行一览页面(EventBus 消息)
+     */
+    val REFRESH_TRAVEL_DATA = "refreshTravel"
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,8 +81,8 @@ open class BaseActivity: AppCompatActivity() {
      * intent：遷移の情報
      * options:アニメーションやシェアのコンポネートなどの設定
      */
-    fun baseStartActivity(intent: Intent,options: ActivityOptions){
-            intent.flags = Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY
+    fun baseStartActivity(intent: Intent?,options: ActivityOptions){
+            intent?.flags = Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY
             startActivity(intent, options.toBundle())
     }
 
@@ -86,12 +91,10 @@ open class BaseActivity: AppCompatActivity() {
      * intent：遷移の情報
      * options:アニメーションのタイプ
      */
-    fun baseStartActivity(intent: Intent,anim:ActivityMoveEnum){
+    fun baseStartActivity(intent: Intent?,anim:ActivityMoveEnum){
         if (intent != null) {
-            intent?.addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY)
+            intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY)
             startActivity(intent)
-        }else{
-            finish()
         }
         when (anim){
             null -> overridePendingTransition(R.anim.in_from_right,R.anim.out_to_left)

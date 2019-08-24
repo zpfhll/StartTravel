@@ -19,6 +19,7 @@ import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.bean.StepBean
 import hll.zpf.starttravel.common.components.ITButton
+import hll.zpf.starttravel.common.enums.ActivityMoveEnum
 import hll.zpf.starttravel.common.enums.TravelTypeEnum
 import hll.zpf.starttravel.page.fragment.HistoryFragment
 import hll.zpf.starttravel.page.fragment.MapFragment
@@ -200,7 +201,7 @@ class HomeActivity : BaseActivity() {
                 event.travelType = TravelTypeEnum.MONEY_TRAVEL
                 EventBus.getDefault().postSticky(event)
                 val moneyIntent = Intent(this,AddTravelActivity::class.java)
-                startActivity(moneyIntent)
+                baseStartActivity(moneyIntent, ActivityMoveEnum.START_FROM_RIGHT)
                 closeAddPlatform()
             }
             R.id.travel_only_btn -> {//随心旅行
@@ -208,7 +209,7 @@ class HomeActivity : BaseActivity() {
                 event.travelType = TravelTypeEnum.FREE_TRAVEL
                 EventBus.getDefault().postSticky(event)
                 val freeIntent = Intent(this,AddTravelActivity::class.java)
-                startActivity(freeIntent)
+                baseStartActivity(freeIntent, ActivityMoveEnum.START_FROM_RIGHT)
                 closeAddPlatform()
             }
         }

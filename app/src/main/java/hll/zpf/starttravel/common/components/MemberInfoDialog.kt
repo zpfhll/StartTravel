@@ -11,10 +11,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.database.entity.Member
 import hll.zpf.starttravel.common.enums.TravelTypeEnum
-import hll.zpf.starttravel.common.model.MemberModel
 
 
 class MemberInfoDialog(context: Context,memberType: TravelTypeEnum) : Dialog(context),View.OnClickListener{
@@ -36,19 +37,30 @@ class MemberInfoDialog(context: Context,memberType: TravelTypeEnum) : Dialog(con
         val memberImageView:CRImageView = rootView.findViewById(R.id.member_image)
         memberName = rootView.findViewById(R.id.member_name)
         memberMoney = rootView.findViewById(R.id.member_money)
-        memberMoney.visibility = if (mMemberType == TravelTypeEnum.MONEY_TRAVEL) View.VISIBLE else View.GONE
+        memberMoney.visibility = when(mMemberType){
+            TravelTypeEnum.MONEY_TRAVEL -> View.VISIBLE
+            TravelTypeEnum.FREE_TRAVEL -> View.GONE
+        }
+        rootView.findViewById<TextView>(R.id.money_info).visibility =  memberMoney.visibility
+        if(memberMoney.visibility == View.GONE){
+            var layoutParams = memberName.layoutParams as ConstraintLayout.LayoutParams
+            layoutParams.bottomMargin = Utils.instance().DPToPX(32f).toInt()
+            memberName.layoutParams = layoutParams
+        }
         member?.let {
-            it.imageBitmap?.let {bitmap ->
-                memberImageView.setImageBitmap(bitmap)
-            }
-            it.name?.let {nameStr ->
-                mMemberName = nameStr
-                memberName.setText(nameStr)
-            }
-            it.money?.let {moneyStr ->
-                mMemberMoney = "${moneyStr}"
+        it.imageBitmap?.let {bitmap ->
+            memberImageView.setImageBitmap(bitmap)
+        }
+        it.name?.let {nameStr ->
+            mMemberName = nameStr
+            memberName.setText(nameStr)
+        }
+        it.money?.let {moneyStr ->
+            if(moneyStr > 0) {
+                mMemberMoney = Utils.instance().transMoneyToString(moneyStr).replace(",","")
                 memberMoney.setText(mMemberMoney)
             }
+        }
         }
         commitBtn = rootView.findViewById(R.id.commit_button)
         commitBtn.isEnabled = false
@@ -70,7 +82,7 @@ class MemberInfoDialog(context: Context,memberType: TravelTypeEnum) : Dialog(con
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
             override fun afterTextChanged(s: Editable?) {
-                checkInput()
+                    checkInput()
             }
         })
         setContentView(rootView)
@@ -80,10 +92,19 @@ class MemberInfoDialog(context: Context,memberType: TravelTypeEnum) : Dialog(con
     }
 
     private fun checkInput(){
-        commitBtn.isEnabled = !(memberName.text.isNullOrEmpty() ||
-                memberMoney.text.isNullOrEmpty() ||
-                !Utils.instance().checkMoney(memberMoney.text.toString()) ||
-                (memberName.text.equals(mMemberName) && memberMoney.text.equals(mMemberMoney)))
+        val moneyCheck = memberMoney.text.isNullOrEmpty() || !Utils.instance().checkMoney(memberMoney.text.toString())
+        val nameCheck = memberName.text.isNullOrEmpty()
+        val moneyNotChange =  memberMoney.text.toString().equals(mMemberMoney)
+        val nameNotChange = memberName.text.toString().equals(mMemberName)
+        when(mMemberType){
+            TravelTypeEnum.MONEY_TRAVEL -> {
+                commitBtn.isEnabled =  !(moneyCheck || nameCheck || (moneyNotChange && nameNotChange))
+            }
+            TravelTypeEnum.FREE_TRAVEL -> {
+                commitBtn.isEnabled =  !( nameCheck || nameNotChange)
+            }
+        }
+
     }
 
 

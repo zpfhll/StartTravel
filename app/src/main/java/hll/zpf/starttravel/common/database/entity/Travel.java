@@ -28,6 +28,10 @@ public class Travel {
     private String endDate;
     @Property(nameInDb = "money")
     private float money;
+
+    /**
+     * 0:未启程 1：旅途中 2：结束未清算完成 3：结束并且清算完成
+     */
     @Property(nameInDb = "state")
     private int state;
     @Property(nameInDb = "image")
@@ -58,7 +62,8 @@ public class Travel {
 
 
     public Travel(){
-
+        Utils utils = new Utils();
+        this.id = "T"+ utils.getDateStringByFormat("",null);
     }
 
     @Generated(hash = 1954945903)
