@@ -69,6 +69,7 @@
 			android:id="@+id/travel_action_bt"
 			android:textSize="@dimen/font_size_s3"
 			android:textColor="@color/white"
+			android:stateListAnimator="@null"
 			android:background="@drawable/button_background3"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintHorizontal_bias="0.5"
@@ -150,30 +151,56 @@
 			android:background="@drawable/edit1_button_background"
 			android:layout_width="34dp"
 			android:layout_height="34dp"
+			android:stateListAnimator="@null"
 			android:id="@+id/travel_item_edit"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toEndOf="@+id/textView12"
 			app:layout_constraintHorizontal_bias="0.5"
 			app:layout_constraintEnd_toStartOf="@+id/textView12"
 			android:layout_marginBottom="8dp"/>
-	
+
 	<Button
 			android:layout_width="34dp"
 			android:layout_height="34dp"
 			android:id="@+id/travel_item_flag"
+			android:stateListAnimator="@null"
 			android:background="@drawable/flag_button_background"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/travel_item_edit"
 			android:layout_marginEnd="64dp"
 			android:layout_marginBottom="8dp"/>
-	
+
 	<Button
 			android:background="@drawable/detail_button_background"
 			android:layout_width="34dp"
 			android:layout_height="34dp"
+			android:stateListAnimator="@null"
 			android:id="@+id/travel_item_detail"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toEndOf="@+id/travel_item_edit"
 			android:layout_marginStart="64dp"
 			android:layout_marginBottom="8dp"/>
+	<View
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:id="@+id/travel_none_background"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			android:background="@drawable/button_background5"
+			android:visibility="gone"/>
+	<ImageView
+			android:src="@mipmap/welcome"
+			android:layout_width="0dp"
+			android:layout_height="200dp"
+			android:scaleType="center"
+			android:id="@+id/travel_none_background_image"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintHorizontal_bias="0.5"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			android:visibility="gone"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

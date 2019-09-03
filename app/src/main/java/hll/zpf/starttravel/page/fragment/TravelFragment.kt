@@ -14,6 +14,10 @@ import hll.zpf.starttravel.base.BaseActivity
 import hll.zpf.starttravel.common.EventBusMessage
 import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.database.DataManager
+import hll.zpf.starttravel.common.database.entity.Travel
+import kotlinx.android.synthetic.main.fragment_travel.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -25,7 +29,9 @@ class TravelFragment : Fragment() {
 
     private val REFRESH_DATA = 1
 
-    private var fragmentData:ArrayList<TravelItemFragment>? = null
+    private var fragmentData:MutableList<TravelItemFragment> = mutableListOf()
+
+    private var travelData:MutableList<Travel>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,21 +48,35 @@ class TravelFragment : Fragment() {
 //            val travel = travelModel.getTravelData().value!!
 //            travel.travelName = "旅途1234"
 //            travelModel.getTravelData().value =  travel
+
         }
         pagerView.adapter = adapter
         pagerView.pageMargin = 60
         //预缓存页面数
         pagerView.offscreenPageLimit = 2
-
         refreshHandler = Handler{
             when(it.what){
                 REFRESH_DATA -> {
-                    adapter.datas = fragmentData!!
-                    adapter.notifyDataSetChanged()
+                    travelData?.let {
+                        adapter.refresh(it)
+                        travel_view_pager.currentItem = 0
+                        pager_index.itemOnClick = {currentItem ->
+                            travel_view_pager.currentItem = currentItem
+                        }
+                        pager_index.refresh(it.size,0)
+                        it.clear()
+                    }
                 }
             }
             false
         }
+        pagerView.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {}
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+            override fun onPageSelected(position: Int) {
+                pager_index.changeState(position)
+            }
+        })
         val message = EventBusMessage()
         message.message = (activity as BaseActivity).REFRESH_TRAVEL_DATA
         EventBus.getDefault().post(message)
@@ -76,29 +96,14 @@ class TravelFragment : Fragment() {
         }
     }
 
-
-
     private fun initData(){
         val dataManager = DataManager()
-        val travelList = dataManager.getNotEndTravel()
-        fragmentData = ArrayList<TravelItemFragment>()
-        travelList?.let {
-            if(travelList.isNotEmpty()) {
-                for (travel in travelList) {
-                    val fragment = TravelItemFragment()
-                    fragment.initDate = travel
-                    fragment.type = 0
-                    fragmentData!!.add(fragment)
-                }
-            }else{
-                val fragment = TravelItemFragment()
-                fragment.type = 1
-                fragmentData!!.add(fragment)
-            }
-            val message = Message()
-            message.what = REFRESH_DATA
-            refreshHandler.sendMessage(message)
-        }
+        travelData?.clear()
+        travelData = dataManager.getNotEndTravel()
+        val message = Message()
+        message.what = REFRESH_DATA
+        refreshHandler.sendMessage(message)
+
     }
 
 

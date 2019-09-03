@@ -3,11 +3,20 @@ package hll.zpf.starttravel.page.fragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
+import hll.zpf.starttravel.common.database.entity.Travel
 import hll.zpf.starttravel.common.model.TravelModel
 
-class TravelItemAdapter(manager:FragmentManager): FragmentPagerAdapter(manager) {
+class TravelItemAdapter(manager:FragmentManager):FragmentStatePagerAdapter(manager) {
+    var mDatas:MutableList<TravelItemFragment> = mutableListOf()
 
-    var datas:List<TravelItemFragment> = ArrayList()
+    init {
+        val fragment = TravelItemFragment()
+        val travel = Travel()
+        travel.type = 1
+        fragment.initDate = travel
+        mDatas.add(fragment)
+    }
 
     /**
      * 回调函数
@@ -18,7 +27,7 @@ class TravelItemAdapter(manager:FragmentManager): FragmentPagerAdapter(manager) 
     var callback:((Int,TravelModel,Int) -> Unit)? = null
 
     override fun getItem(position : Int): Fragment {
-        val fragment = datas[position]
+        val fragment = mDatas[position]
         fragment.callback = { travelState,action ->
             callback?.let {
                 it(position,travelState,action)
@@ -28,7 +37,46 @@ class TravelItemAdapter(manager:FragmentManager): FragmentPagerAdapter(manager) 
     }
 
     override fun getCount(): Int {
-        return datas.size
+        return mDatas.size
+    }
+
+
+    override fun getItemPosition(`object`: Any): Int {
+        return POSITION_NONE
+    }
+
+    fun refresh(travelData:MutableList<Travel>){
+        if(travelData.size > 0){
+            if (mDatas.size == travelData.size){
+                for (i in 0 until travelData.size){
+                   mDatas[i].initDate = travelData[i]
+                }
+            }else if (mDatas.size > travelData.size){
+                for (i in 0 until travelData.size){
+                    mDatas[i].initDate = travelData[i]
+                }
+                for (i in travelData.size until mDatas.size){
+                    mDatas.removeAt(i)
+                }
+            }else{
+                for (i in 0 until mDatas.size){
+                    mDatas[i].initDate = travelData[i]
+                }
+                for (i in mDatas.size until travelData.size){
+                    val fragment = TravelItemFragment()
+                    fragment.initDate = travelData[i]
+                    mDatas.add(fragment)
+                }
+            }
+        }else{
+            if(mDatas[0].travelModel?.getTravelData()?.value == null
+                || mDatas[0].travelModel?.getTravelData()?.value?.type != 1 ){
+                val travel = Travel()
+                travel.type = 1
+                mDatas[0].initDate = travel
+            }
+        }
+        notifyDataSetChanged()
     }
 
 }

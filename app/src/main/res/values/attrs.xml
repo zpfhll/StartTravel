@@ -20,6 +20,16 @@
 		<attr name="left_bottom_radius" format="dimension"/>
 	</declare-styleable>
 
+	<declare-styleable name="Pager_Index_View">
+		<attr name="number" format="integer"/>
+		<attr name="current_index" format="integer"/>
+		<attr name="index_selected_image" format="reference"/>
+		<attr name="index_not_select_image" format="reference"/>
+		<attr name="index_item_width" format="dimension"/>
+		<attr name="index_item_height" format="dimension"/>
+		<attr name="index_padding" format="dimension"/>
+	</declare-styleable>
+
 	<declare-styleable name="Custom_Switch_View">
 		<attr name="left_text" format="string"/>
 		<attr name="right_text" format="string"/>

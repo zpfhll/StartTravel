@@ -111,9 +111,9 @@
 			app:layout_constraintStart_toStartOf="@+id/member_name"/>
 
 	<Button
-			android:layout_width="18dp"
-			android:layout_height="18dp"
-			android:background="@drawable/close_button_background"
+			android:layout_width="25dp"
+			android:layout_height="25dp"
+			android:background="@drawable/close_circle_filled_button_background"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			android:layout_marginTop="10dp"

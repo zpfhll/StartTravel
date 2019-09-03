@@ -52,7 +52,7 @@ class DataManager {
         val daoSession = BaseApplication.application?.daoSession
         var travels:MutableList<Travel>? =  null
         daoSession?.let {
-            travels = it.travelDao.queryRaw("where state in (?,?,?)","0","1","2")
+            travels = it.travelDao.queryRaw("WHERE state IN (?,?,?) ORDER BY id DESC","0","1","2")
         }
         return travels
     }

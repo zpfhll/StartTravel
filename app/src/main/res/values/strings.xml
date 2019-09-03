@@ -24,6 +24,9 @@
     <string name="home_005">旅途</string>
     <string name="home_006">记录花销</string>
     <string name="home_007">随心旅行</string>
+    <string name="home_008">权限请求</string>
+    <string name="home_009">标记功能需要打开存储，电话状态和位置权限！</string>
+
 
     <string name="map_001">查找地点</string>
     <string name="map_002">搜索</string>

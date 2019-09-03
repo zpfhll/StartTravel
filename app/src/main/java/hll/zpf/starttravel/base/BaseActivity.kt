@@ -44,6 +44,11 @@ open class BaseActivity: AppCompatActivity() {
      */
     val REFRESH_TRAVEL_DATA = "refreshTravel"
 
+    val CODE_FOR_WRITE_PERMISSION = 1
+    val CODE_FOR_LOCATION_PERMISSION = 2
+    val CODE_FOR_READ_PHONE_STATE_PERMISSION = 3
+
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context = this
@@ -97,7 +102,6 @@ open class BaseActivity: AppCompatActivity() {
             startActivity(intent)
         }
         when (anim){
-            null -> overridePendingTransition(R.anim.in_from_right,R.anim.out_to_left)
             ActivityMoveEnum.START_FROM_RIGHT -> overridePendingTransition(R.anim.in_from_right,R.anim.out_to_left)
             ActivityMoveEnum.START_FROM_BOTTOM -> overridePendingTransition(R.anim.in_from_bottom,R.anim.out_to_top)
             ActivityMoveEnum.BACK_FROM_LEFT -> overridePendingTransition(R.anim.out_to_right,R.anim.in_from_left)
