@@ -161,7 +161,7 @@ class Utils {
      * 默认格式：yyyyMMddHHmmsssss
      * 默认日期：现在
      */
-    fun getDateStringByFormatAndDateString(format:String? = null,specialDate:String):String{
+    fun getDateStringByFormatAndDateString(specialDate:String,format:String? = null):String{
         var dateString:String
         var mFormat  = format
         if(mFormat == null || mFormat.equals("")){

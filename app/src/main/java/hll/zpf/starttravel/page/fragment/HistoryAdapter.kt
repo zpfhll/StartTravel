@@ -33,7 +33,7 @@ class HistoryAdapter: RecyclerView.Adapter<HistoryAdapter.HistoryViewHodler>() {
         holder.travelMemoTv.text = history.memo
         val numberStr = mContext!!.getString(R.string.history_010)
         holder.travelPersonNumberTv.text = "${history.memberList.size} $numberStr"
-        holder.travelDateTv.text = Utils.instance().getDateStringByFormatAndDateString("yyyy年MM月dd日 hh:mm",history.startDate)
+        holder.travelDateTv.text = Utils.instance().getDateStringByFormatAndDateString(history.startDate,"yyyy年MM月dd日 hh:mm")
         holder.travelMoneyTv.text = Utils.instance().transMoneyToString(history.money)
 
         holder.travelDetailBt.setOnClickListener {

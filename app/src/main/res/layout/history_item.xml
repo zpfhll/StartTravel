@@ -25,7 +25,7 @@
 				android:text="TextView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:textColor="@color/bottom_menu_color"
+				android:textColor="@color/text_color"
 				android:textSize="@dimen/font_size_s3"
 				android:textStyle="bold"
 				android:id="@+id/travel_name_tv"
@@ -58,7 +58,7 @@
 		
 		<TextView
 				android:text="TextView"
-				android:textColor="@color/bottom_menu_color"
+				android:textColor="@color/text_color"
 				android:textSize="@dimen/font_size_s4"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"

@@ -21,7 +21,7 @@ class UtilsTest {
 //        response.accessToken = "1234"
 //        val result = uitls?.reflectObject(response)
 //        assertTrue(result!!)
-        val result = Utils.instance().getDateStringByFormatAndDateString("yyyy年MM月dd日 hh:mm","20190213123312123")
+        val result = Utils.instance().getDateStringByFormatAndDateString("20190213123312123","yyyy年MM月dd日 hh:mm")
         assertSame("2019年02月13日 12:33",result)
     }
 }

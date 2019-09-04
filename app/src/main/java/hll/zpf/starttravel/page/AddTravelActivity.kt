@@ -407,7 +407,7 @@ class AddTravelActivity : BaseActivity() {
         }
 
         val dataManager = DataManager()
-        val travelResult = dataManager.insertTravel(travel)
+        val travelResult = dataManager.insertOrReplaceTravel(travel)
         if(travelResult == -1L){
             showMessageAlertDialog("",getString(R.string.E00004))
         }else{

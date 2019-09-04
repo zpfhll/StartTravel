@@ -13,6 +13,7 @@ import hll.zpf.starttravel.R
 import hll.zpf.starttravel.base.BaseActivity
 import hll.zpf.starttravel.common.EventBusMessage
 import hll.zpf.starttravel.common.HLogger
+import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.database.DataManager
 import hll.zpf.starttravel.common.database.entity.Travel
 import kotlinx.android.synthetic.main.fragment_travel.*
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 class TravelFragment : Fragment() {
 
@@ -38,16 +40,37 @@ class TravelFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_travel, container, false)
-        val pagerView: ViewPager = rootView.findViewById(R.id.travel_view_pager)
+        val pagerView:ViewPager = rootView.findViewById(R.id.travel_view_pager)
         EventBus.getDefault().register(this)
         adapter = TravelItemAdapter(activity!!.supportFragmentManager)
         adapter.callback = {position,travelModel,action ->
             HLogger.instance().d("travelTap","$position--${travelModel.getTravelData().value!!.name}---$action")
+            when(action){
+                0 ->{//0：启程
+                    val travel = travelModel.getTravelData().value
+                    val startDate = Utils.instance().getDateStringByFormat()
+                    travel?.startDate = startDate
+                    travel?.state = 1
+                    travelModel.getTravelData().value =  travel
+                    GlobalScope.launch {
+                        travel?.let {
+                            DataManager().insertOrReplaceTravel(it)
+                        }
+                    }
+                }
+                1 ->{//1：标记
 
-            //TODO カード更新の処理
-//            val travel = travelModel.getTravelData().value!!
-//            travel.travelName = "旅途1234"
-//            travelModel.getTravelData().value =  travel
+                }
+                2 ->{//2：编辑
+
+                }
+                3 ->{//3：详细
+
+                }
+                4 ->{//4:结束
+
+                }
+            }
 
         }
         pagerView.adapter = adapter
@@ -82,20 +105,17 @@ class TravelFragment : Fragment() {
         EventBus.getDefault().post(message)
         return rootView
     }
-
     override fun onDestroy() {
         super.onDestroy()
         refreshHandler.removeCallbacksAndMessages(null)
         EventBus.getDefault().unregister(this)
     }
-
     @Subscribe(threadMode = ThreadMode.ASYNC)
     fun refreshData(message: EventBusMessage){
         if(message.message.equals((activity as BaseActivity).REFRESH_TRAVEL_DATA)){
             initData()
         }
     }
-
     private fun initData(){
         val dataManager = DataManager()
         travelData?.clear()
@@ -103,7 +123,6 @@ class TravelFragment : Fragment() {
         val message = Message()
         message.what = REFRESH_DATA
         refreshHandler.sendMessage(message)
-
     }
 
 
