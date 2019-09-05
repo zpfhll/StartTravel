@@ -103,7 +103,7 @@ class TravelItemFragment : Fragment() {
                             travelAction,
                             "translationY",
                             travelAction.translationY,
-                            Utils.instance().DPToPX(32f + 25f)
+                            Utils.instance().DPToPX(32f + 25f - 8f)
                         )
                         animator.duration = 0
                         animator.start()
@@ -137,7 +137,7 @@ class TravelItemFragment : Fragment() {
                 val animatorAction = ObjectAnimator.ofFloat(travelAction,
                     "translationY",
                     travelAction.translationY,
-                    Utils.instance().DPToPX(32f+25f))
+                    Utils.instance().DPToPX(32f+25f-8f))
                 animatorAction.addListener(object : Animator.AnimatorListener{
                     override fun onAnimationRepeat(animation: Animator?) {
                     }

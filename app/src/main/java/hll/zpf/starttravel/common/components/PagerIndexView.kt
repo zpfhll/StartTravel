@@ -18,7 +18,7 @@ class PagerIndexView @JvmOverloads constructor(
     private var mNotSelectImage:Int = 0
     private var mIndexWidth:Float = 0f
     private var mIndexHeight:Float = 0f
-    private var mDefault:Float = 10f
+    private var mDefault:Float = 8f
     private var mPadding:Float = 0f
 
     var itemOnClick:((Int) -> Unit)? = null

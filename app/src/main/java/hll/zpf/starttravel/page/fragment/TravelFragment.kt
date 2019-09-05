@@ -74,7 +74,7 @@ class TravelFragment : Fragment() {
 
         }
         pagerView.adapter = adapter
-        pagerView.pageMargin = 60
+        pagerView.pageMargin = 50
         //预缓存页面数
         pagerView.offscreenPageLimit = 2
         refreshHandler = Handler{

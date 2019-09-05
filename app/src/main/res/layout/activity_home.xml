@@ -113,7 +113,7 @@
 			android:layout_marginBottom="58dp"
 			app:layout_constraintStart_toStartOf="parent"
 			android:layout_marginStart="28dp"/>
-	
+
 	<Button
 			android:layout_width="50dp"
 			android:layout_height="50dp"
@@ -121,12 +121,12 @@
 			android:id="@+id/add_travel_btn"
 			android:stateListAnimator="@null"
 			android:onClick="clickAction"
-			android:elevation="@dimen/font_size_s1"
+			android:elevation="10dp"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintHorizontal_bias="0.5"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			android:layout_marginBottom="40dp"/>
+			android:layout_marginBottom="30dp"/>
 	
 	<View
 			android:layout_width="0dp"
@@ -149,6 +149,7 @@
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
+			android:elevation="11dp"
 			android:id="@+id/add_travel_platform"
 			android:visibility="gone"
 			>
