@@ -10,7 +10,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:src="@mipmap/user_image1"
-            android:id="@+id/partner_image"
+            android:id="@+id/travel_image"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:radius="20dp"
@@ -24,17 +24,17 @@
             android:textColor="@color/title_color"
             android:id="@+id/partner_name"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/partner_image"
+            app:layout_constraintStart_toEndOf="@+id/travel_image"
             android:layout_marginStart="24dp"
-            app:layout_constraintTop_toTopOf="@+id/partner_image"
-            app:layout_constraintBottom_toBottomOf="@+id/partner_image"/>
+            app:layout_constraintTop_toTopOf="@+id/travel_image"
+            app:layout_constraintBottom_toBottomOf="@+id/travel_image"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/partner_add_money"
             android:textSize="@dimen/font_size_s3"
-            app:layout_constraintTop_toTopOf="@+id/partner_image"
-            app:layout_constraintBottom_toBottomOf="@+id/partner_image"
+            app:layout_constraintTop_toTopOf="@+id/travel_image"
+            app:layout_constraintBottom_toBottomOf="@+id/travel_image"
             app:layout_constraintEnd_toStartOf="@+id/delete_partner_bt"
             android:layout_marginEnd="24dp" android:text="￥0"/>
     <Button
@@ -43,8 +43,8 @@
             android:background="@drawable/delete_button_background"
             android:id="@+id/delete_partner_bt"
             android:textSize="@dimen/font_size_s3"
-            app:layout_constraintTop_toTopOf="@+id/partner_image"
-            app:layout_constraintBottom_toBottomOf="@+id/partner_image"
+            app:layout_constraintTop_toTopOf="@+id/travel_image"
+            app:layout_constraintBottom_toBottomOf="@+id/travel_image"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="24dp"/>
 

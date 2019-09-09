@@ -24,8 +24,7 @@
     <string name="home_005">旅途</string>
     <string name="home_006">记录花销</string>
     <string name="home_007">随心旅行</string>
-    <string name="home_008">权限请求</string>
-    <string name="home_009">标记功能需要打开存储，电话状态和位置权限！</string>
+    <string name="home_008">标记功能需要打开存储，电话状态和位置权限！</string>
 
 
     <string name="map_001">查找地点</string>
@@ -57,6 +56,7 @@
     <string name="travel_004">￥</string>
     <string name="travel_005">同行者:</string>
     <string name="travel_006">人</string>
+    <string name="travel_007">图片选择功能需要打开存储权限！</string>
 
     <string name="add_travel_001">添加行程</string>
     <string name="add_travel_002">提交</string>
@@ -93,6 +93,8 @@
     <string name="loading_text">努力奔跑中...</string>
 
     <string name="money_label">￥%1$s</string>
+
+    <string name="common_001">权限请求</string>
 
 
 

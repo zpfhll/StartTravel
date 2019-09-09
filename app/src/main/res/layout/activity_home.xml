@@ -18,7 +18,7 @@
 			android:id="@+id/linearLayout">
 		
 		<hll.zpf.starttravel.common.components.ITButton
-				app:image="@mipmap/travel"
+				app:image="@mipmap/foot_right"
 				app:text="@string/home_001"
 				app:image_width="27dp"
 				app:image_height="27dp"

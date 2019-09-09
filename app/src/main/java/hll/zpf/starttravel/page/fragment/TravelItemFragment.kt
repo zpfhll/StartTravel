@@ -29,7 +29,7 @@ class TravelItemFragment : Fragment() {
     /**
      * 回调函数
      * TravelModel：旅途的情报
-     * Int：动作 ⇨　0：启程 1：标记 2：编辑 3：详细 4:结束
+     * Int：动作 ⇨　0：启程 1：标记 2：编辑 3：详细 4:结束 5:图片
      */
     var callback:((TravelModel,Int) -> Unit)? = null
 
@@ -47,6 +47,8 @@ class TravelItemFragment : Fragment() {
         val travelFlag:Button = view.findViewById(R.id.travel_item_flag)
         val travelEdit:Button = view.findViewById(R.id.travel_item_edit)
         val travelDetail:Button = view.findViewById(R.id.travel_item_detail)
+
+        val travelImage:CRImageView = view.findViewById(R.id.travel_image)
 
         travelModel?.getTravelData()?.observe(this, Observer {
             when(it.type) {
@@ -89,6 +91,12 @@ class TravelItemFragment : Fragment() {
                     }else{
                         view.findViewById<TextView>(R.id.travel_money_tv).visibility = View.GONE
                         view.findViewById<TextView>(R.id.travel_money_label_tv).visibility = View.GONE
+                    }
+
+
+                    //图片设定
+                    it.imageBitmap?.let {bitmap ->
+                        travelImage.setImageBitmap(bitmap)
                     }
 
 
@@ -203,6 +211,13 @@ class TravelItemFragment : Fragment() {
                 it(travelModel!!,3)
             }
         }
+
+        travelImage.setOnClickListener {
+            callback?.let {
+                it(travelModel!!,5)
+            }
+        }
+
         return view
 
 

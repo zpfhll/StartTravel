@@ -22,7 +22,7 @@ class TravelItemAdapter(manager:FragmentManager):FragmentStatePagerAdapter(manag
      * 回调函数
      * Int：旅途的索引
      * TravelModel：旅途的情报
-     * Int：动作 ⇨　0：启程 1：标记 2：编辑 3：详细 4:结束
+     * Int：动作 ⇨　0：启程 1：标记 2：编辑 3：详细 4:结束 5:图片
      */
     var callback:((Int,TravelModel,Int) -> Unit)? = null
 

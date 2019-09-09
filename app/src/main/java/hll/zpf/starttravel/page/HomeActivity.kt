@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import android.view.View
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import hll.zpf.starttravel.R
 import hll.zpf.starttravel.base.BaseActivity
@@ -245,10 +244,10 @@ class HomeActivity : BaseActivity() {
                 }
             }
         } else {
-            showMessageAlertDialog(getString(R.string.home_008),getString(R.string.home_009)){dialog, index ->
+            showMessageAlertDialog(getString(R.string.common_001),getString(R.string.home_008)){ dialog, index ->
                 val localIntent = Intent()
-                localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS")
-                localIntent.setData(Uri.fromParts("package", getPackageName(), null))
+                localIntent.action = "android.settings.APPLICATION_DETAILS_SETTINGS"
+                localIntent.data = Uri.fromParts("package", packageName, null)
                 localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(localIntent)
             }

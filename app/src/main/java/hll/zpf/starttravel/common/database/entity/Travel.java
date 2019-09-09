@@ -172,8 +172,16 @@ public class Travel {
         this.image = image;
     }
 
-    public Bitmap getImageBitma() {
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    public Bitmap getImageBitmap() {
+
+        if(image == null){
+            return null;
+        }
+        Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
+        if(bitmap == null) {
+            return null;
+        }
+        return bitmap;
     }
 
     public void setImageBitmap(Bitmap icon) {

@@ -3,7 +3,6 @@ package hll.zpf.starttravel.page
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.app.ActivityOptions
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,7 +27,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import android.text.Spanned
-import android.graphics.Color.parseColor
 import android.text.style.ForegroundColorSpan
 import android.text.SpannableString
 import hll.zpf.starttravel.common.database.DataManager
@@ -280,7 +278,7 @@ class AddTravelActivity : BaseActivity() {
         val mPartnerNameTextView:TextView = mView.findViewById(R.id.partner_name)
         val mPartnerMoneyView:TextView = mView.findViewById(R.id.partner_add_money)
         val mDeleteButton:TextView = mView.findViewById(R.id.delete_partner_bt)
-        val mPartnerImage:ImageView = mView.findViewById(R.id.partner_image)
+        val mPartnerImage:ImageView = mView.findViewById(R.id.travel_image)
 
         member.imageBitmap?.let {
             mPartnerImage.setImageBitmap(it)
