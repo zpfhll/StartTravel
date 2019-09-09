@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import android.view.View
 import androidx.core.content.ContextCompat
+import hll.zpf.starttravel.BuildConfig
 import hll.zpf.starttravel.R
 import hll.zpf.starttravel.base.BaseActivity
 import hll.zpf.starttravel.common.EventBusMessage
@@ -191,18 +192,23 @@ class HomeActivity : BaseActivity() {
                 selectPage(meFragment,4)
             }
             R.id.add_travel_btn -> {//添加旅行
-                mAddTravelPlatform.visibility = View.VISIBLE
-                val animator = ObjectAnimator.ofFloat(mAddTravelPlatform, "translationY", mAddTravelPlatform.translationY, 0f)
-                val animatorAlpha = ObjectAnimator.ofFloat(mAddTravelBackground, "alpha", 0f, 1f)
-                animatorAlpha.addListener(object : AnimatorListenerAdapter(){
-                    override fun onAnimationStart(animation: Animator?) {
-                        mAddTravelBackground.visibility = View.VISIBLE
-                    }
-                })
-                animator.duration = 300
-                animatorAlpha.duration = 300
-                animator.start()
-                animatorAlpha.start()
+                if((travelFragment as TravelFragment).travelNumber >= BuildConfig.MAX_TRAVEL){
+                    showMessageAlertDialog("",getString(R.string.home_009))
+                }else {
+                    mAddTravelPlatform.visibility = View.VISIBLE
+                    val animator =
+                        ObjectAnimator.ofFloat(mAddTravelPlatform, "translationY", mAddTravelPlatform.translationY, 0f)
+                    val animatorAlpha = ObjectAnimator.ofFloat(mAddTravelBackground, "alpha", 0f, 1f)
+                    animatorAlpha.addListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationStart(animation: Animator?) {
+                            mAddTravelBackground.visibility = View.VISIBLE
+                        }
+                    })
+                    animator.duration = 300
+                    animatorAlpha.duration = 300
+                    animator.start()
+                    animatorAlpha.start()
+                }
             }
             R.id.close_btn -> {//关闭添加区域
                closeAddPlatform()

@@ -54,7 +54,9 @@ class TravelItemFragment : Fragment() {
             when(it.type) {
                 0 -> {
                     view.findViewById<View>(R.id.travel_none_background).visibility = View.GONE
+                    view.findViewById<View>(R.id.travel_none_background_shadow).visibility = View.GONE
                     view.findViewById<ImageView>(R.id.travel_none_background_image).visibility = View.GONE
+                    view.findViewById<View>(R.id.travel_background_shadow).visibility = View.VISIBLE
                     view.findViewById<TextView>(R.id.travel_name_tv).text = it.name
 
                     //开始日期的显示
@@ -124,7 +126,9 @@ class TravelItemFragment : Fragment() {
                 1 -> {
                     travelAction.visibility = View.GONE
                     view.findViewById<View>(R.id.travel_none_background).visibility = View.VISIBLE
+                    view.findViewById<View>(R.id.travel_none_background_shadow).visibility = View.VISIBLE
                     view.findViewById<ImageView>(R.id.travel_none_background_image).visibility = View.VISIBLE
+                    view.findViewById<View>(R.id.travel_background_shadow).visibility = View.GONE
                 }
             }
         })

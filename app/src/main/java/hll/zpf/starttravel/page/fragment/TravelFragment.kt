@@ -46,7 +46,9 @@ class TravelFragment : Fragment() {
 
     private val CROP_REQUEST_CODE = 3
 
-    private var currentTravelModel:TravelModel? = null;
+    private var currentTravelModel:TravelModel? = null
+
+    var travelNumber:Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -111,6 +113,7 @@ class TravelFragment : Fragment() {
             when(it.what){
                 REFRESH_DATA -> {
                     travelData?.let{ travels ->
+                        travelNumber = travels.size
                         adapter.refresh(travels)
                         travel_view_pager.currentItem = 0
                         pager_index.itemOnClick = {currentItem ->

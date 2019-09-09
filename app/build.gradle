@@ -36,6 +36,7 @@ android {
             buildConfigField("String", "SERVER_DOMAIN", "${SERVER_DOMAIN}")
             buildConfigField("String", "LOGIN_PATH", "${LOGIN_PATH}")
             buildConfigField("String", "SIGN_IN_PATH", "${SIGN_IN_PATH}")
+            buildConfigField("int", "MAX_TRAVEL", "${MAX_TRAVEL}")
             signingConfig signingConfigs.config
         }
     }
