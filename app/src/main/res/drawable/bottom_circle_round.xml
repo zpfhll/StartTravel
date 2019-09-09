@@ -3,7 +3,7 @@
        android:shape="rectangle">
 	
 	<!--填充设置-->
-	<solid android:color="@color/baseColor"/>
+	<solid android:color="@color/dialog_base_color"/>
 	
 	<!--圆角设置-->
 	<corners android:bottomLeftRadius="10dp"

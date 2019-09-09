@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import hll.zpf.starttravel.common.Utils;
 import org.greenrobot.greendao.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import org.greenrobot.greendao.DaoException;
 import hll.zpf.starttravel.common.database.DaoSession;
@@ -28,6 +29,10 @@ public class Travel {
     private String endDate;
     @Property(nameInDb = "money")
     private float money;
+
+    /**
+     * 0:未启程 1：旅途中 2：结束未清算完成 3：结束并且清算完成
+     */
     @Property(nameInDb = "state")
     private int state;
     @Property(nameInDb = "image")
@@ -56,14 +61,20 @@ public class Travel {
     @Generated(hash = 1728782803)
     private transient TravelDao myDao;
 
+    /**
+     * タイプ　０：普通　１：情報なし
+     */
+    private int type = 0;
+
 
     public Travel(){
-
+        Utils utils = new Utils();
+        this.id = "T"+ utils.getDateStringByFormat("",null);
     }
 
-    @Generated(hash = 1954945903)
-    public Travel(String id, String name, String memo, String startDate,
-            String endDate, float money, int state, byte[] image, String userId) {
+    @Generated(hash = 1584001836)
+    public Travel(String id, String name, String memo, String startDate, String endDate, float money,
+            int state, byte[] image, String userId, int type) {
         this.id = id;
         this.name = name;
         this.memo = memo;
@@ -73,15 +84,28 @@ public class Travel {
         this.state = state;
         this.image = image;
         this.userId = userId;
+        this.type = type;
     }
 
     @Override
     public String toString() {
-        String str = "id:" + id + " Name:" + name + " memo:" + memo
-                + " startDate:" + startDate + " endDate:" + endDate
-                + " money:" + money+ " state:" + state+ " image:" + image.length
-                + " userId:" + userId;
-        return str;
+        return "Travel{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", memo='" + memo + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", money=" + money +
+                ", state=" + state +
+                ", image=" + Arrays.toString(image) +
+                ", userId='" + userId + '\'' +
+                ", stepList=" + stepList +
+                ", detailList=" + detailList +
+                ", memberList=" + memberList +
+                ", daoSession=" + daoSession +
+                ", myDao=" + myDao +
+                ", type=" + type +
+                '}';
     }
 
     public String getId() {
@@ -148,8 +172,16 @@ public class Travel {
         this.image = image;
     }
 
-    public Bitmap getImageBitma() {
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    public Bitmap getImageBitmap() {
+
+        if(image == null){
+            return null;
+        }
+        Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
+        if(bitmap == null) {
+            return null;
+        }
+        return bitmap;
     }
 
     public void setImageBitmap(Bitmap icon) {
@@ -174,6 +206,17 @@ public class Travel {
 
     public void setMemberList(List<Member> memberList) {
         this.memberList = memberList;
+    }
+
+    /**
+     * タイプ　０：普通　１：情報なし
+     */
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     /**

@@ -14,11 +14,11 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			android:background="@color/bottom_menu_color"
+			android:background="@color/white"
 			android:id="@+id/linearLayout">
 		
 		<hll.zpf.starttravel.common.components.ITButton
-				app:image="@mipmap/travel"
+				app:image="@mipmap/foot_right"
 				app:text="@string/home_001"
 				app:image_width="27dp"
 				app:image_height="27dp"
@@ -55,7 +55,7 @@
 				android:layout_width="0dp"
 				android:layout_height="43dp"
 				android:layout_weight="1"
-				android:background="@color/bottom_menu_color"
+				android:background="@color/white"
 				android:layout_gravity="center_vertical"
 				android:focusable="false"/>
 		
@@ -113,7 +113,7 @@
 			android:layout_marginBottom="58dp"
 			app:layout_constraintStart_toStartOf="parent"
 			android:layout_marginStart="28dp"/>
-	
+
 	<Button
 			android:layout_width="50dp"
 			android:layout_height="50dp"
@@ -121,11 +121,12 @@
 			android:id="@+id/add_travel_btn"
 			android:stateListAnimator="@null"
 			android:onClick="clickAction"
+			android:elevation="10dp"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintHorizontal_bias="0.5"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			android:layout_marginBottom="40dp"/>
+			android:layout_marginBottom="30dp"/>
 	
 	<View
 			android:layout_width="0dp"
@@ -148,6 +149,7 @@
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
+			android:elevation="11dp"
 			android:id="@+id/add_travel_platform"
 			android:visibility="gone"
 			>

@@ -1,10 +1,13 @@
 package hll.zpf.starttravel.page
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.MotionEvent
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -12,6 +15,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import android.view.View
+import androidx.core.content.ContextCompat
+import hll.zpf.starttravel.BuildConfig
 import hll.zpf.starttravel.R
 import hll.zpf.starttravel.base.BaseActivity
 import hll.zpf.starttravel.common.EventBusMessage
@@ -19,12 +24,16 @@ import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.bean.StepBean
 import hll.zpf.starttravel.common.components.ITButton
+import hll.zpf.starttravel.common.enums.ActivityMoveEnum
 import hll.zpf.starttravel.common.enums.TravelTypeEnum
 import hll.zpf.starttravel.page.fragment.HistoryFragment
 import hll.zpf.starttravel.page.fragment.MapFragment
 import hll.zpf.starttravel.page.fragment.MeFragment
 import hll.zpf.starttravel.page.fragment.TravelFragment
 import org.greenrobot.eventbus.EventBus
+
+
+
 
 
 class HomeActivity : BaseActivity() {
@@ -164,33 +173,42 @@ class HomeActivity : BaseActivity() {
         when (view.id) {
             R.id.travel_bt -> {
                 HLogger.instance().e("clickAction", "旅途")
-                selectPage(view,travelFragment,1)
+                transBottomButton(view.id)
+                selectPage(travelFragment,1)
             }
             R.id.map_bt -> {
                 HLogger.instance().e("clickAction", "标记")
-                selectPage(view,mapFragment,2)
+                transBottomButton(view.id)
+                checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,CODE_FOR_WRITE_PERMISSION)
             }
             R.id.history_bt -> {
                 HLogger.instance().e("clickAction", "足迹")
-                selectPage(view,historyFragment,3)
+                transBottomButton(view.id)
+                selectPage(historyFragment,3)
             }
             R.id.self_bt -> {
                 HLogger.instance().e("clickAction", "我")
-                selectPage(view,meFragment,4)
+                transBottomButton(view.id)
+                selectPage(meFragment,4)
             }
             R.id.add_travel_btn -> {//添加旅行
-                mAddTravelPlatform.visibility = View.VISIBLE
-                val animator = ObjectAnimator.ofFloat(mAddTravelPlatform, "translationY", mAddTravelPlatform.translationY, 0f)
-                val animatorAlpha = ObjectAnimator.ofFloat(mAddTravelBackground, "alpha", 0f, 1f)
-                animatorAlpha.addListener(object : AnimatorListenerAdapter(){
-                    override fun onAnimationStart(animation: Animator?) {
-                        mAddTravelBackground.visibility = View.VISIBLE
-                    }
-                })
-                animator.duration = 300
-                animatorAlpha.duration = 300
-                animator.start()
-                animatorAlpha.start()
+                if((travelFragment as TravelFragment).travelNumber >= BuildConfig.MAX_TRAVEL){
+                    showMessageAlertDialog("",getString(R.string.home_009))
+                }else {
+                    mAddTravelPlatform.visibility = View.VISIBLE
+                    val animator =
+                        ObjectAnimator.ofFloat(mAddTravelPlatform, "translationY", mAddTravelPlatform.translationY, 0f)
+                    val animatorAlpha = ObjectAnimator.ofFloat(mAddTravelBackground, "alpha", 0f, 1f)
+                    animatorAlpha.addListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationStart(animation: Animator?) {
+                            mAddTravelBackground.visibility = View.VISIBLE
+                        }
+                    })
+                    animator.duration = 300
+                    animatorAlpha.duration = 300
+                    animator.start()
+                    animatorAlpha.start()
+                }
             }
             R.id.close_btn -> {//关闭添加区域
                closeAddPlatform()
@@ -200,7 +218,7 @@ class HomeActivity : BaseActivity() {
                 event.travelType = TravelTypeEnum.MONEY_TRAVEL
                 EventBus.getDefault().postSticky(event)
                 val moneyIntent = Intent(this,AddTravelActivity::class.java)
-                startActivity(moneyIntent)
+                baseStartActivity(moneyIntent, ActivityMoveEnum.START_FROM_RIGHT)
                 closeAddPlatform()
             }
             R.id.travel_only_btn -> {//随心旅行
@@ -208,12 +226,40 @@ class HomeActivity : BaseActivity() {
                 event.travelType = TravelTypeEnum.FREE_TRAVEL
                 EventBus.getDefault().postSticky(event)
                 val freeIntent = Intent(this,AddTravelActivity::class.java)
-                startActivity(freeIntent)
+                baseStartActivity(freeIntent, ActivityMoveEnum.START_FROM_RIGHT)
                 closeAddPlatform()
             }
         }
 
     }
+
+    private fun checkPermission(permisson:String,requestCode: Int) {
+        val hasPermission =
+            ContextCompat.checkSelfPermission(application, permisson)
+        if (hasPermission == PackageManager.PERMISSION_GRANTED) {
+            //拥有权限，执行操作
+            when(requestCode){
+                CODE_FOR_WRITE_PERMISSION -> {
+                    checkPermission(Manifest.permission.READ_PHONE_STATE,CODE_FOR_READ_PHONE_STATE_PERMISSION)
+                }
+                CODE_FOR_READ_PHONE_STATE_PERMISSION -> {
+                    checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION,CODE_FOR_LOCATION_PERMISSION)
+                }
+                CODE_FOR_LOCATION_PERMISSION -> {
+                    selectPage(mapFragment,2)
+                }
+            }
+        } else {
+            showMessageAlertDialog(getString(R.string.common_001),getString(R.string.home_008)){ dialog, index ->
+                val localIntent = Intent()
+                localIntent.action = "android.settings.APPLICATION_DETAILS_SETTINGS"
+                localIntent.data = Uri.fromParts("package", packageName, null)
+                localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(localIntent)
+            }
+        }
+    }
+
 
     /**
      * 关闭添加区域
@@ -235,8 +281,8 @@ class HomeActivity : BaseActivity() {
 
 
 
-    private fun selectPage(view:View,fragment:Fragment?,type:Int ){
-        transBottomButton(view.id)
+    private fun selectPage(fragment:Fragment?,type:Int ){
+
         val mTransaction = mFragmentManager.beginTransaction()
         hideAllFragment(mTransaction)
 

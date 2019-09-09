@@ -15,11 +15,11 @@
     <color name="red">#F95F62</color>
     <color name="light_red">#F78D90</color>
     <color name="light_black">#302E2E</color>
-    <color name="baseColor">#55C8B9</color>
+    <color name="baseColor">#60CCB1</color>
     <color name="background_color">#F3F3F3</color>
     <color name="unableColor">#b2d9d9</color>
     <color name="input_background_color1">#E2E9F2</color>
     <color name="input_line_color1">#969FAA</color>
-    <color name="bottom_menu_color">#343F4B</color>
+    <color name="text_color">#343F4B</color>
     <color name="dialog_base_color">#60CCB1</color>
 </resources>

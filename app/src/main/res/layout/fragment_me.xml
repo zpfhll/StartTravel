@@ -61,7 +61,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/user_name_tv"
-			android:textColor="@color/bottom_menu_color"
+			android:textColor="@color/text_color"
 			android:textStyle="bold"
 			android:textSize="@dimen/font_size_s2"
 			android:layout_marginStart="16dp"

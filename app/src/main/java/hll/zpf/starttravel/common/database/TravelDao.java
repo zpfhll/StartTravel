@@ -36,6 +36,7 @@ public class TravelDao extends AbstractDao<Travel, String> {
         public final static Property State = new Property(6, int.class, "state", false, "state");
         public final static Property Image = new Property(7, byte[].class, "image", false, "image");
         public final static Property UserId = new Property(8, String.class, "userId", false, "user_id");
+        public final static Property Type = new Property(9, int.class, "type", false, "TYPE");
     }
 
     private DaoSession daoSession;
@@ -63,7 +64,8 @@ public class TravelDao extends AbstractDao<Travel, String> {
                 "\"money\" REAL NOT NULL ," + // 5: money
                 "\"state\" INTEGER NOT NULL ," + // 6: state
                 "\"image\" BLOB," + // 7: image
-                "\"user_id\" TEXT);"); // 8: userId
+                "\"user_id\" TEXT," + // 8: userId
+                "\"TYPE\" INTEGER NOT NULL );"); // 9: type
     }
 
     /** Drops the underlying database table. */
@@ -112,6 +114,7 @@ public class TravelDao extends AbstractDao<Travel, String> {
         if (userId != null) {
             stmt.bindString(9, userId);
         }
+        stmt.bindLong(10, entity.getType());
     }
 
     @Override
@@ -154,6 +157,7 @@ public class TravelDao extends AbstractDao<Travel, String> {
         if (userId != null) {
             stmt.bindString(9, userId);
         }
+        stmt.bindLong(10, entity.getType());
     }
 
     @Override
@@ -178,7 +182,8 @@ public class TravelDao extends AbstractDao<Travel, String> {
             cursor.getFloat(offset + 5), // money
             cursor.getInt(offset + 6), // state
             cursor.isNull(offset + 7) ? null : cursor.getBlob(offset + 7), // image
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // userId
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // userId
+            cursor.getInt(offset + 9) // type
         );
         return entity;
     }
@@ -194,6 +199,7 @@ public class TravelDao extends AbstractDao<Travel, String> {
         entity.setState(cursor.getInt(offset + 6));
         entity.setImage(cursor.isNull(offset + 7) ? null : cursor.getBlob(offset + 7));
         entity.setUserId(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setType(cursor.getInt(offset + 9));
      }
     
     @Override

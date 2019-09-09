@@ -24,7 +24,6 @@
         <meta-data
                 android:name="com.amap.api.v2.apikey"
                 android:value="449244fdd692ea6f573d6f6fbe7f26aa"/>
-
         <activity
                 android:name=".page.SplashActivity"
                 android:screenOrientation="portrait"
