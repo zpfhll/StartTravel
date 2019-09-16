@@ -102,7 +102,7 @@ class HistoryFragment : Fragment(),View.OnClickListener {
         adapter.travelData = initData()
         adapter.mContext = context
         adapter.callback = {
-            HLogger.instance().e("listDialog",adapter.travelData[it].name)
+            HLogger.instance().e("listDialog",adapter.travelData[it].name ?: "")
         }
         historyListView.adapter = adapter
         historyListView.layoutManager = LinearLayoutManager(context)
@@ -191,11 +191,10 @@ class HistoryFragment : Fragment(),View.OnClickListener {
         }
 
     }
-
     private fun initData() : List<Travel>{
         var datas = ArrayList<Travel>()
         for (i in 0..5){
-             var info = Travel()
+             var info = Travel.createTravel()
             info.memberList = ArrayList<Member>()
             info.name = "旅行$i"
             info.startDate = "20190213123334123"

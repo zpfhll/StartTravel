@@ -14,8 +14,8 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import hll.zpf.starttravel.common.Utils
-import hll.zpf.starttravel.common.database.entity.Member
 import hll.zpf.starttravel.common.enums.TravelTypeEnum
+import hll.zpf.starttravel.common.database.entity.Member
 
 
 class MemberInfoDialog(context: Context,memberType: TravelTypeEnum) : Dialog(context),View.OnClickListener{
@@ -48,7 +48,7 @@ class MemberInfoDialog(context: Context,memberType: TravelTypeEnum) : Dialog(con
             memberName.layoutParams = layoutParams
         }
         member?.let {
-        it.imageBitmap?.let {bitmap ->
+        it.getImageBitmap()?.let {bitmap ->
             memberImageView.setImageBitmap(bitmap)
         }
         it.name?.let {nameStr ->

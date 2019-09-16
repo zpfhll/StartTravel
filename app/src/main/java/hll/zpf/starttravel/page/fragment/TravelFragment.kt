@@ -19,7 +19,6 @@ import hll.zpf.starttravel.common.EventBusMessage
 import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.database.DataManager
-import hll.zpf.starttravel.common.database.entity.Travel
 import kotlinx.android.synthetic.main.fragment_travel.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -31,6 +30,7 @@ import android.net.Uri
 import hll.zpf.starttravel.common.model.TravelModel
 import java.io.File
 import androidx.core.content.ContextCompat
+import hll.zpf.starttravel.common.database.entity.Travel
 
 
 class TravelFragment : Fragment() {
@@ -216,7 +216,7 @@ class TravelFragment : Fragment() {
                    val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
                     currentTravelModel?.let {
                         val travel = it.getTravelData().value
-                        travel?.imageBitmap = image
+                        travel?.setImageBitmap(image)
                         it.getTravelData().value =  travel
                         GlobalScope.launch {
                             travel?.let {item ->

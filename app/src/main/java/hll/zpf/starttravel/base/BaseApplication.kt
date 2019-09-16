@@ -1,14 +1,14 @@
 package hll.zpf.starttravel.base
 
 import android.app.Application
-import hll.zpf.starttravel.common.database.DaoMaster
-import hll.zpf.starttravel.common.database.DaoSession
+import androidx.room.Room
+import hll.zpf.starttravel.common.database.TravelDatabase
 
 class BaseApplication:Application() {
 
     val DB_NAME = "travel.db"
 
-    lateinit var daoSession: DaoSession
+    lateinit var travelDatabase:TravelDatabase
 
 
     companion object {
@@ -21,13 +21,7 @@ class BaseApplication:Application() {
     }
 
     private fun initGreenDao(){
-        val helper = DaoMaster.DevOpenHelper(this, DB_NAME)
-        val db = helper.writableDatabase
-        val daoMaster =  DaoMaster(db)
-        daoSession = daoMaster.newSession()
+        travelDatabase = Room.databaseBuilder(this, TravelDatabase::class.java, "travel_room.db").build()
     }
 
-    fun getmDaoSession() : DaoSession {
-        return daoSession
-    }
 }
