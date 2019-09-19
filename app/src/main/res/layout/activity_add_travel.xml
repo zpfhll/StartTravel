@@ -215,7 +215,7 @@
                                 android:layout_gravity="center_vertical"
                                 android:gravity="center"
                                 android:onClick="clickAction"
-                                android:textColor="@color/light_black"
+                                android:textColor="@color/text_color"
                                 android:id="@+id/add_travel_partner_text"
                                 android:text="@string/add_travel_008"
                                 app:layout_constraintStart_toEndOf="@+id/add_travel_partner_btn"

@@ -13,11 +13,15 @@ import hll.zpf.starttravel.internet.bean.LoginBean
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import android.os.Handler
 import android.os.Message
+import hll.zpf.starttravel.base.BaseApplication
 import hll.zpf.starttravel.common.Utils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.ThreadMode
 import org.greenrobot.eventbus.Subscribe
 import hll.zpf.starttravel.common.EventBusMessage
+import hll.zpf.starttravel.common.HLLAny
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 
 class SignUpActivity : BaseActivity() {

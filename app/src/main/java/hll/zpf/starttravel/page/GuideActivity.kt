@@ -5,11 +5,11 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.os.Message
 import android.view.View
 import hll.zpf.starttravel.R
 import hll.zpf.starttravel.base.BaseActivity
+import hll.zpf.starttravel.base.BaseApplication
 import hll.zpf.starttravel.common.EventBusMessage
 import hll.zpf.starttravel.common.UserData
 import hll.zpf.starttravel.common.database.DataManager
@@ -27,7 +27,6 @@ class GuideActivity : BaseActivity() {
         moveHandler = @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
-
                 when(msg.what){
                     1 -> {
                         val intent = Intent(context,HomeActivity::class.java)
@@ -52,6 +51,8 @@ class GuideActivity : BaseActivity() {
 
     fun onClick(view: View){
         val userID = UserData.instance().getLoginUserId()
+
+        val dao= BaseApplication.application!!.travelDatabase.detailDao()
         GlobalScope.launch {
             //有用户的时候，是访客的话直接跳转到HOME，不是访客的话就直接跳转到登录页面
             //没有用户的时候，跳转到注册页面

@@ -1,7 +1,6 @@
 package hll.zpf.starttravel.base
 
 import android.app.ActivityOptions
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.view.View
@@ -18,8 +17,8 @@ import androidx.core.content.ContextCompat
 import com.github.ybq.android.spinkit.style.DoubleBounce
 import hll.zpf.starttravel.common.UserData
 import hll.zpf.starttravel.common.database.DataManager
-import hll.zpf.starttravel.common.database.entity.User
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
+import hll.zpf.starttravel.common.database.entity.User
 import hll.zpf.starttravel.page.HomeActivity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -43,6 +42,11 @@ open class BaseActivity: AppCompatActivity() {
      * 刷新旅行一览页面(EventBus 消息)
      */
     val REFRESH_TRAVEL_DATA = "refreshTravel"
+
+    /**
+     * 旅行明细一览页面(EventBus 消息)
+     */
+    val TRAVEL_DETAIL = "travel_detail"
 
     val CODE_FOR_WRITE_PERMISSION = 1
     val CODE_FOR_LOCATION_PERMISSION = 2
@@ -201,7 +205,7 @@ open class BaseActivity: AppCompatActivity() {
 
     fun skipToHome(){
         GlobalScope.launch {
-            val user = User()
+            val user = User.createUser()
             user.isVisitor = true
             val manager = DataManager()
             val result = manager.insertUser(user)

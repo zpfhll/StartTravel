@@ -18,8 +18,6 @@ import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.components.CustomConstraintLayout
 import hll.zpf.starttravel.common.components.CustomSwitchView
 import hll.zpf.starttravel.common.components.MemberInfoDialog
-import hll.zpf.starttravel.common.database.entity.Member
-import hll.zpf.starttravel.common.database.entity.Travel
 import hll.zpf.starttravel.common.enums.TravelTypeEnum
 import kotlinx.android.synthetic.main.activity_add_travel.*
 import org.greenrobot.eventbus.EventBus
@@ -29,8 +27,13 @@ import java.util.*
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.SpannableString
+import hll.zpf.starttravel.common.UserData
 import hll.zpf.starttravel.common.database.DataManager
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
+import hll.zpf.starttravel.common.database.entity.Member
+import hll.zpf.starttravel.common.database.entity.Travel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.collections.ArrayList
 
 
@@ -152,7 +155,7 @@ class AddTravelActivity : BaseActivity() {
         for (i in 0 until  addTravelPartnerPlatform.childCount){
             if(addTravelPartnerPlatform.getChildAt(i).tag != null && addTravelPartnerPlatform.getChildAt(i).tag is Member){
                 number += 1
-                money += (addTravelPartnerPlatform.getChildAt(i).tag as Member).money
+                money += (addTravelPartnerPlatform.getChildAt(i).tag as Member).money ?: 0f
             }
         }
         val moneyStr = Utils.instance().transMoneyToString(money)
@@ -192,20 +195,20 @@ class AddTravelActivity : BaseActivity() {
         when(view.id){
             R.id.add_travel_partner_text,R.id.add_travel_partner_btn -> {//添加伙伴
                 mRootView.requestFocus()
-                val member = Member()
+                val member = Member.createMember()
                 val imageId = Random().nextInt(100)
                 when(imageId % 4){
                     0 -> {
-                        member.imageBitmap = Utils.instance().drawableToBitmap(context.getDrawable(R.mipmap.user_image1))
+                        member.setImageBitmap(Utils.instance().drawableToBitmap(context.getDrawable(R.mipmap.user_image1)))
                     }
                     1 -> {
-                        member.imageBitmap = Utils.instance().drawableToBitmap(context.getDrawable(R.mipmap.user_image2))
+                        member.setImageBitmap(Utils.instance().drawableToBitmap(context.getDrawable(R.mipmap.user_image2)))
                     }
                     2 -> {
-                        member.imageBitmap = Utils.instance().drawableToBitmap(context.getDrawable(R.mipmap.user_image3))
+                        member.setImageBitmap(Utils.instance().drawableToBitmap(context.getDrawable(R.mipmap.user_image3)))
                     }
                     3 -> {
-                        member.imageBitmap = Utils.instance().drawableToBitmap(context.getDrawable(R.mipmap.user_image4))
+                        member.setImageBitmap(Utils.instance().drawableToBitmap(context.getDrawable(R.mipmap.user_image4)))
                     }
                 }
                 showMemberInfoDialog(member) {view,member ->
@@ -280,7 +283,7 @@ class AddTravelActivity : BaseActivity() {
         val mDeleteButton:TextView = mView.findViewById(R.id.delete_partner_bt)
         val mPartnerImage:ImageView = mView.findViewById(R.id.travel_image)
 
-        member.imageBitmap?.let {
+        member.getImageBitmap()?.let {
             mPartnerImage.setImageBitmap(it)
         }
         when(type){
@@ -289,7 +292,7 @@ class AddTravelActivity : BaseActivity() {
             }
             TravelTypeEnum.MONEY_TRAVEL ->{
                 mPartnerMoneyView.visibility = View.VISIBLE
-                mPartnerMoneyView.text = String.format(getString(R.string.money_label),Utils.instance().transMoneyToString(member.money))
+                mPartnerMoneyView.text = String.format(getString(R.string.money_label),Utils.instance().transMoneyToString(member.money!!))
             }
         }
         member.name?.let {
@@ -310,7 +313,7 @@ class AddTravelActivity : BaseActivity() {
 
         mView.registEventBus()
         mView.update = {updateMember ->
-            updateMember.imageBitmap?.let {
+            updateMember.getImageBitmap()?.let {
                 mPartnerImage.setImageBitmap(it)
             }
             when(type){
@@ -319,7 +322,7 @@ class AddTravelActivity : BaseActivity() {
                 }
                 TravelTypeEnum.MONEY_TRAVEL ->{
                     mPartnerMoneyView.visibility = View.VISIBLE
-                    mPartnerMoneyView.text = String.format(getString(R.string.money_label),Utils.instance().transMoneyToString(updateMember.money))
+                    mPartnerMoneyView.text = String.format(getString(R.string.money_label),Utils.instance().transMoneyToString(updateMember.money ?: 0f))
                 }
             }
             updateMember.name?.let {
@@ -380,20 +383,22 @@ class AddTravelActivity : BaseActivity() {
             return
         }
 
-        val travel = Travel()
+        val travel = Travel.createTravel()
         travel.name = travelName
         travel.memo = travelMemo
-        travel.state  = 0 //未开启的行程
+        travel.userId = UserData.instance().getLoginUserId()
 
         val members = ArrayList<Member>()
         var memberMoney = 0f
         for (i in 0 until  addTravelPartnerPlatform.childCount){
             addTravelPartnerPlatform.getChildAt(i).tag?.let {
                 if(it is Member){
-                    val member = it as Member
-                    member.memberTravelId = travel.id
-                    memberMoney += member.money
-                    members.add(member)
+                    it.travelId = travel.id
+                    it.money?.let {money ->
+                        memberMoney += money
+                    }
+
+                    members.add(it)
                 }
             }
         }
@@ -403,23 +408,25 @@ class AddTravelActivity : BaseActivity() {
         }else{
             travel.money = 0f
         }
-
         val dataManager = DataManager()
-        val travelResult = dataManager.insertOrReplaceTravel(travel)
-        if(travelResult == -1L){
-            showMessageAlertDialog("",getString(R.string.E00004))
-        }else{
-            val memberResult = dataManager.insertMembers(members)
-            if(memberResult == -1L){
+        GlobalScope.launch {
+            val travelResult = dataManager.insertOrReplaceTravel(travel)
+            if(travelResult == -1L){
                 showMessageAlertDialog("",getString(R.string.E00004))
             }else{
-                val message = EventBusMessage()
-                message.message = REFRESH_TRAVEL_DATA
-                EventBus.getDefault().post(message)
-                finish()
-                baseStartActivity(null,ActivityMoveEnum.BACK_FROM_LEFT)
+                val memberResult = dataManager.insertMembers(members)
+                if(memberResult == -1L){
+                    showMessageAlertDialog("",getString(R.string.E00004))
+                }else{
+                    val message = EventBusMessage()
+                    message.message = REFRESH_TRAVEL_DATA
+                    EventBus.getDefault().post(message)
+                    finish()
+                    baseStartActivity(null,ActivityMoveEnum.BACK_FROM_LEFT)
+                }
             }
         }
+
     }
     override fun onDestroy() {
         super.onDestroy()

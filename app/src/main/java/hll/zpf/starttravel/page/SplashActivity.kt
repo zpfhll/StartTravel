@@ -14,10 +14,6 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 
 
-
-
-
-
 class SplashActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

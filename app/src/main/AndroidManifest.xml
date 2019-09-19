@@ -21,9 +21,11 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
+
         <meta-data
                 android:name="com.amap.api.v2.apikey"
                 android:value="449244fdd692ea6f573d6f6fbe7f26aa"/>
+
         <activity
                 android:name=".page.SplashActivity"
                 android:screenOrientation="portrait"
@@ -38,12 +40,11 @@
                 android:name=".page.SignUpActivity"
                 android:exported="false"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="stateHidden|stateUnchanged">
-        </activity>
-        <activity android:name=".page.GuideActivity"
-                  android:exported="false"
-                  android:screenOrientation="portrait">
-        </activity>
+                android:windowSoftInputMode="stateHidden|stateUnchanged"/>
+        <activity
+                android:name=".page.GuideActivity"
+                android:exported="false"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".page.LoginActivity"
                 android:exported="false"
@@ -56,6 +57,11 @@
                 android:windowSoftInputMode="stateHidden|stateUnchanged|adjustPan"/>
         <activity
                 android:name=".page.AddTravelActivity"
+                android:exported="false"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden|stateUnchanged"/>
+        <activity
+                android:name=".page.TravelDetailActivity"
                 android:exported="false"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="stateHidden|stateUnchanged"/>

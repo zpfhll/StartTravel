@@ -1,8 +1,8 @@
 package hll.zpf.starttravel.common.database
 
-import hll.zpf.starttravel.base.BaseActivity
 import hll.zpf.starttravel.base.BaseApplication
 import hll.zpf.starttravel.common.HLogger
+import hll.zpf.starttravel.common.UserData
 import hll.zpf.starttravel.common.database.entity.Member
 import hll.zpf.starttravel.common.database.entity.Travel
 import hll.zpf.starttravel.common.database.entity.User
@@ -10,16 +10,12 @@ import java.lang.Exception
 
 class DataManager {
 
-    fun getUserCount():Long{
-        return if(BaseApplication.application == null ) 0 else BaseApplication.application!!.daoSession.userDao.count()
-    }
-
     fun insertUser(user: User):Long{
-        val daoSession = BaseApplication.application?.daoSession
+        val daoSession = BaseApplication.application?.travelDatabase?.userDao()
         daoSession?.let {
             var result = -1L
             try {
-                result = it.userDao.insert(user)
+                result = it.insertUser(user)[0]
                 HLogger.instance().e("insertUser","$result")
             }catch (e:Exception){
                 HLogger.instance().e("insertUser","insert user fail : ${e.message}")
@@ -30,11 +26,11 @@ class DataManager {
     }
 
     fun getUserByID(userId:String) : User?{
-        val daoSession = BaseApplication.application?.daoSession
-        var result:User? = null
+        val daoSession = BaseApplication.application?.travelDatabase?.userDao()
+        var result: User? = null
         daoSession?.let {
             try {
-                result = it.userDao.queryRaw("where id = ?",userId)[0]
+                result = it.getUserByID(userId)
                 HLogger.instance().e("getUserByID","$result")
             }catch (e:Exception){
                 HLogger.instance().e("getUserByID","get user fail : ${e.message}")
@@ -49,10 +45,29 @@ class DataManager {
      * 获取未完成的旅行
      */
     fun getNotEndTravel():MutableList<Travel>?{
-        val daoSession = BaseApplication.application?.daoSession
+        val daoSession = BaseApplication.application?.travelDatabase?.travelDao()
+        val detailDao = BaseApplication.application?.travelDatabase?.detailDao()
+        val memberDao = BaseApplication.application?.travelDatabase?.memberDao()
+        val stepDao = BaseApplication.application?.travelDatabase?.stepDao()
         var travels:MutableList<Travel>? =  null
         daoSession?.let {
-            travels = it.travelDao.queryRaw("WHERE state IN (?,?,?) ORDER BY id DESC","0","1","2")
+            val list = it.getNotEndTravel(UserData.instance().getLoginUserId())
+            list?.let {selectList ->
+                travels = mutableListOf()
+                for (travel in list){
+                    stepDao?.let {
+                        travel.stepList = stepDao.getStepByTravelId(travel.id)
+                    }
+                    detailDao?.let {
+                        travel.detailList = detailDao.getDetailByTravelId(travel.id)
+                    }
+                    memberDao?.let {
+                        travel.memberList = memberDao.getMemberByTravelId(travel.id)
+                    }
+                    travels?.add(travel)
+                }
+
+            }
         }
         return travels
     }
@@ -61,11 +76,11 @@ class DataManager {
      * 插入旅行数据
      */
     fun insertOrReplaceTravel(travel: Travel):Long{
-        val daoSession = BaseApplication.application?.daoSession
+        val daoSession = BaseApplication.application?.travelDatabase?.travelDao()
         daoSession?.let {
             var result = -1L
             try {
-                result = it.travelDao.insertOrReplace(travel)
+                result = it.insertTravel(travel)[0]
                 HLogger.instance().e("insertOrReplaceTravel","$result")
             }catch (e:Exception){
                 HLogger.instance().e("insertOrReplaceTravel","insert travel fail : ${e.message}")
@@ -79,18 +94,18 @@ class DataManager {
      * 批量插入partner
      */
     fun insertMembers(members: List<Member>):Long{
-        if(members.size < 1){
+        if(members.isEmpty()){
             return 0
         }
-        val daoSession = BaseApplication.application?.daoSession
+        val daoSession = BaseApplication.application?.travelDatabase?.memberDao()
         daoSession?.let {
             var result = -1L
             try {
-                if(members.size > 1) {
-                    it.memberDao.insertInTx(members)
-                    result = 0
+
+                result = if(members.size > 1) {
+                    it.insertMember(*members.toTypedArray())[0]
                 }else{
-                    result = it.memberDao.insert(members.get(0))
+                    it.insertMember(members[0])[0]
                 }
                 HLogger.instance().e("insertMembers","$result")
             }catch (e:Exception){

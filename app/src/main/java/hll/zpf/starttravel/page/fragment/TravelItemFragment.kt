@@ -17,8 +17,8 @@ import androidx.lifecycle.ViewModelProviders
 import hll.zpf.starttravel.R
 import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.components.CRImageView
-import hll.zpf.starttravel.common.database.entity.Travel
 import hll.zpf.starttravel.common.model.TravelModel
+import hll.zpf.starttravel.common.database.entity.Travel
 
 class TravelItemFragment : Fragment() {
 
@@ -71,21 +71,21 @@ class TravelItemFragment : Fragment() {
                     }
 
                     //人数显示
-                    if(it.memberList.size > 0){
+                    if(it.memberList != null && it.memberList!!.isNotEmpty()){
                         view.findViewById<TextView>(R.id.travel_person_number_tv).visibility = View.VISIBLE
-                        view.findViewById<TextView>(R.id.travel_person_number_tv).text = "${it.memberList.size + 1}${getString(R.string.travel_006)}"
+                        view.findViewById<TextView>(R.id.travel_person_number_tv).text = "${it.memberList!!.size + 1}${getString(R.string.travel_006)}"
                     }else{
                         view.findViewById<TextView>(R.id.travel_person_number_tv).visibility = View.GONE
                     }
 
                     //钱的显示
-                    if(it.money > 0) {
+                    if(it.money != null && it.money!! > 0) {
                         view.findViewById<TextView>(R.id.travel_money_tv).visibility = View.VISIBLE
                         view.findViewById<TextView>(R.id.travel_money_label_tv).visibility = View.VISIBLE
                         var detailTotalMoney = 0f;
                         it.detailList?.let { details ->
                             for (detail in details) {
-                                detailTotalMoney += detail.money
+                                detailTotalMoney += detail.money ?: 0f
                             }
                         }
                         view.findViewById<TextView>(R.id.travel_money_tv).text =
@@ -97,7 +97,7 @@ class TravelItemFragment : Fragment() {
 
 
                     //图片设定
-                    it.imageBitmap?.let {bitmap ->
+                    it.getImageBitmap()?.let {bitmap ->
                         travelImage.setImageBitmap(bitmap)
                     }
 
