@@ -98,11 +98,9 @@ class HistoryFragment : Fragment(),View.OnClickListener {
         rootView.findViewById<Button>(R.id.setting_ok).setOnClickListener(this)
 
         historyListView = rootView.findViewById(R.id.travel_list_recycler)
-        val adapter = HistoryAdapter()
-        adapter.travelData = initData()
-        adapter.mContext = context
-        adapter.callback = {
-            HLogger.instance().e("listDialog",adapter.travelData[it].name ?: "")
+
+        val adapter = HistoryAdapter(context!!,initData()){
+            HLogger.instance().e("listDialog","$it")
         }
         historyListView.adapter = adapter
         historyListView.layoutManager = LinearLayoutManager(context)

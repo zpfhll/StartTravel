@@ -48,6 +48,11 @@ open class BaseActivity: AppCompatActivity() {
      */
     val TRAVEL_DETAIL = "travel_detail"
 
+    /**
+     * 添加明细页面(EventBus 消息)
+     */
+    val ADD_DETAIL = "add_detail"
+
     val CODE_FOR_WRITE_PERMISSION = 1
     val CODE_FOR_LOCATION_PERMISSION = 2
     val CODE_FOR_READ_PHONE_STATE_PERMISSION = 3

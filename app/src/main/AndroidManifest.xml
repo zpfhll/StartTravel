@@ -21,6 +21,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".page.AddDetailActivity">
+        </activity>
 
         <meta-data
                 android:name="com.amap.api.v2.apikey"

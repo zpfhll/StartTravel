@@ -12,23 +12,25 @@ import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.components.CRImageView
 import hll.zpf.starttravel.common.database.entity.Travel
 
-class HistoryAdapter: RecyclerView.Adapter<HistoryAdapter.HistoryViewHodler>() {
+class HistoryAdapter(context: Context, travelData: List<Travel>, callback: ((Int) -> Unit)): RecyclerView.Adapter<HistoryAdapter.HistoryViewHandler>() {
 
-    var travelData:List<Travel> = ArrayList()
-    var mContext:Context? = null
-    var callback:((Int) -> Unit)? = null
+    var mTravelData:List<Travel> = travelData
+    var mContext:Context = context
+    var mCallback:((Int) -> Unit) = callback
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): HistoryViewHodler {
+
+
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): HistoryViewHandler {
         val view = LayoutInflater.from(mContext).inflate(R.layout.history_item,p0,false)
-        return HistoryViewHodler(view)
+        return HistoryViewHandler(view)
     }
 
     override fun getItemCount(): Int {
-        return travelData.size
+        return mTravelData.size
     }
 
-    override fun onBindViewHolder(holder: HistoryViewHodler, position: Int) {
-        val history = travelData[position]
+    override fun onBindViewHolder(holder: HistoryViewHandler, position: Int) {
+        val history = mTravelData[position]
         holder.travelNameTv.text = history.name
         holder.travelMemoTv.text = history.memo
         val numberStr = mContext!!.getString(R.string.history_010)
@@ -37,13 +39,13 @@ class HistoryAdapter: RecyclerView.Adapter<HistoryAdapter.HistoryViewHodler>() {
         holder.travelMoneyTv.text = Utils.instance().transMoneyToString(history.money ?: 0f)
 
         holder.travelDetailBt.setOnClickListener {
-            callback?.let {
+            mCallback?.let {
                 it(position)
             }
         }
     }
 
-    inner class HistoryViewHodler(itemView:View): RecyclerView.ViewHolder(itemView){
+    inner class HistoryViewHandler(itemView:View): RecyclerView.ViewHolder(itemView){
          var travelNameTv:TextView = itemView.findViewById(R.id.travel_name_tv)
          var travelDateTv:TextView = itemView.findViewById(R.id.travel_date_tv)
          var travelMemoTv:TextView = itemView.findViewById(R.id.travel_memo_tv)

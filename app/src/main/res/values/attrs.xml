@@ -41,4 +41,16 @@
 		<attr name="switch_background_color" format="reference"/>
 		<attr name="switch_init_left" format="boolean"/>
 	</declare-styleable>
+
+	<declare-styleable name="Custom_checkbox_View">
+		<attr name="checkbox_image_width" format="dimension"/>
+		<attr name="checkbox_image_height" format="dimension"/>
+		<attr name="checked_image" format="reference"/>
+		<attr name="uncheck_image" format="reference"/>
+		<attr name="checkbox_text" format="string"/>
+		<attr name="checkbox_text_size" format="dimension"/>
+		<attr name="checkbox_text_color" format="color"/>
+		<attr name="text_image_padding" format="dimension"/>
+		<attr name="checked" format="boolean"/>
+	</declare-styleable>
 </resources>

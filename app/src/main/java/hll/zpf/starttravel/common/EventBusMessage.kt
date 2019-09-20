@@ -1,5 +1,6 @@
 package hll.zpf.starttravel.common
 
+import hll.zpf.starttravel.common.database.entity.Detail
 import hll.zpf.starttravel.common.enums.TravelTypeEnum
 import hll.zpf.starttravel.common.model.TravelModel
 
@@ -10,6 +11,8 @@ class EventBusMessage {
     var travelType: TravelTypeEnum = TravelTypeEnum.MONEY_TRAVEL
 
     var travel: TravelModel? = null
+
+    var detail: Detail? = null
 
     companion object{
         @Synchronized
