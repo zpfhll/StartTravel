@@ -76,13 +76,16 @@ class AddDetailActivity : BaseActivity() {
             val title = if(detail == null) getString(R.string.add_detail_001) else getString(R.string.add_detail_002)
             setTitle(
                 title,
-                false,
-                "",
+                true,
+                getString(R.string.add_detail_011),
                 R.drawable.back_button_background){
                 when(it.id){
                     R.id.left_button -> {//返回
                         finish()
                         baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
+                    }
+                    R.id.right_button -> {//添加
+
                     }
                 }
             }
