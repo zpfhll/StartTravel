@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/transparent"
+		android:id="@+id/root_view">
+
+	<hll.zpf.starttravel.common.components.CustomCheckboxView
+			android:layout_width="100dp"
+			android:layout_height="wrap_content"
+			app:checkbox_image_width="20dp"
+			app:checkbox_image_height="20dp"
+			app:checked_image="@mipmap/checkbox_checked_red"
+			app:uncheck_image="@mipmap/checkbox_red"
+			app:checkbox_text="name"
+			app:layout_constraintStart_toStartOf="parent"
+			android:layout_marginStart="24dp"
+			android:id="@+id/out_checkbox"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			android:layout_marginTop="16dp"
+			android:layout_marginBottom="16dp"/>
+	<TextView
+			android:layout_width="0dp"
+			android:layout_height="1dp"
+			android:id="@+id/textView33"
+			app:layout_constraintEnd_toEndOf="parent"
+			android:background="@color/light_red"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			android:layout_marginStart="16dp"
+			android:layout_marginEnd="16dp"/>
+	<TextView
+			android:text="@string/add_detail_004"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/font_size_s3"
+			android:textColor="@color/text_color"
+			android:id="@+id/textView34"
+			app:layout_constraintEnd_toEndOf="parent"
+			android:layout_marginEnd="24dp" app:layout_constraintTop_toTopOf="@+id/out_checkbox"
+			app:layout_constraintBottom_toBottomOf="@+id/out_checkbox"/>
+	<EditText
+			android:layout_width="120dp"
+			android:layout_height="30dp"
+			android:inputType="textPersonName"
+			android:background="@drawable/circle_round_edge"
+			android:gravity="right|center_vertical"
+			android:padding="3dp"
+			android:textColor="@color/red"
+			android:text="12455"
+			android:id="@+id/detail_member_money"
+			android:textSize="@dimen/font_size_s3"
+			app:layout_constraintEnd_toStartOf="@+id/textView34" android:layout_marginEnd="5dp"
+			app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

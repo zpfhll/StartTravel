@@ -116,6 +116,29 @@ class DataManager {
         return -1L
     }
 
+    /**
+     * 查询partner
+     */
+    fun getPartnerByTravelId(travelId : String?) : MutableList<Member>{
+        val members = mutableListOf<Member>()
+        if(travelId == null){
+            return members
+        }
+        val daoSession = BaseApplication.application?.travelDatabase?.memberDao()
+        daoSession?.let {
+            try {
+                val result = it.getMemberByTravelId(travelId)
+                if(result != null){
+                    members.addAll(result)
+                }
+                HLogger.instance().e("getPartnerByTravelId","${result?.size}")
+            }catch (e:Exception){
+                HLogger.instance().e("getPartnerByTravelId","get members fail : ${e.message}")
+            }
+        }
+        return members
+    }
+
 
 
 }

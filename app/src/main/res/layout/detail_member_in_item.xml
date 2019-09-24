@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/transparent"
+		android:id="@+id/root_view">
+
+	<hll.zpf.starttravel.common.components.CustomCheckboxView
+			android:layout_width="100dp"
+			android:layout_height="wrap_content"
+			app:checkbox_image_width="20dp"
+			app:checkbox_image_height="20dp"
+			app:checked_image="@mipmap/checkbox_checked_green"
+			app:uncheck_image="@mipmap/checkbox_green"
+			app:checkbox_text="name"
+			app:layout_constraintStart_toStartOf="parent"
+			android:layout_marginStart="24dp"
+			android:id="@+id/in_checkbox"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			android:layout_marginTop="16dp"
+			android:layout_marginBottom="16dp"/>
+	<TextView
+			android:layout_width="0dp"
+			android:layout_height="1dp"
+			android:id="@+id/textView33"
+			app:layout_constraintEnd_toEndOf="parent"
+			android:background="@color/unableColor"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			android:layout_marginStart="16dp"
+			android:layout_marginEnd="16dp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
