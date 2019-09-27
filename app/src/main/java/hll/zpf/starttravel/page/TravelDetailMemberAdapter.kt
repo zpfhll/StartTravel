@@ -29,7 +29,7 @@ class TravelDetailMemberAdapter(context: Context, memberData: List<DetailWithMem
     var mIsIn:Boolean = isIn
 
     private val EVENTBUS_MESSAGE_REFRESH = "REFRESH_ITEM_CHECKBOX"
-
+    private val EVENTBUS_MESSAGE_SWITCH_SPLIT = "SWITCH_SPLIT"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemberItemViewHandler {
         var rootId = if (mIsIn) R.layout.detail_member_in_item else R.layout.detail_member_out_item
@@ -51,6 +51,7 @@ class TravelDetailMemberAdapter(context: Context, memberData: List<DetailWithMem
             holder.outCheckBox.setText(member.memberName)
             holder.memberMoney.setText("${member.money}")
             holder.outCheckBox.check(member.isSelected)
+            holder.memberMoney.isEnabled = member.isSelected
         }
     }
 
@@ -60,10 +61,16 @@ class TravelDetailMemberAdapter(context: Context, memberData: List<DetailWithMem
         lateinit var outCheckBox:CustomCheckboxView
         lateinit var memberMoney:EditText
         var index:Int = 0
+        var isSplit = true
         init {
+            EventBus.getDefault().register(this)
             if (!isIn){
                 outCheckBox = itemView.findViewById(R.id.out_checkbox)
                 outCheckBox.checkCallback = {
+                    memberMoney.isEnabled = it && !isSplit
+                    if (!it){
+                        memberMoney.setText("0")
+                    }
                     mCheckCallback(index,isIn,it)
                 }
                 memberMoney = itemView.findViewById(R.id.detail_member_money)
@@ -89,9 +96,9 @@ class TravelDetailMemberAdapter(context: Context, memberData: List<DetailWithMem
                         if((!beforeText.equals(money) && beforeText.length <= money.length) || isTwo) {
                             memberMoney.setText(money)
                             memberMoney.setSelection(memberMoney.text.length)
-                            mEditCallback?.let {
-                                it(index,text.toFloat())
-                            }
+                        }
+                        mEditCallback?.let {
+                            it(index,text.toFloat())
                         }
 
                     }
@@ -126,16 +133,29 @@ class TravelDetailMemberAdapter(context: Context, memberData: List<DetailWithMem
                     }
 
                 }
-                EventBus.getDefault().register(this)
+
             }
         }
 
         @Subscribe
         fun changeCheck(message: EventBusMessage){
-            if(message.message.equals(EVENTBUS_MESSAGE_REFRESH)){
-                message.memberCheckIndex?.let {
-                    if(it != index && inCheckBox.isChecked){
-                        inCheckBox.check(false)
+            when(message.message){
+                EVENTBUS_MESSAGE_REFRESH -> {
+                    message.memberCheckIndex?.let {
+                        if(it != index && inCheckBox.isChecked){
+                            inCheckBox.check(false)
+                        }
+                    }
+                }
+                EVENTBUS_MESSAGE_SWITCH_SPLIT -> {
+                    isSplit = message.memberIsSplit
+                    if(isSplit){
+                        memberMoney.isEnabled = false
+                        if(outCheckBox.isChecked){
+                            memberMoney.setText(message.memberSplitMoney)
+                        }
+                    }else{
+                        memberMoney.isEnabled  = outCheckBox.isChecked
                     }
                 }
             }

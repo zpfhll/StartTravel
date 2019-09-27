@@ -85,15 +85,15 @@
     <string name="travel_detail_004">概要</string>
     <string name="travel_detail_005">金额</string>
 
-<!--    <string name="add_detail_001">追加明细</string>-->
-<!--    <string name="add_detail_002">编辑明细</string>-->
+    <string name="add_detail_001">是</string>
+    <string name="add_detail_002">否</string>
     <string name="add_detail_003">总金额</string>
     <string name="add_detail_004">元</string>
     <string name="add_detail_005">支出</string>
     <string name="add_detail_006">汇入</string>
     <string name="add_detail_007">汇入人</string>
     <string name="add_detail_008">用途</string>
-    <string name="add_detail_009">参与人员</string>
+    <string name="add_detail_009">参与人员均分</string>
     <string name="add_detail_010">例：游乐园门票</string>
     <string name="add_detail_011">提交</string>
     <string name="add_detail_012">(还有%1$s元未分配)</string>

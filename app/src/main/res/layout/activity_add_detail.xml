@@ -104,8 +104,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/out_checkbox"
                 app:layout_constraintStart_toEndOf="@+id/out_checkbox"
                 app:layout_constraintTop_toTopOf="@+id/out_checkbox"
-                app:uncheck_image="@mipmap/checkbox_green"></hll.zpf.starttravel.common.components.CustomCheckboxView>
-
+                app:uncheck_image="@mipmap/checkbox_green"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/in_detail_platform"
                 android:layout_width="0dp"
@@ -113,7 +112,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="16dp"
-                android:visibility="invisible"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -136,7 +135,7 @@
                     android:id="@+id/detail_in_member_list"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:background="@drawable/edit_background"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -188,7 +187,7 @@
                     android:id="@+id/textView32"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="24dp"
                     android:text="@string/add_detail_009"
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/font_size_s3"
@@ -196,23 +195,34 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/detail_memo" />
 
+                <hll.zpf.starttravel.common.components.CustomSwitchView
+                    android:id="@+id/split_type_switch"
+                    android:layout_width="70dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView32"
+                    app:layout_constraintStart_toEndOf="@+id/textView32"
+                    app:layout_constraintTop_toTopOf="@+id/textView32"
+                    app:left_text="@string/add_detail_001"
+                    app:right_text="@string/add_detail_002" />
+
                 <TextView
                     android:id="@+id/not_assign_money"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="TextView"
-                    android:textSize="@dimen/font_size_s4"
+                    android:text="123123"
                     android:textColor="@color/red"
+                    android:textSize="@dimen/font_size_s4"
                     app:layout_constraintBottom_toBottomOf="@+id/textView32"
-                    app:layout_constraintStart_toEndOf="@+id/textView32"
+                    app:layout_constraintStart_toEndOf="@+id/split_type_switch"
                     app:layout_constraintTop_toTopOf="@+id/textView32" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/detail_out_member_list"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:background="@drawable/edit_background"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import hll.zpf.starttravel.BuildConfig
@@ -27,9 +28,12 @@ class AddDetailActivity : BaseActivity() {
     private lateinit var outDetailMembers:MutableList<DetailWithMember>
     private lateinit var mInMemberAdapter:TravelDetailMemberAdapter
 
+    private val EVENTBUS_MESSAGE_SWITCH_SPLIT = "SWITCH_SPLIT"
+
     private var inputMoney:Float = 0f
 
     var notAssignMoney:Float = 0f
+    var assignMoney:Float = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +51,13 @@ class AddDetailActivity : BaseActivity() {
                 changeMemberPlatform(false)
             }
         }
+
+        split_type_switch.switchAction = {
+            not_assign_money.visibility = if(it) View.GONE else View.VISIBLE
+            switchSplit(it)
+        }
+
+        not_assign_money.visibility = if(split_type_switch.isLeft) View.GONE else View.VISIBLE
 
         detail_money.addTextChangedListener(object : TextWatcher {
             var beforeText = ""
@@ -68,9 +79,17 @@ class AddDetailActivity : BaseActivity() {
                 HLogger.instance().e("afterTextChanged beforeText",beforeText)
                 if((!beforeText.equals(money) && beforeText.length <= money.length) || isTwo) {
                     detail_money.setText(money)
-                    inputMoney = text.toFloat()
                     detail_money.setSelection(detail_money.text.length)
                 }
+                inputMoney = text.toFloat()
+
+                switchSplit(split_type_switch.isLeft)
+
+                notAssignMoney = inputMoney - assignMoney
+                val notAssignStr = Utils.instance().transMoneyToString(notAssignMoney)
+                not_assign_money.text =
+                    String.format(getString(R.string.add_detail_012),notAssignStr)
+                detail_money.requestFocus()
             }
 
             override fun beforeTextChanged(
@@ -91,6 +110,23 @@ class AddDetailActivity : BaseActivity() {
             ) {
             }
         })
+    }
+
+    private fun switchSplit(isSplit:Boolean){
+        var checkedNum = 0
+
+        for (member in outDetailMembers){
+            checkedNum = if (member.isSelected) checkedNum + 1 else checkedNum
+        }
+        if (checkedNum == 0){
+            return
+        }
+
+        val eventBusMessage = EventBusMessage()
+        eventBusMessage.message = EVENTBUS_MESSAGE_SWITCH_SPLIT
+        eventBusMessage.memberIsSplit = isSplit
+        eventBusMessage.memberSplitMoney = Utils.instance().transMoneyToString(inputMoney/checkedNum)
+        EventBus.getDefault().post(eventBusMessage)
     }
 
     @Subscribe(threadMode = org.greenrobot.eventbus.ThreadMode.MAIN, sticky = true)
@@ -179,11 +215,20 @@ class AddDetailActivity : BaseActivity() {
                 }
             }else{
                 outDetailMembers[position].isSelected = isChecked
+                switchSplit(split_type_switch.isLeft)
             }
     }
 
     private fun memberSetMoney(position:Int,money:Float){
         outDetailMembers[position].money = money
+        assignMoney = 0f
+        for (detailMember in outDetailMembers){
+            assignMoney += detailMember.money
+        }
+        notAssignMoney = inputMoney - assignMoney
+        val notAssignStr = Utils.instance().transMoneyToString(notAssignMoney)
+        not_assign_money.text =
+            String.format(getString(R.string.add_detail_012),notAssignStr)
     }
 
 

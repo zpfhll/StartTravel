@@ -16,6 +16,10 @@ class EventBusMessage {
 
     var memberCheckIndex:Int? = 0
 
+    var memberIsSplit:Boolean = true
+
+    var memberSplitMoney:String = "0"
+
     companion object{
         @Synchronized
         fun instance(message:String):EventBusMessage{
