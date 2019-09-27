@@ -10,6 +10,8 @@ import java.lang.Exception
 
 class DataManager {
 
+    //-------------  user -------------
+
     fun insertUser(user: User):Long{
         val daoSession = BaseApplication.application?.travelDatabase?.userDao()
         daoSession?.let {
@@ -40,6 +42,7 @@ class DataManager {
         return result
     }
 
+    //-------------  travel -------------
 
     /**
      * 获取未完成的旅行
@@ -89,6 +92,9 @@ class DataManager {
         }
         return -1L
     }
+
+
+    //-------------  member -------------
 
     /**
      * 批量插入partner

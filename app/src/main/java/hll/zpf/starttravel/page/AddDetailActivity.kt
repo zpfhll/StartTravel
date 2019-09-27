@@ -1,22 +1,21 @@
 package hll.zpf.starttravel.page
 
-import android.animation.Animator
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.os.Bundle
-import android.view.View
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import hll.zpf.starttravel.BuildConfig
 import hll.zpf.starttravel.R
 import hll.zpf.starttravel.base.BaseActivity
 import hll.zpf.starttravel.common.EventBusMessage
 import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.database.DataManager
-import hll.zpf.starttravel.common.database.entity.Member
+import hll.zpf.starttravel.common.database.entity.DetailWithMember
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
 import kotlinx.android.synthetic.main.activity_add_detail.*
-import kotlinx.android.synthetic.main.activity_travel_detail.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
@@ -24,7 +23,13 @@ import org.greenrobot.eventbus.Subscribe
 
 class AddDetailActivity : BaseActivity() {
     private lateinit var dataManager:DataManager
-    private lateinit var members:MutableList<Member>
+    private lateinit var inDetailMembers:MutableList<DetailWithMember>
+    private lateinit var outDetailMembers:MutableList<DetailWithMember>
+    private lateinit var mInMemberAdapter:TravelDetailMemberAdapter
+
+    private var inputMoney:Float = 0f
+
+    var notAssignMoney:Float = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +47,50 @@ class AddDetailActivity : BaseActivity() {
                 changeMemberPlatform(false)
             }
         }
+
+        detail_money.addTextChangedListener(object : TextWatcher {
+            var beforeText = ""
+            override fun afterTextChanged(s: Editable?) {
+                var text = s.toString().replace(",","")
+                var isTwo = false
+                if(text.isEmpty()){
+                    text = "0"
+                }else if(text.split(".").size > 1 && text.split(".")[1].length > 1){
+                    text = text.substring(0,text.length - 1)
+                    isTwo = true
+                }
+                if(text.toFloat() > BuildConfig.MAX_MONEY){
+                    text = beforeText.replace(",","")
+                    isTwo = true
+                }
+                val money = Utils.instance().transMoneyToString(text.toFloat())
+                HLogger.instance().e("afterTextChanged",money)
+                HLogger.instance().e("afterTextChanged beforeText",beforeText)
+                if((!beforeText.equals(money) && beforeText.length <= money.length) || isTwo) {
+                    detail_money.setText(money)
+                    inputMoney = text.toFloat()
+                    detail_money.setSelection(detail_money.text.length)
+                }
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+                beforeText = s.toString()
+                HLogger.instance().e("beforeTextChanged",beforeText)
+            }
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+            }
+        })
     }
 
     @Subscribe(threadMode = org.greenrobot.eventbus.ThreadMode.MAIN, sticky = true)
@@ -50,9 +99,6 @@ class AddDetailActivity : BaseActivity() {
             val detail = message.detail
             val travel = message.travel
             var isIn = false
-            travel?.let {
-                travel_name.text = it.getTravelData().value!!.name
-            }
             if(detail == null){
                 isIn = false
                 in_checkbox.check(false)
@@ -73,7 +119,7 @@ class AddDetailActivity : BaseActivity() {
             }
 
             initPlatform(isIn,travel?.getTravelData()?.value?.id)
-            val title = if(detail == null) getString(R.string.add_detail_001) else getString(R.string.add_detail_002)
+            val title = travel?.getTravelData()?.value?.name ?: ""
             setTitle(
                 title,
                 true,
@@ -91,7 +137,6 @@ class AddDetailActivity : BaseActivity() {
             }
         }
     }
-
 
     private fun changeMemberPlatform(isIn:Boolean){
         val moveDistance = Utils.instance().getScreenWidth() - Utils.instance().DPToPX(24f)
@@ -116,24 +161,50 @@ class AddDetailActivity : BaseActivity() {
         objectAnimatorIn.duration = 500
         objectAnimatorIn.start()
 
-
     }
 
-    private fun memberCheck(isIn:Boolean,position:Int){
+    private fun memberCheck(position:Int,isIn:Boolean,isChecked:Boolean){
+            if(isIn){
+                for (i in 0 until inDetailMembers.size) {
+                    if (i == position) {
+                        inDetailMembers[position].isSelected = isChecked
+                        if(isChecked){
+                            inDetailMembers[position].money = if(detail_money.text.isEmpty()) 0f else detail_money.text.toString().replace(",","").toFloat()
+                        }
+                    }else {
+                        if (isChecked) {
+                            inDetailMembers[position].isSelected = !isChecked
+                        }
+                    }
+                }
+            }else{
+                outDetailMembers[position].isSelected = isChecked
+            }
+    }
 
+    private fun memberSetMoney(position:Int,money:Float){
+        outDetailMembers[position].money = money
     }
 
 
     private fun initPlatform(isIn:Boolean,travelId:String?) {
         dataManager = DataManager()
-        members = mutableListOf()
-        val self = Member("","自己",0f,null,null)
-        members.add(0,self)
-        var mInMemberAdapter = TravelDetailMemberAdapter(this,members,true){
-            memberCheck(true,it)
+        inDetailMembers = mutableListOf()
+        outDetailMembers = mutableListOf()
+        val self = DetailWithMember.createDetailWithMember()
+        self.memberId = ""
+        self.memberName = "自己"
+        self.travelId = travelId ?: ""
+        inDetailMembers.add(0,self)
+        outDetailMembers.add(0,self)
+        mInMemberAdapter = TravelDetailMemberAdapter(this,inDetailMembers,true){ index, mIsIn, isChecked ->
+            memberCheck(index,mIsIn,isChecked)
         }
-        var mOutMemberAdapter = TravelDetailMemberAdapter(this,members,false){
-            memberCheck(false,it)
+        val mOutMemberAdapter = TravelDetailMemberAdapter(this,outDetailMembers,false){ index, mIsIn, isChecked ->
+            memberCheck(index,mIsIn,isChecked)
+        }
+        mOutMemberAdapter.mEditCallback = {index,money ->
+            memberSetMoney(index,money)
         }
         detail_out_member_list.adapter = mOutMemberAdapter
         detail_in_member_list.adapter = mInMemberAdapter
@@ -161,16 +232,23 @@ class AddDetailActivity : BaseActivity() {
             objectAnimator.start()
         }
         GlobalScope.launch {
-            val datas = dataManager.getPartnerByTravelId(travelId)
-            members.addAll(datas)
+            val members = dataManager.getPartnerByTravelId(travelId)
+            for (member in members){
+                val detailMember = DetailWithMember.createDetailWithMember()
+                detailMember.memberId = member.id
+                detailMember.memberName = member.name ?: ""
+                detailMember.travelId = travelId ?: ""
+                inDetailMembers.add(detailMember)
+                outDetailMembers.add(detailMember)
+            }
 
             val inLayout = detail_in_member_list.layoutParams as ConstraintLayout.LayoutParams
-            inLayout.height = Utils.instance().DPToPX((20f + 1f + 16f + 16f + 2f) * members.size).toInt()
+            inLayout.height = Utils.instance().DPToPX((20f + 1f + 16f + 16f + 2f) * inDetailMembers.size).toInt()
             inLayout.width = Utils.instance().getScreenWidth() - Utils.instance().DPToPX(24 * 2f).toInt()
             detail_in_member_list.layoutParams = inLayout
 
             val outLayout = detail_out_member_list.layoutParams as ConstraintLayout.LayoutParams
-            outLayout.height = Utils.instance().DPToPX((20f + 1f + 16f + 16f + 2f ) * members.size).toInt()
+            outLayout.height = Utils.instance().DPToPX((20f + 1f + 16f + 16f + 2f ) * outDetailMembers.size).toInt()
             outLayout.width = Utils.instance().getScreenWidth() - Utils.instance().DPToPX(24 * 2f).toInt()
             detail_out_member_list.layoutParams = outLayout
 
@@ -179,9 +257,10 @@ class AddDetailActivity : BaseActivity() {
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
+        outDetailMembers.clear()
+        inDetailMembers.clear()
         EventBus.getDefault().unregister(this)
     }
 }

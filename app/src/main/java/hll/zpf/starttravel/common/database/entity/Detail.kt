@@ -3,6 +3,7 @@ package hll.zpf.starttravel.common.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import hll.zpf.starttravel.common.Utils
 
 @Entity(tableName = "detail")
 data class Detail(
@@ -21,4 +22,16 @@ data class Detail(
     var money: Float?,
     @ColumnInfo(name = "travel_id")
     var travelId: String
-)
+){
+
+
+
+    companion object {
+        fun createDetail():Detail{
+            val dateString = Utils.instance().getDateStringByFormat("", null)
+            val detailId = "D$dateString"
+            return Detail(detailId,"",dateString,1,0f,"")
+        }
+    }
+}
+

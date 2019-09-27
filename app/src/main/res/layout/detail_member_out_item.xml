@@ -43,18 +43,21 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			android:layout_marginEnd="24dp" app:layout_constraintTop_toTopOf="@+id/out_checkbox"
 			app:layout_constraintBottom_toBottomOf="@+id/out_checkbox"/>
+
 	<EditText
-			android:layout_width="120dp"
-			android:layout_height="30dp"
-			android:inputType="textPersonName"
-			android:background="@drawable/circle_round_edge"
-			android:gravity="right|center_vertical"
-			android:paddingRight="10dp"
-			android:textColor="@color/red"
-			android:id="@+id/detail_member_money"
-			android:textSize="@dimen/font_size_s3"
-			app:layout_constraintEnd_toStartOf="@+id/textView34" android:layout_marginEnd="5dp"
-			app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
+		android:id="@+id/detail_member_money"
+		android:layout_width="120dp"
+		android:layout_height="30dp"
+		android:layout_marginEnd="5dp"
+		android:background="@drawable/circle_round_edge"
+		android:gravity="right|center_vertical"
+		android:inputType="number|numberDecimal"
+		android:paddingRight="10dp"
+		android:textColor="@color/red"
+		android:textSize="@dimen/font_size_s3"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toStartOf="@+id/textView34"
+		app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

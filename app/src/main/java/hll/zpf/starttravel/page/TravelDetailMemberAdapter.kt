@@ -1,22 +1,34 @@
 package hll.zpf.starttravel.page
 
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
+import hll.zpf.starttravel.BuildConfig
 import hll.zpf.starttravel.R
+import hll.zpf.starttravel.common.EventBusMessage
+import hll.zpf.starttravel.common.HLogger
+import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.components.CustomCheckboxView
+import hll.zpf.starttravel.common.database.entity.DetailWithMember
 import hll.zpf.starttravel.common.database.entity.Member
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
-class TravelDetailMemberAdapter(context: Context, memberData: List<Member>,isIn:Boolean,callback: ((Int) -> Unit)) :
+class TravelDetailMemberAdapter(context: Context, memberData: List<DetailWithMember>,isIn:Boolean,checkCallback: ((Int,Boolean,Boolean) -> Unit)) :
     RecyclerView.Adapter<TravelDetailMemberAdapter.MemberItemViewHandler>() {
 
-    var mMemberData:List<Member> = memberData
+    var mMemberData:List<DetailWithMember> = memberData
     var mContext:Context = context
-    var mCallback:((Int) -> Unit) = callback
+    var mCheckCallback:((Int,Boolean,Boolean) -> Unit) = checkCallback
+    var mEditCallback:((Int,Float) -> Unit)? = null
     var mIsIn:Boolean = isIn
+
+    private val EVENTBUS_MESSAGE_REFRESH = "REFRESH_ITEM_CHECKBOX"
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemberItemViewHandler {
@@ -31,10 +43,14 @@ class TravelDetailMemberAdapter(context: Context, memberData: List<Member>,isIn:
 
     override fun onBindViewHolder(holder: MemberItemViewHandler, position: Int) {
         val member = mMemberData[position]
+        holder.index = position
         if (mIsIn){
-            holder.inCheckBox.setText(member.name!!)
+            holder.inCheckBox.setText(member.memberName)
+            holder.inCheckBox.check(member.isSelected)
         }else{
-            holder.outCheckBox.setText(member.name!!)
+            holder.outCheckBox.setText(member.memberName)
+            holder.memberMoney.setText("${member.money}")
+            holder.outCheckBox.check(member.isSelected)
         }
     }
 
@@ -43,15 +59,86 @@ class TravelDetailMemberAdapter(context: Context, memberData: List<Member>,isIn:
         lateinit  var inCheckBox: CustomCheckboxView
         lateinit var outCheckBox:CustomCheckboxView
         lateinit var memberMoney:EditText
-
+        var index:Int = 0
         init {
             if (!isIn){
                 outCheckBox = itemView.findViewById(R.id.out_checkbox)
+                outCheckBox.checkCallback = {
+                    mCheckCallback(index,isIn,it)
+                }
                 memberMoney = itemView.findViewById(R.id.detail_member_money)
+                memberMoney.addTextChangedListener(object : TextWatcher{
+                    var beforeText = ""
+                    override fun afterTextChanged(s: Editable?) {
+
+                        var text = s.toString().replace(",","")
+                        var isTwo = false
+                        if(text.isEmpty()){
+                            text = "0"
+                        }else if(text.split(".").size > 1 && text.split(".")[1].length > 1){
+                            text = text.substring(0,text.length - 1)
+                            isTwo = true
+                        }
+                        if(text.toFloat() > BuildConfig.MAX_MONEY){
+                            text = beforeText.replace(",","")
+                            isTwo = true
+                        }
+                        val money = Utils.instance().transMoneyToString(text.toFloat())
+                        HLogger.instance().e("afterTextChanged",money)
+                        HLogger.instance().e("afterTextChanged beforeText",beforeText)
+                        if((!beforeText.equals(money) && beforeText.length <= money.length) || isTwo) {
+                            memberMoney.setText(money)
+                            memberMoney.setSelection(memberMoney.text.length)
+                            mEditCallback?.let {
+                                it(index,text.toFloat())
+                            }
+                        }
+
+                    }
+
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                        beforeText = s.toString()
+                        HLogger.instance().e("beforeTextChanged",beforeText)
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                    }
+                })
             }else{
                 inCheckBox = itemView.findViewById(R.id.in_checkbox)
+                inCheckBox.checkCallback = {
+                    mCheckCallback(index,mIsIn,it)
+                    if(it){
+                        val message = EventBusMessage()
+                        message.message = EVENTBUS_MESSAGE_REFRESH
+                        message.memberCheckIndex = index
+                        EventBus.getDefault().post(message)
+                    }
+
+                }
+                EventBus.getDefault().register(this)
             }
         }
 
+        @Subscribe
+        fun changeCheck(message: EventBusMessage){
+            if(message.message.equals(EVENTBUS_MESSAGE_REFRESH)){
+                message.memberCheckIndex?.let {
+                    if(it != index && inCheckBox.isChecked){
+                        inCheckBox.check(false)
+                    }
+                }
+            }
+        }
     }
 }

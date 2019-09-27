@@ -21,30 +21,17 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/travel_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="旅途名称"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/font_size_s0"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
                 android:id="@+id/textView29"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="@string/add_detail_003"
                 android:textColor="@color/title_color"
                 android:textSize="@dimen/font_size_s3"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/travel_name" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/money_background_view"
@@ -126,7 +113,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="16dp"
-                android:visibility="visible"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -155,6 +142,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView35" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -185,7 +173,7 @@
                 <EditText
                     android:id="@+id/detail_memo"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="45dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/edit_background"
                     android:hint="@string/add_detail_010"
@@ -207,6 +195,18 @@
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/detail_memo" />
+
+                <TextView
+                    android:id="@+id/not_assign_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="TextView"
+                    android:textSize="@dimen/font_size_s4"
+                    android:textColor="@color/red"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView32"
+                    app:layout_constraintStart_toEndOf="@+id/textView32"
+                    app:layout_constraintTop_toTopOf="@+id/textView32" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/detail_out_member_list"

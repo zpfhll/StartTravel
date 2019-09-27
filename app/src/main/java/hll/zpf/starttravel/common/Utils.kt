@@ -91,7 +91,11 @@ class Utils {
      */
     fun transMoneyToString(money:Float) : String{
         val df = DecimalFormat("###,##0.0")
-        return df.format(money)
+        var result = df.format(money)
+        if(result.split(".")[1].equals("0")){
+            result = result.split(".")[0]
+        }
+        return result
     }
 
     /**
