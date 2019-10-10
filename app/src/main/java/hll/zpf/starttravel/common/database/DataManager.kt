@@ -3,9 +3,7 @@ package hll.zpf.starttravel.common.database
 import hll.zpf.starttravel.base.BaseApplication
 import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.UserData
-import hll.zpf.starttravel.common.database.entity.Member
-import hll.zpf.starttravel.common.database.entity.Travel
-import hll.zpf.starttravel.common.database.entity.User
+import hll.zpf.starttravel.common.database.entity.*
 import java.lang.Exception
 
 class DataManager {
@@ -143,6 +141,58 @@ class DataManager {
             }
         }
         return members
+    }
+
+    //-------------  DetailWithMember -------------
+    /**
+     * 明细人员关联插入partner
+     */
+    fun insertDetailWithMember(detailWithMembers: List<DetailWithMember>):Long{
+        if(detailWithMembers.isEmpty()){
+            return 0
+        }
+        val daoSession = BaseApplication.application?.travelDatabase?.detailWithMemberDao()
+        daoSession?.let {
+            var result = -1L
+            try {
+                result = if(detailWithMembers.size > 1) {
+                    it.insertDM(*detailWithMembers.toTypedArray())[0]
+                }else{
+                    it.insertDM(detailWithMembers[0])[0]
+                }
+                HLogger.instance().e("insertDetailWithMembers","$result")
+            }catch (e:Exception){
+                HLogger.instance().e("insertDetailWithMembers","insert DetailWithMembers fail : ${e.message}")
+            }
+            return result
+        }
+        return -1L
+    }
+    //-------------  Detail -------------
+    /**
+     * 明细插入partner
+     */
+    fun insertDetail(details: List<Detail>):Long{
+        if(details.isEmpty()){
+            return 0
+        }
+        val daoSession = BaseApplication.application?.travelDatabase?.detailDao()
+        daoSession?.let {
+            var result = -1L
+            try {
+
+                result = if(details.size > 1) {
+                    it.insertDetail(*details.toTypedArray())[0]
+                }else{
+                    it.insertDetail(details[0])[0]
+                }
+                HLogger.instance().e("insertDetails","$result")
+            }catch (e:Exception){
+                HLogger.instance().e("insertDetails","insert details fail : ${e.message}")
+            }
+            return result
+        }
+        return -1L
     }
 
 

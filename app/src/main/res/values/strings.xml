@@ -97,7 +97,13 @@
     <string name="add_detail_010">例：游乐园门票</string>
     <string name="add_detail_011">提交</string>
     <string name="add_detail_012">(还有%1$s元未分配)</string>
-
+    <string name="add_detail_013">自己</string>
+    <string name="add_detail_E01"> 请合理分配金额给你的伙伴！</string>
+    <string name="add_detail_E02"> 请选择汇入人！</string>
+    <string name="add_detail_E03"> 请输入总金额！</string>
+    <string name="add_detail_E04"> 请输入花销的用途！</string>
+    <string name="add_detail_E05"> 明细添加失败，请重试！</string>
+    <string name="add_detail_E06"> 明细添加成功！</string>
 
     <string name="list_dialog_001">取消</string>
 

@@ -45,36 +45,36 @@ class TravelDetailMemberAdapter(context: Context, memberData: List<DetailWithMem
         val member = mMemberData[position]
         holder.index = position
         if (mIsIn){
-            holder.inCheckBox.setText(member.memberName)
-            holder.inCheckBox.check(member.isSelected)
+            holder.inCheckBox?.setText(member.memberName)
+            holder.inCheckBox?.check(member.isSelected)
         }else{
-            holder.outCheckBox.setText(member.memberName)
-            holder.memberMoney.setText("${member.money}")
-            holder.outCheckBox.check(member.isSelected)
-            holder.memberMoney.isEnabled = member.isSelected
+            holder.outCheckBox?.setText(member.memberName)
+            holder.memberMoney?.setText("${member.money}")
+            holder.outCheckBox?.check(member.isSelected)
+            holder.memberMoney?.isEnabled = member.isSelected
         }
     }
 
     inner class MemberItemViewHandler(itemView: View,isIn: Boolean): RecyclerView.ViewHolder(itemView){
 
-        lateinit  var inCheckBox: CustomCheckboxView
-        lateinit var outCheckBox:CustomCheckboxView
-        lateinit var memberMoney:EditText
+        var inCheckBox: CustomCheckboxView? = null
+        var outCheckBox:CustomCheckboxView? = null
+        var memberMoney:EditText? = null
         var index:Int = 0
         var isSplit = true
         init {
             EventBus.getDefault().register(this)
             if (!isIn){
                 outCheckBox = itemView.findViewById(R.id.out_checkbox)
-                outCheckBox.checkCallback = {
-                    memberMoney.isEnabled = it && !isSplit
+                outCheckBox?.checkCallback = {
+                    memberMoney?.isEnabled = it && !isSplit
                     if (!it){
-                        memberMoney.setText("0")
+                        memberMoney?.setText("0")
                     }
                     mCheckCallback(index,isIn,it)
                 }
                 memberMoney = itemView.findViewById(R.id.detail_member_money)
-                memberMoney.addTextChangedListener(object : TextWatcher{
+                memberMoney?.addTextChangedListener(object : TextWatcher{
                     var beforeText = ""
                     override fun afterTextChanged(s: Editable?) {
 
@@ -94,8 +94,8 @@ class TravelDetailMemberAdapter(context: Context, memberData: List<DetailWithMem
                         HLogger.instance().e("afterTextChanged",money)
                         HLogger.instance().e("afterTextChanged beforeText",beforeText)
                         if((!beforeText.equals(money) && beforeText.length <= money.length) || isTwo) {
-                            memberMoney.setText(money)
-                            memberMoney.setSelection(memberMoney.text.length)
+                            memberMoney?.setText(money)
+                            memberMoney?.setSelection(memberMoney?.text?.length ?: 0)
                         }
                         mEditCallback?.let {
                             it(index,text.toFloat())
@@ -123,7 +123,7 @@ class TravelDetailMemberAdapter(context: Context, memberData: List<DetailWithMem
                 })
             }else{
                 inCheckBox = itemView.findViewById(R.id.in_checkbox)
-                inCheckBox.checkCallback = {
+                inCheckBox?.checkCallback = {
                     mCheckCallback(index,mIsIn,it)
                     if(it){
                         val message = EventBusMessage()
@@ -142,20 +142,18 @@ class TravelDetailMemberAdapter(context: Context, memberData: List<DetailWithMem
             when(message.message){
                 EVENTBUS_MESSAGE_REFRESH -> {
                     message.memberCheckIndex?.let {
-                        if(it != index && inCheckBox.isChecked){
-                            inCheckBox.check(false)
+                        if(it != index && inCheckBox?.isChecked == true){
+                            inCheckBox?.check(false)
                         }
                     }
                 }
                 EVENTBUS_MESSAGE_SWITCH_SPLIT -> {
                     isSplit = message.memberIsSplit
                     if(isSplit){
-                        memberMoney.isEnabled = false
-                        if(outCheckBox.isChecked){
-                            memberMoney.setText(message.memberSplitMoney)
-                        }
+                        memberMoney?.isEnabled = false
+                        if(outCheckBox?.isChecked == true) memberMoney?.setText(message.memberSplitMoney)
                     }else{
-                        memberMoney.isEnabled  = outCheckBox.isChecked
+                        memberMoney?.isEnabled  = outCheckBox?.isChecked ?: false
                     }
                 }
             }

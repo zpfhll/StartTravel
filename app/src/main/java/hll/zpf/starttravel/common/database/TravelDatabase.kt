@@ -12,4 +12,5 @@ abstract  class TravelDatabase:RoomDatabase() {
     abstract fun travelDao(): TravelDao
     abstract fun memberDao(): MemberDao
     abstract fun stepDao(): StepDao
+    abstract fun detailWithMemberDao(): DetailWithMemberDao
 }

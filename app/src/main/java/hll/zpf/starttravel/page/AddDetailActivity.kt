@@ -2,9 +2,11 @@ package hll.zpf.starttravel.page
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.ProgressBar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import hll.zpf.starttravel.BuildConfig
@@ -14,6 +16,7 @@ import hll.zpf.starttravel.common.EventBusMessage
 import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.database.DataManager
+import hll.zpf.starttravel.common.database.entity.Detail
 import hll.zpf.starttravel.common.database.entity.DetailWithMember
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
 import kotlinx.android.synthetic.main.activity_add_detail.*
@@ -27,6 +30,7 @@ class AddDetailActivity : BaseActivity() {
     private lateinit var inDetailMembers:MutableList<DetailWithMember>
     private lateinit var outDetailMembers:MutableList<DetailWithMember>
     private lateinit var mInMemberAdapter:TravelDetailMemberAdapter
+    private lateinit var detail:Detail
 
     private val EVENTBUS_MESSAGE_SWITCH_SPLIT = "SWITCH_SPLIT"
 
@@ -82,7 +86,7 @@ class AddDetailActivity : BaseActivity() {
                     detail_money.setSelection(detail_money.text.length)
                 }
                 inputMoney = text.toFloat()
-
+                detail.money = inputMoney
                 switchSplit(split_type_switch.isLeft)
 
                 notAssignMoney = inputMoney - assignMoney
@@ -109,6 +113,14 @@ class AddDetailActivity : BaseActivity() {
                 count: Int
             ) {
             }
+        })
+
+        detail_memo.addTextChangedListener(object:TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                detail.memo = detail_memo.text.toString()
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
         })
     }
 
@@ -167,11 +179,84 @@ class AddDetailActivity : BaseActivity() {
                         baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
                     }
                     R.id.right_button -> {//添加
-
+                        commit()
                     }
                 }
             }
         }
+    }
+
+    private fun commit(){
+
+        if(detail_money.text.isEmpty() || detail_money.text.toString().equals("0")){
+            showMessageAlertDialog("",getString(R.string.add_detail_E03))
+            return
+        }else if(!in_checkbox.isChecked && detail_memo.text.isEmpty()){
+            showMessageAlertDialog("",getString(R.string.add_detail_E04))
+            return
+        }
+
+        val detailWithMembers = mutableListOf<DetailWithMember>()
+        if(in_checkbox.isChecked){
+            var isChecked = false
+            detail.type = 0
+            for (member in inDetailMembers){
+                if (member.isSelected){
+                    isChecked = true
+                    detail.memo = member.memberName
+                    detailWithMembers.add(member)
+                }
+            }
+            if(!isChecked){
+                showMessageAlertDialog("",getString(R.string.add_detail_E02))
+                return
+            }
+        }else{
+            var isChecked = false
+            detail.type = 1
+            for (member in outDetailMembers){
+                if (member.isSelected){
+                    isChecked = true
+                    detailWithMembers.add(member)
+                }
+            }
+            if(!split_type_switch.isLeft && notAssignMoney != 0f){
+                showMessageAlertDialog("",getString(R.string.add_detail_E01))
+                return
+            }else if (split_type_switch.isLeft){
+                if(!isChecked){
+                    showMessageAlertDialog("",getString(R.string.add_detail_E01))
+                    return
+                }
+            }
+        }
+        val progressBar = ProgressBar(this)
+        showProgressBar(progressBar)
+        val handler = Handler{
+            closeProgressBar(progressBar)
+            if(it.what > -1){
+                showMessageAlertDialog("",getString(R.string.add_detail_E06)){_,_ ->
+                    finish()
+                    baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
+                }
+            }else{
+                showMessageAlertDialog("",getString(R.string.add_detail_E05))
+            }
+            true
+        }
+        GlobalScope.launch {
+           var result = dataManager.insertDetail(listOf(detail))
+            if(result > -1){
+                result = dataManager.insertDetailWithMember(detailWithMembers)
+            }
+            if(result < 0){
+                handler.sendEmptyMessage(-1)
+            }else{
+                handler.sendEmptyMessage(0)
+            }
+        }
+
+
     }
 
     private fun changeMemberPlatform(isIn:Boolean){
@@ -209,7 +294,7 @@ class AddDetailActivity : BaseActivity() {
                         }
                     }else {
                         if (isChecked) {
-                            inDetailMembers[position].isSelected = !isChecked
+                            inDetailMembers[i].isSelected = !isChecked
                         }
                     }
                 }
@@ -234,14 +319,17 @@ class AddDetailActivity : BaseActivity() {
 
     private fun initPlatform(isIn:Boolean,travelId:String?) {
         dataManager = DataManager()
+        detail  = Detail.createDetail()
+        detail.travelId = travelId ?: ""
         inDetailMembers = mutableListOf()
         outDetailMembers = mutableListOf()
         val self = DetailWithMember.createDetailWithMember()
         self.memberId = ""
-        self.memberName = "自己"
+        self.memberName = getString(R.string.add_detail_013)
         self.travelId = travelId ?: ""
+        self.detailId = detail.id
         inDetailMembers.add(0,self)
-        outDetailMembers.add(0,self)
+        outDetailMembers.add(0,self.copy())
         mInMemberAdapter = TravelDetailMemberAdapter(this,inDetailMembers,true){ index, mIsIn, isChecked ->
             memberCheck(index,mIsIn,isChecked)
         }
@@ -283,8 +371,10 @@ class AddDetailActivity : BaseActivity() {
                 detailMember.memberId = member.id
                 detailMember.memberName = member.name ?: ""
                 detailMember.travelId = travelId ?: ""
+                detailMember.memberType = 1
+                detailMember.detailId = detail.id
                 inDetailMembers.add(detailMember)
-                outDetailMembers.add(detailMember)
+                outDetailMembers.add(detailMember.copy())
             }
 
             val inLayout = detail_in_member_list.layoutParams as ConstraintLayout.LayoutParams

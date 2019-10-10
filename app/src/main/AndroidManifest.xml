@@ -21,8 +21,6 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".page.AddDetailActivity">
-        </activity>
 
         <meta-data
                 android:name="com.amap.api.v2.apikey"
@@ -66,7 +64,13 @@
                 android:name=".page.TravelDetailActivity"
                 android:exported="false"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="stateHidden|stateUnchanged"/>
+                android:windowSoftInputMode="stateHidden|stateUnchanged|adjustPan"/>
+        <activity
+                android:name=".page.AddDetailActivity"
+                android:exported="false"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden|stateUnchanged">
+        </activity>
     </application>
 
 </manifest>
