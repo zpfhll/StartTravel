@@ -13,6 +13,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import hll.zpf.starttravel.BuildConfig
+import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.enums.TravelTypeEnum
 import hll.zpf.starttravel.common.database.entity.Member
@@ -48,20 +50,68 @@ class MemberInfoDialog(context: Context,memberType: TravelTypeEnum) : Dialog(con
             memberName.layoutParams = layoutParams
         }
         member?.let {
-        it.getImageBitmap()?.let {bitmap ->
-            memberImageView.setImageBitmap(bitmap)
-        }
-        it.name?.let {nameStr ->
-            mMemberName = nameStr
-            memberName.setText(nameStr)
-        }
-        it.money?.let {moneyStr ->
-            if(moneyStr > 0) {
-                mMemberMoney = Utils.instance().transMoneyToString(moneyStr).replace(",","")
-                memberMoney.setText(mMemberMoney)
+
+            it.getImageBitmap()?.let {bitmap ->
+                memberImageView.setImageBitmap(bitmap)
+            }
+            it.name?.let {nameStr ->
+                mMemberName = nameStr
+                memberName.setText(nameStr)
+            }
+            it.money?.let {moneyStr ->
+                if(moneyStr > 0) {
+                    mMemberMoney = Utils.instance().transMoneyToString(moneyStr)
+                    memberMoney.setText(mMemberMoney)
+                }
             }
         }
-        }
+
+
+        memberMoney.addTextChangedListener(object : TextWatcher {
+            var beforeText = ""
+            override fun afterTextChanged(s: Editable?) {
+                var text = s.toString().replace(",","")
+                var isTwo = false
+                if(text.isEmpty()){
+                    text = "0"
+                }else if(text.split(".").size > 1 && text.split(".")[1].length > 1){
+                    text = text.substring(0,text.length - 1)
+                    isTwo = true
+                }
+                if(text.toFloat() > BuildConfig.MAX_MONEY){
+                    text = beforeText.replace(",","")
+                    isTwo = true
+                }
+                val money = Utils.instance().transMoneyToString(text.toFloat())
+                HLogger.instance().e("afterTextChanged",money)
+                HLogger.instance().e("afterTextChanged beforeText",beforeText)
+                if((!beforeText.equals(money) && beforeText.length <= money.length) || isTwo) {
+                    memberMoney.setText(money)
+                    memberMoney.setSelection(memberMoney.text.length)
+                }
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+                beforeText = s.toString()
+                HLogger.instance().e("beforeTextChanged",beforeText)
+            }
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+            }
+        })
+
+
+
         commitBtn = rootView.findViewById(R.id.commit_button)
         commitBtn.isEnabled = false
         commitBtn.setOnClickListener(this)
@@ -92,7 +142,7 @@ class MemberInfoDialog(context: Context,memberType: TravelTypeEnum) : Dialog(con
     }
 
     private fun checkInput(){
-        val moneyCheck = memberMoney.text.isNullOrEmpty() || !Utils.instance().checkMoney(memberMoney.text.toString())
+        val moneyCheck = memberMoney.text.isNullOrEmpty() || !Utils.instance().checkMoney(memberMoney.text.toString().replace(",",""))
         val nameCheck = memberName.text.isNullOrEmpty()
         val moneyNotChange =  memberMoney.text.toString().equals(mMemberMoney)
         val nameNotChange = memberName.text.toString().equals(mMemberName)
@@ -120,7 +170,7 @@ class MemberInfoDialog(context: Context,memberType: TravelTypeEnum) : Dialog(con
            R.id.commit_button -> {
                member?.let {
                    if (mMemberType == TravelTypeEnum.MONEY_TRAVEL) {
-                       it.money = memberMoney.text.toString().toFloat()
+                       it.money = memberMoney.text.toString().replace(",","").toFloat()
                    }
                    it.name = memberName.text.toString()
                }

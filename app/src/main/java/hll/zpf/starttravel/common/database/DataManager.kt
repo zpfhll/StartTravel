@@ -170,7 +170,7 @@ class DataManager {
     }
     //-------------  Detail -------------
     /**
-     * 明细插入partner
+     * 明细插入
      */
     fun insertDetail(details: List<Detail>):Long{
         if(details.isEmpty()){
@@ -195,6 +195,28 @@ class DataManager {
         return -1L
     }
 
+    /**
+     * 明细查询
+     */
+    fun getDetailByTravelId(travelId : String?) : MutableList<Detail>{
+        val details = mutableListOf<Detail>()
+        if(travelId == null){
+            return details
+        }
+        val daoSession = BaseApplication.application?.travelDatabase?.detailDao()
+        daoSession?.let {
+            try {
+                val result = it.getDetailByTravelId(travelId)
+                if(result != null){
+                    details.addAll(result)
+                }
+                HLogger.instance().e("getDetailByTravelId","${result?.size}")
+            }catch (e:Exception){
+                HLogger.instance().e("getDetailByTravelId","get details fail : ${e.message}")
+            }
+        }
+        return details
+    }
 
 
 }

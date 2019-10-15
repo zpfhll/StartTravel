@@ -14,6 +14,7 @@ import hll.zpf.starttravel.R
 import hll.zpf.starttravel.base.BaseActivity
 import hll.zpf.starttravel.common.EventBusMessage
 import hll.zpf.starttravel.common.HLogger
+import hll.zpf.starttravel.common.UserData
 import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.database.DataManager
 import hll.zpf.starttravel.common.database.entity.Detail
@@ -323,13 +324,13 @@ class AddDetailActivity : BaseActivity() {
         detail.travelId = travelId ?: ""
         inDetailMembers = mutableListOf()
         outDetailMembers = mutableListOf()
-        val self = DetailWithMember.createDetailWithMember()
-        self.memberId = ""
-        self.memberName = getString(R.string.add_detail_013)
-        self.travelId = travelId ?: ""
-        self.detailId = detail.id
-        inDetailMembers.add(0,self)
-        outDetailMembers.add(0,self.copy())
+//        val self = DetailWithMember.createDetailWithMember()
+//        self.memberId = UserData.instance().getLoginUserId()
+//        self.memberName = getString(R.string.add_detail_013)
+//        self.travelId = travelId ?: ""
+//        self.detailId = detail.id
+//        inDetailMembers.add(0,self)
+//        outDetailMembers.add(0,self.copy())
         mInMemberAdapter = TravelDetailMemberAdapter(this,inDetailMembers,true){ index, mIsIn, isChecked ->
             memberCheck(index,mIsIn,isChecked)
         }
@@ -371,10 +372,15 @@ class AddDetailActivity : BaseActivity() {
                 detailMember.memberId = member.id
                 detailMember.memberName = member.name ?: ""
                 detailMember.travelId = travelId ?: ""
-                detailMember.memberType = 1
+                detailMember.memberType = if(member.id.equals(UserData.instance().getLoginUserId())) 0 else 1
                 detailMember.detailId = detail.id
-                inDetailMembers.add(detailMember)
-                outDetailMembers.add(detailMember.copy())
+                if(member.id.equals(UserData.instance().getLoginUserId())){
+                    inDetailMembers.add(0,detailMember)
+                    outDetailMembers.add(0,detailMember.copy().copyInitBy(member.name ?: ""))
+                }else {
+                    inDetailMembers.add(detailMember)
+                    outDetailMembers.add(detailMember.copy().copyInitBy(member.name ?: ""))
+                }
             }
 
             val inLayout = detail_in_member_list.layoutParams as ConstraintLayout.LayoutParams

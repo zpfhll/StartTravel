@@ -73,7 +73,7 @@ class TravelItemFragment : Fragment() {
                     //人数显示
                     if(it.memberList != null && it.memberList!!.isNotEmpty()){
                         view.findViewById<TextView>(R.id.travel_person_number_tv).visibility = View.VISIBLE
-                        view.findViewById<TextView>(R.id.travel_person_number_tv).text = "${it.memberList!!.size + 1}${getString(R.string.travel_006)}"
+                        view.findViewById<TextView>(R.id.travel_person_number_tv).text = "${it.memberList!!.size}${getString(R.string.travel_006)}"
                     }else{
                         view.findViewById<TextView>(R.id.travel_person_number_tv).visibility = View.GONE
                     }

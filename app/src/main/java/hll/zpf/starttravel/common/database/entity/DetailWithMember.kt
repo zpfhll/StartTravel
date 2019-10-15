@@ -30,7 +30,6 @@ data class DetailWithMember(
     @Ignore
     var isSelected :Boolean = false
 
-
     companion object {
         fun createDetailWithMember():DetailWithMember{
             val dateString = Utils.instance().getDateStringByFormat("", null)
@@ -38,4 +37,10 @@ data class DetailWithMember(
             return DetailWithMember(detailWithMemberId,"",0,"",0f,"")
         }
     }
+
+    fun copyInitBy(name :String) : DetailWithMember{
+        this.memberName = name
+        return this
+    }
+
 }

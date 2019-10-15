@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,8 @@ import java.util.*
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.SpannableString
+import android.text.TextWatcher
+import hll.zpf.starttravel.BuildConfig
 import hll.zpf.starttravel.common.UserData
 import hll.zpf.starttravel.common.database.DataManager
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
@@ -82,6 +85,49 @@ class AddTravelActivity : BaseActivity() {
                 }
             }
         }
+
+        travel_money_editText.addTextChangedListener(object : TextWatcher {
+            var beforeText = ""
+            override fun afterTextChanged(s: Editable?) {
+                var text = s.toString().replace(",","")
+                var isTwo = false
+                if(text.isEmpty()){
+                    text = "0"
+                }else if(text.split(".").size > 1 && text.split(".")[1].length > 1){
+                    text = text.substring(0,text.length - 1)
+                    isTwo = true
+                }
+                if(text.toFloat() > BuildConfig.MAX_MONEY){
+                    text = beforeText.replace(",","")
+                    isTwo = true
+                }
+                val money = Utils.instance().transMoneyToString(text.toFloat())
+                HLogger.instance().e("afterTextChanged",money)
+                HLogger.instance().e("afterTextChanged beforeText",beforeText)
+                if((!beforeText.equals(money) && beforeText.length <= money.length) || isTwo) {
+                    travel_money_editText.setText(money)
+                    travel_money_editText.setSelection(travel_money_editText.text.length)
+                }
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+                beforeText = s.toString()
+                HLogger.instance().e("beforeTextChanged",beforeText)
+            }
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+            }
+        })
 
 
         partnerPlatformHeight =  Utils.instance().DPToPX(50f).toInt()
@@ -375,7 +421,7 @@ class AddTravelActivity : BaseActivity() {
         if(travelName == null || travelName.equals("")){
             showMessageAlertDialog("",getString(R.string.add_travel_e01))
             return
-        }else if(travelType == TravelTypeEnum.MONEY_TRAVEL && !Utils.instance().checkMoney(travelMoney.toString())){
+        }else if(travelType == TravelTypeEnum.MONEY_TRAVEL && !Utils.instance().checkMoney(travelMoney.replace(",",""))){
             showMessageAlertDialog("",getString(R.string.add_travel_e02))
             return
         }else if(!travelMemberType && travel_partner_platform.childCount - 1 < 1){
@@ -403,8 +449,15 @@ class AddTravelActivity : BaseActivity() {
             }
         }
 
+        val self = Member.createMember()
+        self.id = UserData.instance().getLoginUserId()
+        self.name = getString(R.string.add_detail_013)
+        self.travelId = travel.id
+        self.money = travelMoney.replace(",","").toFloat()
+        members.add(self)
+
         if(travelType == TravelTypeEnum.MONEY_TRAVEL) {
-            travel.money = travelMoney.toFloat() + memberMoney
+            travel.money = self.money ?: 0f + memberMoney
         }else{
             travel.money = 0f
         }
