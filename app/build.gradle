@@ -38,6 +38,8 @@ android {
             buildConfigField("String", "SIGN_IN_PATH", "${SIGN_IN_PATH}")
             buildConfigField("int", "MAX_TRAVEL", "${MAX_TRAVEL}")
             buildConfigField("float", "MAX_MONEY", "${MAX_MONEY}")
+            buildConfigField("String", "NORMAL_CODE", "${NORMAL_CODE}")
+
             signingConfig signingConfigs.config
         }
     }

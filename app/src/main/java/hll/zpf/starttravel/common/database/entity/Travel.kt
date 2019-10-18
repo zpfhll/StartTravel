@@ -36,23 +36,21 @@ data class Travel (
     @ColumnInfo(name ="type")
     var type :Int,
     @ColumnInfo(name ="user_id")
-    var userId : String?
+    var userId : String?,
+    @Ignore
+    var memberCount: Int,
+    @Ignore
+    var outMoney: Float
 ) {
 
-    @Ignore
-    var memberList: List<Member>? = null
-    @Ignore
-    var stepList: List<Step>? = null
-    @Ignore
-    var detailList: List<Detail>? = null
+    constructor() : this("",null,null,null,null,null,0,null,0,null,0,0f)
 
     companion object {
         fun createTravel():Travel{
             val userId = "T${Utils.instance().getDateStringByFormat("", null)}"
-            return Travel(userId,null,null,null,null,null,0,null,0,null)
+            return Travel(userId,null,null,null,null,null,0,null,0,null,0,0f)
         }
     }
-
 
     fun getImageBitmap(): Bitmap? {
 

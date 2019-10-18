@@ -65,34 +65,22 @@ class TravelItemFragment : Fragment() {
                             Utils.instance().getDateStringByFormatAndDateString(startDateS,"yyyy年MM月dd日 hh:mm")
                     }
 
-                    //memo的显示
-                    it.memo?.let { memoS ->
-                        view.findViewById<TextView>(R.id.travel_memo_tv).text = memoS
-                    }
-
                     //人数显示
-                    if(it.memberList != null && it.memberList!!.isNotEmpty()){
                         view.findViewById<TextView>(R.id.travel_person_number_tv).visibility = View.VISIBLE
-                        view.findViewById<TextView>(R.id.travel_person_number_tv).text = "${it.memberList!!.size}${getString(R.string.travel_006)}"
-                    }else{
-                        view.findViewById<TextView>(R.id.travel_person_number_tv).visibility = View.GONE
-                    }
+                        view.findViewById<TextView>(R.id.travel_person_number_tv).text = "${it.memberCount}${getString(R.string.travel_006)}"
 
                     //钱的显示
                     if(it.money != null && it.money!! > 0) {
                         view.findViewById<TextView>(R.id.travel_money_tv).visibility = View.VISIBLE
                         view.findViewById<TextView>(R.id.travel_money_label_tv).visibility = View.VISIBLE
-                        var detailTotalMoney = 0f;
-                        it.detailList?.let { details ->
-                            for (detail in details) {
-                                detailTotalMoney += detail.money ?: 0f
-                            }
-                        }
                         view.findViewById<TextView>(R.id.travel_money_tv).text =
-                            Utils.instance().transMoneyToString(detailTotalMoney)
+                            Utils.instance().transMoneyToString(it.outMoney)
                     }else{
                         view.findViewById<TextView>(R.id.travel_money_tv).visibility = View.GONE
                         view.findViewById<TextView>(R.id.travel_money_label_tv).visibility = View.GONE
+                        view.findViewById<TextView>(R.id.travel_balance_money_tv).visibility = View.GONE
+                        view.findViewById<TextView>(R.id.travel_balance_money_label_tv).visibility = View.GONE
+
                     }
 
 

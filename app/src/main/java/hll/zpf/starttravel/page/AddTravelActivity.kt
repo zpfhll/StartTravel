@@ -462,24 +462,17 @@ class AddTravelActivity : BaseActivity() {
             travel.money = 0f
         }
         val dataManager = DataManager()
-        GlobalScope.launch {
-            val travelResult = dataManager.insertOrReplaceTravel(travel)
-            if(travelResult == -1L){
-                showMessageAlertDialog("",getString(R.string.E00004))
+        dataManager.insertOrReplaceTravel(travel,members){
+            if(it == BuildConfig.NORMAL_CODE){
+                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($it)")
             }else{
-                val memberResult = dataManager.insertMembers(members)
-                if(memberResult == -1L){
-                    showMessageAlertDialog("",getString(R.string.E00004))
-                }else{
-                    val message = EventBusMessage()
-                    message.message = REFRESH_TRAVEL_DATA
-                    EventBus.getDefault().post(message)
-                    finish()
-                    baseStartActivity(null,ActivityMoveEnum.BACK_FROM_LEFT)
-                }
+                val message = EventBusMessage()
+                message.message = REFRESH_TRAVEL_DATA
+                EventBus.getDefault().post(message)
+                finish()
+                baseStartActivity(null,ActivityMoveEnum.BACK_FROM_LEFT)
             }
         }
-
     }
     override fun onDestroy() {
         super.onDestroy()

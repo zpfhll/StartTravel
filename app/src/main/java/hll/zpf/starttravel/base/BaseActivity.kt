@@ -15,12 +15,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.github.ybq.android.spinkit.style.DoubleBounce
+import hll.zpf.starttravel.BuildConfig
+import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.UserData
 import hll.zpf.starttravel.common.database.DataManager
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
 import hll.zpf.starttravel.common.database.entity.User
 import hll.zpf.starttravel.page.HomeActivity
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 
@@ -56,6 +59,8 @@ open class BaseActivity: AppCompatActivity() {
     val CODE_FOR_WRITE_PERMISSION = 1
     val CODE_FOR_LOCATION_PERMISSION = 2
     val CODE_FOR_READ_PHONE_STATE_PERMISSION = 3
+
+    protected  var dataManager:DataManager? = null
 
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -209,18 +214,23 @@ open class BaseActivity: AppCompatActivity() {
     }
 
     fun skipToHome(){
-        GlobalScope.launch {
-            val user = User.createUser()
-            user.isVisitor = true
-            val manager = DataManager()
-            val result = manager.insertUser(user)
-            if(result != -1L){
+        val user = User.createUser()
+        user.isVisitor = true
+        dataManager = DataManager()
+        dataManager?.insertUser(user){
+            if(it == BuildConfig.NORMAL_CODE){
                 UserData.instance().saveLoginUser(user.id)
                 val  intent = Intent(context, HomeActivity::class.java)
                 baseStartActivity(intent,ActivityMoveEnum.START_FROM_RIGHT)
+            }else{
+                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($it)")
             }
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        dataManager?.cancel()
+    }
 
 }

@@ -193,7 +193,7 @@ class HistoryFragment : Fragment(),View.OnClickListener {
         var datas = ArrayList<Travel>()
         for (i in 0..5){
              var info = Travel.createTravel()
-            info.memberList = ArrayList<Member>()
+//            info.memberList = ArrayList<Member>()
             info.name = "旅行$i"
             info.startDate = "20190213123334123"
             info.memo = "メモ$i"

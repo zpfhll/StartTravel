@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.recyclerview.widget.LinearLayoutManager
+import hll.zpf.starttravel.BuildConfig
 import hll.zpf.starttravel.R
 import hll.zpf.starttravel.base.BaseActivity
 import hll.zpf.starttravel.common.EventBusMessage
@@ -25,7 +26,6 @@ class TravelDetailActivity : BaseActivity() {
 
     private lateinit var detailAdapter :TravelDetailAdapter
     private lateinit var details :List<Detail>
-    private lateinit var dataManager:DataManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,19 +58,18 @@ class TravelDetailActivity : BaseActivity() {
                 }
             }
             dataManager = DataManager()
-            val handler = Handler{
-                detailAdapter = TravelDetailAdapter(this, details){
-                    HLogger.instance().e("TravelDetailAdapter--->","item $it")
+            dataManager?.getDetailByTravelId(travelModel?.getTravelData()?.value?.id ?: ""){resultCode, data ->
+                if(resultCode == BuildConfig.NORMAL_CODE) {
+                    details = data
+                    detailAdapter = TravelDetailAdapter(this, details){
+                        HLogger.instance().e("TravelDetailAdapter--->","item $it")
+                    }
+                    detail_list.adapter = detailAdapter
+                    detail_list.layoutManager = LinearLayoutManager(context)
+                }else{
+                    showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)")
                 }
-                detail_list.adapter = detailAdapter
-                detail_list.layoutManager = LinearLayoutManager(context)
-                true
             }
-            GlobalScope.launch {
-                details = dataManager.getDetailByTravelId(travelModel?.getTravelData()?.value?.id ?: "")
-                handler.sendEmptyMessage(0)
-            }
-
 
         }
     }

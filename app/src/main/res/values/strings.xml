@@ -54,10 +54,11 @@
     <string name="travel_001">启程</string>
     <string name="travel_002">结束</string>
     <string name="travel_003">标语</string>
-    <string name="travel_004">￥</string>
+    <string name="travel_004">支出:￥</string>
     <string name="travel_005">同行者:</string>
     <string name="travel_006">人</string>
     <string name="travel_007">图片选择功能需要打开存储权限！</string>
+    <string name="travel_008">结余:￥</string>
 
     <string name="add_travel_001">添加行程</string>
     <string name="add_travel_002">提交</string>
@@ -128,5 +129,5 @@
     <string name="E00001">请确认您的网络已经处于正常状态！</string>
     <string name="E00002">服务器出小差了，请您稍后再试！</string>
     <string name="E00003">服务器出小差了，请您稍后再试！</string>
-    <string name="E00004">刚才有点走神儿，请再来一遍吧！</string>
+    <string name="DATABASE_ERROR">刚才有点走神儿，请再来一遍吧！</string>
 </resources>

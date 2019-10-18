@@ -19,6 +19,7 @@ import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.database.DataManager
 import hll.zpf.starttravel.common.database.entity.Detail
 import hll.zpf.starttravel.common.database.entity.DetailWithMember
+import hll.zpf.starttravel.common.database.entity.Member
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
 import kotlinx.android.synthetic.main.activity_add_detail.*
 import kotlinx.coroutines.GlobalScope
@@ -27,7 +28,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
 class AddDetailActivity : BaseActivity() {
-    private lateinit var dataManager:DataManager
     private lateinit var inDetailMembers:MutableList<DetailWithMember>
     private lateinit var outDetailMembers:MutableList<DetailWithMember>
     private lateinit var mInMemberAdapter:TravelDetailMemberAdapter
@@ -231,33 +231,16 @@ class AddDetailActivity : BaseActivity() {
                 }
             }
         }
-        val progressBar = ProgressBar(this)
-        showProgressBar(progressBar)
-        val handler = Handler{
-            closeProgressBar(progressBar)
-            if(it.what > -1){
-                showMessageAlertDialog("",getString(R.string.add_detail_E06)){_,_ ->
-                    finish()
-                    baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
-                }
-            }else{
-                showMessageAlertDialog("",getString(R.string.add_detail_E05))
-            }
-            true
-        }
-        GlobalScope.launch {
-           var result = dataManager.insertDetail(listOf(detail))
-            if(result > -1){
-                result = dataManager.insertDetailWithMember(detailWithMembers)
-            }
-            if(result < 0){
-                handler.sendEmptyMessage(-1)
-            }else{
-                handler.sendEmptyMessage(0)
-            }
-        }
-
-
+       dataManager?.insertDetail(listOf(detail),detailWithMembers){
+           if(it == BuildConfig.NORMAL_CODE){
+               showMessageAlertDialog("",getString(R.string.add_detail_E06)){_,_ ->
+                   finish()
+                   baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
+               }
+           }else{
+               showMessageAlertDialog("","${getString(R.string.add_detail_E05)}($it)")
+           }
+       }
     }
 
     private fun changeMemberPlatform(isIn:Boolean){
@@ -365,37 +348,48 @@ class AddDetailActivity : BaseActivity() {
             objectAnimator.duration = 0
             objectAnimator.start()
         }
-        GlobalScope.launch {
-            val members = dataManager.getPartnerByTravelId(travelId)
-            for (member in members){
-                val detailMember = DetailWithMember.createDetailWithMember()
-                detailMember.memberId = member.id
-                detailMember.memberName = member.name ?: ""
-                detailMember.travelId = travelId ?: ""
-                detailMember.memberType = if(member.id.equals(UserData.instance().getLoginUserId())) 0 else 1
-                detailMember.detailId = detail.id
-                if(member.id.equals(UserData.instance().getLoginUserId())){
-                    inDetailMembers.add(0,detailMember)
-                    outDetailMembers.add(0,detailMember.copy().copyInitBy(member.name ?: ""))
-                }else {
-                    inDetailMembers.add(detailMember)
-                    outDetailMembers.add(detailMember.copy().copyInitBy(member.name ?: ""))
+        dataManager?.getPartnerByTravelId(travelId) { resultCode, data ->
+            if (resultCode == BuildConfig.NORMAL_CODE) {
+                for (member in data) {
+                    val detailMember = DetailWithMember.createDetailWithMember()
+                    detailMember.memberId = member.id
+                    detailMember.memberName = member.name ?: ""
+                    detailMember.travelId = travelId ?: ""
+                    detailMember.memberType =
+                        if (member.id.equals(UserData.instance().getLoginUserId())) 0 else 1
+                    detailMember.detailId = detail.id
+                    if (member.id.equals(UserData.instance().getLoginUserId())) {
+                        inDetailMembers.add(0, detailMember)
+                        outDetailMembers.add(0, detailMember.copy().copyInitBy(member.name ?: ""))
+                    } else {
+                        inDetailMembers.add(detailMember)
+                        outDetailMembers.add(detailMember.copy().copyInitBy(member.name ?: ""))
+                    }
                 }
+
+                val inLayout = detail_in_member_list.layoutParams as ConstraintLayout.LayoutParams
+                inLayout.height =
+                    Utils.instance().DPToPX((20f + 1f + 16f + 16f + 2f) * inDetailMembers.size)
+                        .toInt()
+                inLayout.width =
+                    Utils.instance().getScreenWidth() - Utils.instance().DPToPX(24 * 2f).toInt()
+                detail_in_member_list.layoutParams = inLayout
+
+                val outLayout = detail_out_member_list.layoutParams as ConstraintLayout.LayoutParams
+                outLayout.height =
+                    Utils.instance().DPToPX((20f + 1f + 16f + 16f + 2f) * outDetailMembers.size)
+                        .toInt()
+                outLayout.width =
+                    Utils.instance().getScreenWidth() - Utils.instance().DPToPX(24 * 2f).toInt()
+                detail_out_member_list.layoutParams = outLayout
+
+                mOutMemberAdapter.notifyDataSetChanged()
+                mInMemberAdapter.notifyDataSetChanged()
+            }else{
+                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)")
             }
-
-            val inLayout = detail_in_member_list.layoutParams as ConstraintLayout.LayoutParams
-            inLayout.height = Utils.instance().DPToPX((20f + 1f + 16f + 16f + 2f) * inDetailMembers.size).toInt()
-            inLayout.width = Utils.instance().getScreenWidth() - Utils.instance().DPToPX(24 * 2f).toInt()
-            detail_in_member_list.layoutParams = inLayout
-
-            val outLayout = detail_out_member_list.layoutParams as ConstraintLayout.LayoutParams
-            outLayout.height = Utils.instance().DPToPX((20f + 1f + 16f + 16f + 2f ) * outDetailMembers.size).toInt()
-            outLayout.width = Utils.instance().getScreenWidth() - Utils.instance().DPToPX(24 * 2f).toInt()
-            detail_out_member_list.layoutParams = outLayout
-
-            mOutMemberAdapter.notifyDataSetChanged()
-            mInMemberAdapter.notifyDataSetChanged()
         }
+
     }
 
     override fun onDestroy() {

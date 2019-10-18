@@ -30,6 +30,7 @@ import android.net.Uri
 import hll.zpf.starttravel.common.model.TravelModel
 import java.io.File
 import androidx.core.content.ContextCompat
+import hll.zpf.starttravel.BuildConfig
 import hll.zpf.starttravel.common.database.entity.Travel
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
 import hll.zpf.starttravel.common.enums.TravelTypeEnum
@@ -70,10 +71,13 @@ class TravelFragment : Fragment() {
                     val startDate = Utils.instance().getDateStringByFormat()
                     travel?.startDate = startDate
                     travel?.state = 1
-                    travelModel.getTravelData().value =  travel
-                    GlobalScope.launch {
-                        travel?.let {
-                            DataManager().insertOrReplaceTravel(it)
+                    travel?.let { it ->
+                        DataManager().insertOrReplaceTravel(it){ resultCode ->
+                            if(resultCode == BuildConfig.NORMAL_CODE){
+                                travelModel.getTravelData().value =  it
+                            }else{
+                                (activity as BaseActivity).showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($it)")
+                            }
                         }
                     }
                 }
@@ -119,16 +123,7 @@ class TravelFragment : Fragment() {
         refreshHandler = Handler{
             when(it.what){
                 REFRESH_DATA -> {
-                    travelData?.let{ travels ->
-                        travelNumber = travels.size
-                        adapter.refresh(travels)
-                        travel_view_pager.currentItem = 0
-                        pager_index.itemOnClick = {currentItem ->
-                            travel_view_pager.currentItem = currentItem
-                        }
-                        pager_index.refresh(travels.size,0)
-                        travels.clear()
-                    }
+
                 }
             }
             false
@@ -151,7 +146,7 @@ class TravelFragment : Fragment() {
         EventBus.getDefault().unregister(this)
     }
 
-    @Subscribe(threadMode = ThreadMode.ASYNC)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun refreshData(message: EventBusMessage){
         if(message.message.equals((activity as BaseActivity).REFRESH_TRAVEL_DATA)){
             initData()
@@ -161,10 +156,27 @@ class TravelFragment : Fragment() {
     private fun initData(){
         val dataManager = DataManager()
         travelData?.clear()
-        travelData = dataManager.getNotEndTravel()
-        val message = Message()
-        message.what = REFRESH_DATA
-        refreshHandler.sendMessage(message)
+        dataManager.getNotEndTravel{resultCode, data ->
+            if(resultCode == BuildConfig.NORMAL_CODE){
+                travelData = data
+                travelData?.let{ travels ->
+                    travelNumber = travels.size
+                    adapter.refresh(travels)
+                    travel_view_pager.currentItem = 0
+                    pager_index.itemOnClick = {currentItem ->
+                        travel_view_pager.currentItem = currentItem
+                    }
+                    pager_index.refresh(travels.size,0)
+                    travels.clear()
+                }
+            }else{
+                (activity as BaseActivity).showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)")
+            }
+
+        }
+//        val message = Message()
+//        message.what = REFRESH_DATA
+//        refreshHandler.sendMessage(message)
     }
 
 
@@ -224,10 +236,13 @@ class TravelFragment : Fragment() {
                     currentTravelModel?.let {
                         val travel = it.getTravelData().value
                         travel?.setImageBitmap(image)
-                        it.getTravelData().value =  travel
-                        GlobalScope.launch {
-                            travel?.let {item ->
-                                DataManager().insertOrReplaceTravel(item)
+                        travel?.let {item ->
+                            DataManager().insertOrReplaceTravel(item){resultCode ->
+                                if(resultCode == BuildConfig.NORMAL_CODE){
+                                    it.getTravelData().value =  item
+                                }else{
+                                    (activity as BaseActivity).showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)")
+                                }
                             }
                         }
                     }

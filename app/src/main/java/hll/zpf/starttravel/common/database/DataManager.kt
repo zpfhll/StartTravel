@@ -1,43 +1,73 @@
 package hll.zpf.starttravel.common.database
 
+import hll.zpf.starttravel.BuildConfig
 import hll.zpf.starttravel.base.BaseApplication
 import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.UserData
 import hll.zpf.starttravel.common.database.entity.*
+import kotlinx.coroutines.*
 import java.lang.Exception
 
-class DataManager {
+class DataManager : CoroutineScope by MainScope(){
 
-    //-------------  user -------------
 
-    fun insertUser(user: User):Long{
-        val daoSession = BaseApplication.application?.travelDatabase?.userDao()
-        daoSession?.let {
-            var result = -1L
-            try {
-                result = it.insertUser(user)[0]
-                HLogger.instance().e("insertUser","$result")
-            }catch (e:Exception){
-                HLogger.instance().e("insertUser","insert user fail : ${e.message}")
+
+    data class ResultData(val resultCode:String,val data:Any? = null)
+
+    /**
+     * 异步处理
+     */
+    private fun runTaskByAsyn(taskName:String,task:(()->ResultData),callBack: ((ResultData) -> Unit)){
+        HLogger.instance().e(taskName,"start")
+        launch(Dispatchers.IO){
+            val result = task()
+            HLogger.instance().e(taskName,"$result end")
+            withContext(Dispatchers.Main){
+                callBack(result)
             }
-            return result
         }
-        return -1L
     }
 
-    fun getUserByID(userId:String) : User?{
-        val daoSession = BaseApplication.application?.travelDatabase?.userDao()
-        var result: User? = null
-        daoSession?.let {
-            try {
-                result = it.getUserByID(userId)
-                HLogger.instance().e("getUserByID","$result")
-            }catch (e:Exception){
-                HLogger.instance().e("getUserByID","get user fail : ${e.message}")
+    //-------------  user -------------
+    fun insertUser(user: User , callBack:(resultCode:String) -> Unit){
+        runTaskByAsyn("insertUser",task = {
+            val daoSession = BaseApplication.application?.travelDatabase?.userDao()
+            var errorCode = BuildConfig.NORMAL_CODE
+
+            daoSession?.let {
+                try {
+                    it.insertUser(user)
+                }catch (e:Exception){
+                    errorCode = "E00004"
+                    HLogger.instance().e("insertUser","insert user fail : ${e.message}")
+                }
             }
-            return result
-        }
-        return result
+            ResultData(errorCode)
+        },callBack = {
+            callBack(it.resultCode)
+        })
+    }
+
+
+
+    fun getUserByID(userId:String,callBack:(resultCode:String,data:User?) -> Unit){
+        runTaskByAsyn("getUserByID",task = {
+            val daoSession = BaseApplication.application?.travelDatabase?.userDao()
+            var result: User? = null
+            var errorCode = BuildConfig.NORMAL_CODE
+            daoSession?.let {
+                try {
+                    result = it.getUserByID(userId)
+                }catch (e:Exception){
+                    errorCode = "E00005"
+                    HLogger.instance().e("getUserByID","get user fail : ${e.message}")
+                }
+            }
+            ResultData(errorCode,result)
+        },callBack = {
+            callBack(it.resultCode,it.data as User)
+        })
+
     }
 
     //-------------  travel -------------
@@ -45,178 +75,228 @@ class DataManager {
     /**
      * 获取未完成的旅行
      */
-    fun getNotEndTravel():MutableList<Travel>?{
-        val daoSession = BaseApplication.application?.travelDatabase?.travelDao()
-        val detailDao = BaseApplication.application?.travelDatabase?.detailDao()
-        val memberDao = BaseApplication.application?.travelDatabase?.memberDao()
-        val stepDao = BaseApplication.application?.travelDatabase?.stepDao()
-        var travels:MutableList<Travel>? =  null
-        daoSession?.let {
-            val list = it.getNotEndTravel(UserData.instance().getLoginUserId())
-            list?.let {selectList ->
-                travels = mutableListOf()
-                for (travel in list){
-                    stepDao?.let {
-                        travel.stepList = stepDao.getStepByTravelId(travel.id)
+    fun getNotEndTravel(callBack:(resultCode:String,data:MutableList<Travel>?) -> Unit){
+        runTaskByAsyn("getNotEndTravel",task = {
+            val daoSession = BaseApplication.application?.travelDatabase?.travelDao()
+            var travels:MutableList<Travel>? =  null
+            var errorCode = BuildConfig.NORMAL_CODE
+            daoSession?.let {
+                try {
+                    val dbData = it.getNotEndTravel(UserData.instance().getLoginUserId())
+                    if(!dbData.isNullOrEmpty()){
+                        travels = mutableListOf(*dbData.toTypedArray())
                     }
-                    detailDao?.let {
-                        travel.detailList = detailDao.getDetailByTravelId(travel.id)
-                    }
-                    memberDao?.let {
-                        travel.memberList = memberDao.getMemberByTravelId(travel.id)
-                    }
-                    travels?.add(travel)
+                }catch (e:Exception){
+                    errorCode = "E00006"
+                    HLogger.instance().e("getNotEndTravel","get NotEndTravel fail : ${e.message}")
                 }
-
             }
-        }
-        return travels
+            ResultData(errorCode,travels)
+        },callBack = {
+            callBack(it.resultCode,it.data as MutableList<Travel>)
+        })
     }
 
     /**
      * 插入旅行数据
      */
-    fun insertOrReplaceTravel(travel: Travel):Long{
-        val daoSession = BaseApplication.application?.travelDatabase?.travelDao()
-        daoSession?.let {
-            var result = -1L
-            try {
-                result = it.insertTravel(travel)[0]
-                HLogger.instance().e("insertOrReplaceTravel","$result")
-            }catch (e:Exception){
-                HLogger.instance().e("insertOrReplaceTravel","insert travel fail : ${e.message}")
+    fun insertOrReplaceTravel(travel: Travel,members: List<Member>? = null,callBack:(resultCode:String) -> Unit){
+        runTaskByAsyn("insertOrReplaceTravel And insertMembers",task = {
+            val daoSession = BaseApplication.application?.travelDatabase?.travelDao()
+            var errorCode = BuildConfig.NORMAL_CODE
+            daoSession?.let {
+                try {
+                    it.insertTravel(travel)
+                }catch (e:Exception){
+                    errorCode = "E00007"
+                    HLogger.instance().e("insertOrReplaceTravel","insert travel fail : ${e.message}")
+                }
             }
-            return result
-        }
-        return -1L
+
+            if (errorCode.equals(BuildConfig.NORMAL_CODE) && !members.isNullOrEmpty()){
+                val memberDaoSession = BaseApplication.application?.travelDatabase?.memberDao()
+                memberDaoSession?.let {
+                    try {
+                        if(members.size > 1) {
+                            it.insertMember(*members.toTypedArray())
+                        }else{
+                            it.insertMember(members[0])
+                        }
+                    }catch (e:Exception){
+                        errorCode = "E00008"
+                        HLogger.instance().e("insertMembers","insert members fail : ${e.message}")
+                    }
+                }
+            }
+            ResultData(errorCode)
+        },callBack = {
+            callBack(it.resultCode)
+        })
+
     }
+
 
 
     //-------------  member -------------
-
-    /**
-     * 批量插入partner
-     */
-    fun insertMembers(members: List<Member>):Long{
-        if(members.isEmpty()){
-            return 0
-        }
-        val daoSession = BaseApplication.application?.travelDatabase?.memberDao()
-        daoSession?.let {
-            var result = -1L
-            try {
-
-                result = if(members.size > 1) {
-                    it.insertMember(*members.toTypedArray())[0]
-                }else{
-                    it.insertMember(members[0])[0]
-                }
-                HLogger.instance().e("insertMembers","$result")
-            }catch (e:Exception){
-                HLogger.instance().e("insertMembers","insert members fail : ${e.message}")
-            }
-            return result
-        }
-        return -1L
-    }
+//    /**
+//     * 批量插入partner
+//     */
+//    fun insertMembers(members: List<Member>):Long{
+//        if(members.isEmpty()){
+//            return 0
+//        }
+//        val daoSession = BaseApplication.application?.travelDatabase?.memberDao()
+//        daoSession?.let {
+//            var result = -1L
+//            try {
+//
+//                result = if(members.size > 1) {
+//                    it.insertMember(*members.toTypedArray())[0]
+//                }else{
+//                    it.insertMember(members[0])[0]
+//                }
+//                HLogger.instance().e("insertMembers","$result")
+//            }catch (e:Exception){
+//                HLogger.instance().e("insertMembers","insert members fail : ${e.message}")
+//            }
+//            return result
+//        }
+//        return -1L
+//    }
 
     /**
      * 查询partner
      */
-    fun getPartnerByTravelId(travelId : String?) : MutableList<Member>{
-        val members = mutableListOf<Member>()
-        if(travelId == null){
-            return members
-        }
-        val daoSession = BaseApplication.application?.travelDatabase?.memberDao()
-        daoSession?.let {
-            try {
-                val result = it.getMemberByTravelId(travelId)
-                if(result != null){
-                    members.addAll(result)
+    fun getPartnerByTravelId(travelId : String?,callBack: (resultCode:String,data:MutableList<Member>) -> Unit){
+        runTaskByAsyn("getPartnerByTravelId",task = {
+            val members = mutableListOf<Member>()
+            var errorCode = BuildConfig.NORMAL_CODE
+            if(travelId != null) {
+                val daoSession = BaseApplication.application?.travelDatabase?.memberDao()
+                daoSession?.let {
+                    try {
+                        val result = it.getMemberByTravelId(travelId)
+                        if (result != null) {
+                            members.addAll(result)
+                        }
+                    } catch (e: Exception) {
+                        errorCode = "E00009"
+                        HLogger.instance().e("getPartnerByTravelId", "get members fail : ${e.message}")
+                    }
                 }
-                HLogger.instance().e("getPartnerByTravelId","${result?.size}")
-            }catch (e:Exception){
-                HLogger.instance().e("getPartnerByTravelId","get members fail : ${e.message}")
             }
-        }
-        return members
+            ResultData(errorCode,members)
+        },callBack = {
+            callBack(it.resultCode,it.data as MutableList<Member>)
+        })
     }
 
     //-------------  DetailWithMember -------------
-    /**
-     * 明细人员关联插入partner
-     */
-    fun insertDetailWithMember(detailWithMembers: List<DetailWithMember>):Long{
-        if(detailWithMembers.isEmpty()){
-            return 0
-        }
-        val daoSession = BaseApplication.application?.travelDatabase?.detailWithMemberDao()
-        daoSession?.let {
-            var result = -1L
-            try {
-                result = if(detailWithMembers.size > 1) {
-                    it.insertDM(*detailWithMembers.toTypedArray())[0]
-                }else{
-                    it.insertDM(detailWithMembers[0])[0]
-                }
-                HLogger.instance().e("insertDetailWithMembers","$result")
-            }catch (e:Exception){
-                HLogger.instance().e("insertDetailWithMembers","insert DetailWithMembers fail : ${e.message}")
-            }
-            return result
-        }
-        return -1L
-    }
+//    /**
+//     * 明细人员关联插入partner
+//     */
+//    fun insertDetailWithMember(detailWithMembers: List<DetailWithMember>,callBack: (Long) -> Unit){
+//        runTaskByAsyn("insertDetailWithMember",task = {
+//            var result = -1L
+//            if(detailWithMembers.isEmpty()){
+//                result =  0
+//            }else {
+//                val daoSession = BaseApplication.application?.travelDatabase?.detailWithMemberDao()
+//                daoSession?.let {
+//                    try {
+//                        result = if (detailWithMembers.size > 1) {
+//                            it.insertDM(*detailWithMembers.toTypedArray())[0]
+//                        } else {
+//                            it.insertDM(detailWithMembers[0])[0]
+//                        }
+//                    } catch (e: Exception) {
+//                        HLogger.instance().e(
+//                            "insertDetailWithMembers",
+//                            "insert DetailWithMembers fail : ${e.message}"
+//                        )
+//                    }
+//                }
+//            }
+//            result
+//        },callBack = {
+//            callBack(it as Long)
+//        })
+//    }
+
+
     //-------------  Detail -------------
     /**
      * 明细插入
      */
-    fun insertDetail(details: List<Detail>):Long{
-        if(details.isEmpty()){
-            return 0
-        }
-        val daoSession = BaseApplication.application?.travelDatabase?.detailDao()
-        daoSession?.let {
-            var result = -1L
-            try {
-
-                result = if(details.size > 1) {
-                    it.insertDetail(*details.toTypedArray())[0]
-                }else{
-                    it.insertDetail(details[0])[0]
+    fun insertDetail(details: List<Detail>,detailWithMembers: List<DetailWithMember>? = null,callBack: (resultCode:String) -> Unit){
+        runTaskByAsyn("insertDetail And insertDetailWithMember",task = {
+            var errorCode = BuildConfig.NORMAL_CODE
+            if(!details.isNullOrEmpty()){
+                val daoSession = BaseApplication.application?.travelDatabase?.detailDao()
+                daoSession?.let {
+                    try {
+                        if (details.size > 1) {
+                            it.insertDetail(*details.toTypedArray())
+                        } else {
+                            it.insertDetail(details[0])
+                        }
+                    } catch (e: Exception) {
+                        errorCode = "E00010"
+                        HLogger.instance().e("insertDetails", "insert details fail : ${e.message}")
+                    }
                 }
-                HLogger.instance().e("insertDetails","$result")
-            }catch (e:Exception){
-                HLogger.instance().e("insertDetails","insert details fail : ${e.message}")
+
+                if(errorCode.equals(BuildConfig.NORMAL_CODE) && !detailWithMembers.isNullOrEmpty()){
+                    val detailWithMemberDaoSession = BaseApplication.application?.travelDatabase?.detailWithMemberDao()
+                    detailWithMemberDaoSession?.let {
+                        try {
+                            if (detailWithMembers.size > 1) {
+                                it.insertDM(*detailWithMembers.toTypedArray())
+                            } else {
+                                it.insertDM(detailWithMembers[0])
+                            }
+                        } catch (e: Exception) {
+                            errorCode = "E00011"
+                            HLogger.instance().e(
+                                "insertDetailWithMembers",
+                                "insert DetailWithMembers fail : ${e.message}"
+                            )
+                        }
+                    }
+                }
             }
-            return result
-        }
-        return -1L
+            ResultData(errorCode)
+        },callBack = {
+            callBack(it.resultCode)
+        })
     }
 
     /**
      * 明细查询
      */
-    fun getDetailByTravelId(travelId : String?) : MutableList<Detail>{
-        val details = mutableListOf<Detail>()
-        if(travelId == null){
-            return details
-        }
-        val daoSession = BaseApplication.application?.travelDatabase?.detailDao()
-        daoSession?.let {
-            try {
-                val result = it.getDetailByTravelId(travelId)
-                if(result != null){
-                    details.addAll(result)
+    fun getDetailByTravelId(travelId : String?,callBack: (resultCode:String,data:MutableList<Detail>) -> Unit){
+
+        runTaskByAsyn("getDetailByTravelId",task = {
+            val details = mutableListOf<Detail>()
+            var errorCode = BuildConfig.NORMAL_CODE
+            if(travelId != null) {
+                val daoSession = BaseApplication.application?.travelDatabase?.detailDao()
+                daoSession?.let {
+                    try {
+                        val result = it.getDetailByTravelId(travelId)
+                        if (result != null) {
+                            details.addAll(result)
+                        }
+                    } catch (e: Exception) {
+                        errorCode  = "E00012"
+                        HLogger.instance()
+                            .e("getDetailByTravelId", "get details fail : ${e.message}")
+                    }
                 }
-                HLogger.instance().e("getDetailByTravelId","${result?.size}")
-            }catch (e:Exception){
-                HLogger.instance().e("getDetailByTravelId","get details fail : ${e.message}")
             }
-        }
-        return details
+            ResultData(errorCode,details)
+        },callBack = {
+            callBack(it.resultCode,it.data as MutableList<Detail>)
+        })
     }
-
-
 }

@@ -34,7 +34,7 @@ class HistoryAdapter(context: Context, travelData: List<Travel>, callback: ((Int
         holder.travelNameTv.text = history.name
         holder.travelMemoTv.text = history.memo
         val numberStr = mContext!!.getString(R.string.history_010)
-        holder.travelPersonNumberTv.text = "${history.memberList!!.size} $numberStr"
+        holder.travelPersonNumberTv.text = "${history.memberCount} $numberStr"
         holder.travelDateTv.text = Utils.instance().getDateStringByFormatAndDateString(history.startDate!!,"yyyy年MM月dd日 hh:mm")
         holder.travelMoneyTv.text = Utils.instance().transMoneyToString(history.money ?: 0f)
 
