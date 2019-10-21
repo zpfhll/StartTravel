@@ -38,12 +38,11 @@ data class Travel (
     @ColumnInfo(name ="user_id")
     var userId : String?,
     @Ignore
-    var memberCount: Int,
+    var memberCount:Int?,
     @Ignore
-    var outMoney: Float
+    var outMoney:Float?
 ) {
-
-    constructor() : this("",null,null,null,null,null,0,null,0,null,0,0f)
+    constructor():this("",null,null,null,null,null,0,null,0,null,0,0f)
 
     companion object {
         fun createTravel():Travel{

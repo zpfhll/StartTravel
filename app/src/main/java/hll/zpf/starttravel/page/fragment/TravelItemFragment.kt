@@ -3,6 +3,7 @@ package hll.zpf.starttravel.page.fragment
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -33,6 +34,7 @@ class TravelItemFragment : Fragment() {
      */
     var callback:((TravelModel,Int) -> Unit)? = null
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,7 +66,6 @@ class TravelItemFragment : Fragment() {
                         view.findViewById<TextView>(R.id.travel_start_date).text =
                             Utils.instance().getDateStringByFormatAndDateString(startDateS,"yyyy年MM月dd日 hh:mm")
                     }
-
                     //人数显示
                         view.findViewById<TextView>(R.id.travel_person_number_tv).visibility = View.VISIBLE
                         view.findViewById<TextView>(R.id.travel_person_number_tv).text = "${it.memberCount}${getString(R.string.travel_006)}"
@@ -73,16 +74,18 @@ class TravelItemFragment : Fragment() {
                     if(it.money != null && it.money!! > 0) {
                         view.findViewById<TextView>(R.id.travel_money_tv).visibility = View.VISIBLE
                         view.findViewById<TextView>(R.id.travel_money_label_tv).visibility = View.VISIBLE
+                        view.findViewById<TextView>(R.id.travel_balance_money_tv).visibility = View.VISIBLE
+                        view.findViewById<TextView>(R.id.travel_balance_money_label_tv).visibility = View.VISIBLE
                         view.findViewById<TextView>(R.id.travel_money_tv).text =
-                            Utils.instance().transMoneyToString(it.outMoney)
+                            Utils.instance().transMoneyToString(it.outMoney ?: 0f)
+                        view.findViewById<TextView>(R.id.travel_balance_money_tv).text =
+                            Utils.instance().transMoneyToString((it.money ?: 0f)- (it.outMoney ?: 0f))
                     }else{
                         view.findViewById<TextView>(R.id.travel_money_tv).visibility = View.GONE
                         view.findViewById<TextView>(R.id.travel_money_label_tv).visibility = View.GONE
                         view.findViewById<TextView>(R.id.travel_balance_money_tv).visibility = View.GONE
                         view.findViewById<TextView>(R.id.travel_balance_money_label_tv).visibility = View.GONE
-
                     }
-
 
                     //图片设定
                     it.getImageBitmap()?.let {bitmap ->

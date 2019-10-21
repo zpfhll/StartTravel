@@ -65,7 +65,7 @@ class DataManager : CoroutineScope by MainScope(){
             }
             ResultData(errorCode,result)
         },callBack = {
-            callBack(it.resultCode,it.data as User)
+            callBack(it.resultCode,it.data as? User)
         })
 
     }
@@ -82,9 +82,23 @@ class DataManager : CoroutineScope by MainScope(){
             var errorCode = BuildConfig.NORMAL_CODE
             daoSession?.let {
                 try {
-                    val dbData = it.getNotEndTravel(UserData.instance().getLoginUserId())
-                    if(!dbData.isNullOrEmpty()){
-                        travels = mutableListOf(*dbData.toTypedArray())
+                    val cursor = it.getNotEndTravel(UserData.instance().getLoginUserId())
+                    travels = mutableListOf()
+                    while (cursor.moveToNext()){
+                        val travel = Travel()
+                        travel.id = cursor.getString(cursor.getColumnIndex("id"))
+                        travel.name = cursor.getString(cursor.getColumnIndex("name"))
+                        travel.startDate = cursor.getString(cursor.getColumnIndex("start_date"))
+                        travel.endDate = cursor.getString(cursor.getColumnIndex("end_date"))
+                        travel.endDate = cursor.getString(cursor.getColumnIndex("end_date"))
+                        travel.money = cursor.getFloat(cursor.getColumnIndex("money"))
+                        travel.state = cursor.getInt(cursor.getColumnIndex("state"))
+                        travel.image = cursor.getBlob(cursor.getColumnIndex("image"))
+                        travel.type = cursor.getInt(cursor.getColumnIndex("type"))
+                        travel.userId = cursor.getString(cursor.getColumnIndex("user_id"))
+                        travel.memberCount = cursor.getInt(cursor.getColumnIndex("memberCount"))
+                        travel.outMoney = cursor.getFloat(cursor.getColumnIndex("outMoney"))
+                        travels?.add(travel)
                     }
                 }catch (e:Exception){
                     errorCode = "E00006"
@@ -93,7 +107,7 @@ class DataManager : CoroutineScope by MainScope(){
             }
             ResultData(errorCode,travels)
         },callBack = {
-            callBack(it.resultCode,it.data as MutableList<Travel>)
+            callBack(it.resultCode,it.data as? MutableList<Travel>)
         })
     }
 
@@ -275,7 +289,6 @@ class DataManager : CoroutineScope by MainScope(){
      * 明细查询
      */
     fun getDetailByTravelId(travelId : String?,callBack: (resultCode:String,data:MutableList<Detail>) -> Unit){
-
         runTaskByAsyn("getDetailByTravelId",task = {
             val details = mutableListOf<Detail>()
             var errorCode = BuildConfig.NORMAL_CODE

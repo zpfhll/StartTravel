@@ -1,5 +1,6 @@
 package hll.zpf.starttravel.common.database.dao
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -34,7 +35,7 @@ interface TravelDao {
             "LEFT JOIN (SELECT " +
             "     id AS member_id," +
             "     out_money," +
-            "     detail_travel_id " +
+            "     travel_id AS member_travel_id " +
             "     FROM" +
             "     member " +
             "     LEFT JOIN (" +
@@ -45,9 +46,9 @@ interface TravelDao {
             "           WHERE detail.[type] = 1 " +
             "           GROUP BY travel_id) " +
             "     ON member.travel_id = detail_travel_id ) " +
-            "ON travel.id = detail_travel_id " +
+            "ON travel.id = member_travel_id " +
             "WHERE user_id = :userId AND state IN (0,1,2) " +
             "GROUP BY travel.id " +
             "ORDER BY id DESC")
-    fun getNotEndTravel(userId : String):List<Travel>?
+    fun getNotEndTravel(userId : String): Cursor
 }

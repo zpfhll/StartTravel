@@ -418,7 +418,7 @@ class AddTravelActivity : BaseActivity() {
         val travelMemo = travel_memo_editText.text.toString()
         val travelMoney = travel_money_editText.text.toString()
         val travelMemberType = travel_type_switch.isLeft
-        if(travelName == null || travelName.equals("")){
+        if(travelName.isBlank()){
             showMessageAlertDialog("",getString(R.string.add_travel_e01))
             return
         }else if(travelType == TravelTypeEnum.MONEY_TRAVEL && !Utils.instance().checkMoney(travelMoney.replace(",",""))){
@@ -457,20 +457,20 @@ class AddTravelActivity : BaseActivity() {
         members.add(self)
 
         if(travelType == TravelTypeEnum.MONEY_TRAVEL) {
-            travel.money = self.money ?: 0f + memberMoney
+            travel.money = (self.money ?: 0f) + memberMoney
         }else{
             travel.money = 0f
         }
         val dataManager = DataManager()
         dataManager.insertOrReplaceTravel(travel,members){
             if(it == BuildConfig.NORMAL_CODE){
-                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($it)")
-            }else{
                 val message = EventBusMessage()
                 message.message = REFRESH_TRAVEL_DATA
                 EventBus.getDefault().post(message)
                 finish()
                 baseStartActivity(null,ActivityMoveEnum.BACK_FROM_LEFT)
+            }else{
+                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($it)")
             }
         }
     }

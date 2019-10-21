@@ -37,45 +37,45 @@
 		app:layout_constraintVertical_bias="0.0" />
 
 	<hll.zpf.starttravel.common.components.CRImageView
-		android:id="@+id/travel_image"
-		android:layout_width="210dp"
-		android:layout_height="150dp"
-		android:layout_marginStart="24dp"
-		android:layout_marginTop="20dp"
-		android:layout_marginEnd="24dp"
-		android:scaleType="centerCrop"
-		android:src="@mipmap/default_image"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:radius="10dp" />
+			android:id="@+id/travel_image"
+			android:layout_width="210dp"
+			android:layout_height="150dp"
+			android:layout_marginStart="24dp"
+			android:layout_marginTop="20dp"
+			android:layout_marginEnd="24dp"
+			android:scaleType="centerCrop"
+			android:src="@mipmap/default_image"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:radius="10dp" />
 
 	<TextView
-		android:id="@+id/travel_name_tv"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="32dp"
-		android:layout_marginTop="24dp"
-		android:ellipsize="end"
-		android:gravity="left"
-		android:lines="1"
-		android:textColor="@color/white"
-		android:textSize="@dimen/font_size_s3"
-		android:textStyle="bold"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/travel_image" />
+			android:id="@+id/travel_name_tv"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="32dp"
+			android:layout_marginTop="16dp"
+			android:ellipsize="end"
+			android:gravity="left"
+			android:lines="1"
+			android:textColor="@color/white"
+			android:textSize="@dimen/font_size_s1"
+			android:textStyle="bold"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/travel_image" />
 
 	<TextView
-		android:id="@+id/travel_start_date"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="32dp"
-		android:layout_marginTop="8dp"
-		android:gravity="left"
-		android:textColor="@color/white"
-		android:textSize="@dimen/font_size_s5"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/travel_person_number_tv" />
+			android:id="@+id/travel_start_date"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="32dp"
+			android:layout_marginTop="8dp"
+			android:gravity="left"
+			android:textColor="@color/white"
+			android:textSize="@dimen/font_size_s5"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/travel_balance_money_tv" />
 
 	<Button
 		android:id="@+id/travel_action_bt"
@@ -95,68 +95,63 @@
 		app:layout_constraintStart_toStartOf="parent" />
 
 	<TextView
-		android:id="@+id/travel_money_tv"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="2dp"
-		android:layout_marginTop="8dp"
-		android:text="0"
-		android:textColor="@color/light_red"
-		android:textSize="@dimen/font_size_s1"
-		android:textStyle="bold"
-		app:layout_constraintStart_toEndOf="@+id/travel_money_label_tv"
-		app:layout_constraintTop_toBottomOf="@+id/travel_name_tv" />
+			android:id="@+id/travel_money_tv"
+			android:layout_width="wrap_content"
+			android:layout_height="0dp"
+			android:layout_marginStart="3dp"
+			android:layout_marginTop="8dp"
+			android:text="0"
+			android:textColor="@color/light_red"
+			android:textSize="@dimen/font_size_s1"
+			android:textStyle="bold"
+			app:layout_constraintStart_toEndOf="@+id/travel_money_label_tv"
+			app:layout_constraintTop_toBottomOf="@+id/travel_name_tv" />
 
 	<TextView
 		android:id="@+id/travel_money_label_tv"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_width="20dp"
+		android:layout_height="20dp"
 		android:layout_marginStart="32dp"
-		android:text="@string/travel_004"
-		android:textColor="@color/light_red"
-		android:textSize="@dimen/font_size_s5"
-		android:textStyle="bold"
+		android:background="@mipmap/consume"
 		app:layout_constraintBottom_toBottomOf="@+id/travel_money_tv"
 		app:layout_constraintStart_toStartOf="@+id/travel_background_shadow"
 		app:layout_constraintTop_toTopOf="@+id/travel_money_tv" />
 
 	<TextView
-		android:id="@+id/travel_balance_money_tv"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="2dp"
-		android:text="0"
-		android:textColor="@color/white"
-		android:textSize="@dimen/font_size_s1"
-		android:textStyle="bold"
-		app:layout_constraintStart_toEndOf="@+id/travel_balance_money_label_tv"
-		app:layout_constraintTop_toBottomOf="@+id/travel_money_tv" />
+			android:id="@+id/travel_balance_money_tv"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="3dp"
+			android:layout_marginTop="8dp"
+			android:text="0"
+			android:textColor="@color/white"
+			android:textSize="@dimen/font_size_s1"
+			android:textStyle="bold"
+			app:layout_constraintStart_toEndOf="@+id/travel_balance_money_label_tv"
+			app:layout_constraintTop_toBottomOf="@+id/travel_name_tv" />
 
 	<TextView
-		android:id="@+id/travel_balance_money_label_tv"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="32dp"
-		android:text="@string/travel_004"
-		android:textColor="@color/white"
-		android:textSize="@dimen/font_size_s5"
-		android:textStyle="bold"
-		app:layout_constraintBottom_toBottomOf="@+id/travel_balance_money_tv"
-		app:layout_constraintStart_toStartOf="@+id/travel_background_shadow"
-		app:layout_constraintTop_toTopOf="@+id/travel_balance_money_tv" />
+			android:id="@+id/travel_balance_money_label_tv"
+			android:layout_width="15dp"
+			android:layout_height="15dp"
+			android:layout_marginStart="16dp"
+			android:background="@mipmap/wallet"
+			app:layout_constraintBottom_toBottomOf="@+id/travel_balance_money_tv"
+			app:layout_constraintStart_toEndOf="@+id/travel_money_tv"
+			app:layout_constraintTop_toTopOf="@+id/travel_balance_money_tv" />
 
 	<TextView
-		android:id="@+id/travel_person_number_tv"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="36dp"
-		android:layout_marginTop="8dp"
-		android:text=""
-		android:textColor="@color/white"
-		android:textSize="@dimen/font_size_s3"
-		android:textStyle="bold"
-		app:layout_constraintStart_toStartOf="@+id/travel_background_shadow"
-		app:layout_constraintTop_toBottomOf="@+id/travel_balance_money_tv" />
+			android:id="@+id/travel_person_number_tv"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:text=""
+			android:textColor="@color/white"
+			android:textSize="@dimen/font_size_s3"
+			android:textStyle="bold"
+			app:layout_constraintBottom_toBottomOf="@+id/travel_name_tv"
+			app:layout_constraintStart_toEndOf="@+id/travel_name_tv"
+			app:layout_constraintTop_toTopOf="@+id/travel_name_tv" />
 
 	<Button
 		android:id="@+id/travel_item_edit"
