@@ -2,33 +2,29 @@ package hll.zpf.starttravel.common.database.entity
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import hll.zpf.starttravel.common.Utils
 
 @Entity(tableName = "member",
+    primaryKeys = ["id","travel_id"],
     foreignKeys = [ForeignKey(entity = Travel::class,
         parentColumns = ["id"],
         childColumns = ["travel_id"])])
 data class Member(
-    @PrimaryKey
     var id: String,
     @ColumnInfo(name = "name")
     var name: String?,
-    @ColumnInfo(name = "money")
-    var money: Float?,
     @ColumnInfo(name = "image")
     var image: ByteArray?,
     @ColumnInfo(name = "travel_id")
-    var travelId: String?
+    var travelId: String
 ) {
-
+    @Ignore
+    var money: Float? = 0f
     companion object {
         fun createMember():Member{
             val memberId = "M${Utils.instance().getDateStringByFormat("", null)}"
-            return Member(memberId,null,null,null,null)
+            return Member(memberId,null,null,"")
         }
     }
 

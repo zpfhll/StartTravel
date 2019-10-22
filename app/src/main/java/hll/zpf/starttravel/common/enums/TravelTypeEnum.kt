@@ -9,4 +9,5 @@ enum class TravelTypeEnum(value:Int) {
      * 随心旅行
      */
     FREE_TRAVEL(1)
+
 }

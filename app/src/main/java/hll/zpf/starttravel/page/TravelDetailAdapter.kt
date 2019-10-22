@@ -13,7 +13,7 @@ import hll.zpf.starttravel.common.database.entity.Detail
 class TravelDetailAdapter(context: Context, detailData: List<Detail>, callback: ((Int) -> Unit)) :
     RecyclerView.Adapter<TravelDetailAdapter.DetailItemViewHandler>() {
 
-    var mDetailData:List<Detail> = detailData
+    var mDetailData:ArrayList<Detail> = arrayListOf(*detailData.toTypedArray())
     var mContext:Context = context
     var mCallback:((Int) -> Unit) = callback
 
@@ -25,6 +25,12 @@ class TravelDetailAdapter(context: Context, detailData: List<Detail>, callback: 
 
     override fun getItemCount(): Int {
         return mDetailData.size
+    }
+
+    fun refreshData(data:List<Detail>){
+        mDetailData.clear()
+        mDetailData.addAll(data)
+        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: DetailItemViewHandler, position: Int) {

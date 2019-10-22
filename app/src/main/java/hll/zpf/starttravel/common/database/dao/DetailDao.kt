@@ -1,9 +1,6 @@
 package hll.zpf.starttravel.common.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import hll.zpf.starttravel.common.database.entity.Detail
 
 @Dao
@@ -16,4 +13,7 @@ interface DetailDao {
 
     @Query(value = "select * from detail where travel_id = :travelId")
     fun getDetailByTravelId(travelId:String): List<Detail>?
+
+    @Delete
+    fun deleteDetail(vararg details: Detail)
 }

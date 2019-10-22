@@ -32,6 +32,8 @@ import android.text.TextWatcher
 import hll.zpf.starttravel.BuildConfig
 import hll.zpf.starttravel.common.UserData
 import hll.zpf.starttravel.common.database.DataManager
+import hll.zpf.starttravel.common.database.entity.Detail
+import hll.zpf.starttravel.common.database.entity.DetailWithMember
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
 import hll.zpf.starttravel.common.database.entity.Member
 import hll.zpf.starttravel.common.database.entity.Travel
@@ -91,7 +93,7 @@ class AddTravelActivity : BaseActivity() {
             override fun afterTextChanged(s: Editable?) {
                 var text = s.toString().replace(",","")
                 var isTwo = false
-                if(text.isEmpty()){
+                if(text.isEmpty() || text.startsWith(".")){
                     text = "0"
                 }else if(text.split(".").size > 1 && text.split(".")[1].length > 1){
                     text = text.substring(0,text.length - 1)
@@ -104,7 +106,7 @@ class AddTravelActivity : BaseActivity() {
                 val money = Utils.instance().transMoneyToString(text.toFloat())
                 HLogger.instance().e("afterTextChanged",money)
                 HLogger.instance().e("afterTextChanged beforeText",beforeText)
-                if((!beforeText.equals(money) && beforeText.length <= money.length) || isTwo) {
+                if((!beforeText.equals(money) && beforeText.length <= money.length) || isTwo || beforeText.length > money.length) {
                     travel_money_editText.setText(money)
                     travel_money_editText.setSelection(travel_money_editText.text.length)
                 }
@@ -428,47 +430,87 @@ class AddTravelActivity : BaseActivity() {
             showMessageAlertDialog("",getString(R.string.add_travel_e03))
             return
         }
-
         val travel = Travel.createTravel()
         travel.name = travelName
         travel.memo = travelMemo
         travel.userId = UserData.instance().getLoginUserId()
-
         val members = ArrayList<Member>()
-        var memberMoney = 0f
+        val details = ArrayList<Detail>()
+        val detailWithMembers = ArrayList<DetailWithMember>()
         for (i in 0 until  addTravelPartnerPlatform.childCount){
             addTravelPartnerPlatform.getChildAt(i).tag?.let {
                 if(it is Member){
                     it.travelId = travel.id
-                    it.money?.let {money ->
-                        memberMoney += money
-                    }
 
+                    if(travelType == TravelTypeEnum.MONEY_TRAVEL && (it.money ?: 0f) > 0f){
+                            val detail = Detail.createDetail()
+                            detail.memo = it.name ?: ""
+                            detail.money = it.money
+                            detail.type = 0
+                            detail.travelId = travel.id
+                            val detailWithMember =  DetailWithMember.createDetailWithMember()
+                            detailWithMember.detailId  = detail.id
+                            detailWithMember.memberId = it.id
+                            detailWithMember.travelId = travel.id
+                            detailWithMember.memberType = 1
+                            detailWithMember.money = it.money ?: 0f
+
+                            details.add(detail)
+                            detailWithMembers.add(detailWithMember)
+                    }
                     members.add(it)
                 }
             }
         }
-
         val self = Member.createMember()
         self.id = UserData.instance().getLoginUserId()
         self.name = getString(R.string.add_detail_013)
         self.travelId = travel.id
-        self.money = travelMoney.replace(",","").toFloat()
+        if(travelType == TravelTypeEnum.MONEY_TRAVEL){
+            self.money = travelMoney.replace(",","").toFloat()
+            if((self.money ?: 0f) > 0f){
+                val detail = Detail.createDetail()
+                detail.memo = self.name ?: ""
+                detail.money = self.money
+                detail.type = 0
+                detail.travelId = travel.id
+                val detailWithMember =  DetailWithMember.createDetailWithMember()
+                detailWithMember.detailId  = detail.id
+                detailWithMember.memberId = self.id
+                detailWithMember.travelId = travel.id
+                detailWithMember.memberType = 1
+                detailWithMember.money = self.money ?: 0f
+                details.add(0,detail)
+                detailWithMembers.add(0,detailWithMember)
+            }
+        }
         members.add(self)
-
-        if(travelType == TravelTypeEnum.MONEY_TRAVEL) {
-            travel.money = (self.money ?: 0f) + memberMoney
-        }else{
-            travel.money = 0f
+        travel.type = when(travelType){
+            TravelTypeEnum.MONEY_TRAVEL -> 0
+            TravelTypeEnum.FREE_TRAVEL -> 1
         }
         val dataManager = DataManager()
         dataManager.insertOrReplaceTravel(travel,members){
             if(it == BuildConfig.NORMAL_CODE){
-                val message = EventBusMessage()
-                message.message = REFRESH_TRAVEL_DATA
-                EventBus.getDefault().post(message)
-                finish()
-                baseStartActivity(null,ActivityMoveEnum.BACK_FROM_LEFT)
+                if(travelType == TravelTypeEnum.MONEY_TRAVEL){
+                    dataManager.insertDetail(details,detailWithMembers){resultCode ->
+                        if(resultCode == BuildConfig.NORMAL_CODE) {
+                            val message = EventBusMessage()
+                            message.message = REFRESH_TRAVEL_DATA
+                            EventBus.getDefault().post(message)
+                            finish()
+                            baseStartActivity(null,ActivityMoveEnum.BACK_FROM_LEFT)
+                        }else {
+                            showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)")
+                        }
+                    }
+                }else{
+                    val message = EventBusMessage()
+                    message.message = REFRESH_TRAVEL_DATA
+                    EventBus.getDefault().post(message)
+                    finish()
+                    baseStartActivity(null,ActivityMoveEnum.BACK_FROM_LEFT)
+                }
             }else{
                 showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($it)")
             }

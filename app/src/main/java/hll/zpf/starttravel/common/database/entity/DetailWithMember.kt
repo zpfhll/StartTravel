@@ -5,8 +5,8 @@ import hll.zpf.starttravel.common.Utils
 
 @Entity(tableName = "detail_member_join",
         foreignKeys = [ForeignKey(entity = Member::class,
-                            parentColumns = ["id"],
-                            childColumns = ["member_id"]),
+                            parentColumns = ["id","travel_id"],
+                            childColumns = ["member_id","travel_id"]),
                       ForeignKey(entity = Detail::class,
                             parentColumns = ["id"],
                             childColumns = ["detail_id"])

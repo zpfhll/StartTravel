@@ -226,14 +226,11 @@ class Utils {
      * 金额的有效性检查
      */
     fun checkMoney(moneyStr:String?):Boolean{
-        if(moneyStr.isNullOrEmpty() || moneyStr.startsWith(".") || moneyStr.equals("0")){
+        if(moneyStr.isNullOrEmpty() || moneyStr.startsWith(".") ){
             return false
         }
         try {
-            val moneyNum = moneyStr.toFloat()
-            if(moneyNum == 0f){
-                return false
-            }
+            moneyStr.toFloat()
         }catch (e:NumberFormatException){
             return false
         }

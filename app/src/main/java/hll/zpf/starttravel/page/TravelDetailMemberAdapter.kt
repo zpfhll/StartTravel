@@ -16,17 +16,20 @@ import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.components.CustomCheckboxView
 import hll.zpf.starttravel.common.database.entity.DetailWithMember
 import hll.zpf.starttravel.common.database.entity.Member
+import kotlinx.android.synthetic.main.activity_travel_detail.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
-class TravelDetailMemberAdapter(context: Context, memberData: List<DetailWithMember>,isIn:Boolean,checkCallback: ((Int,Boolean,Boolean) -> Unit)) :
+class TravelDetailMemberAdapter(context: AddDetailActivity, memberData: List<DetailWithMember>,isIn:Boolean,checkCallback: ((Int,Boolean,Boolean) -> Unit)? = null) :
     RecyclerView.Adapter<TravelDetailMemberAdapter.MemberItemViewHandler>() {
 
     var mMemberData:List<DetailWithMember> = memberData
-    var mContext:Context = context
-    var mCheckCallback:((Int,Boolean,Boolean) -> Unit) = checkCallback
+    var mContext:AddDetailActivity = context
+    var mCheckCallback:((Int,Boolean,Boolean) -> Unit)? = checkCallback
     var mEditCallback:((Int,Float) -> Unit)? = null
     var mIsIn:Boolean = isIn
+
+    var isShow:Boolean = false
 
     private val EVENTBUS_MESSAGE_REFRESH = "REFRESH_ITEM_CHECKBOX"
     private val EVENTBUS_MESSAGE_SWITCH_SPLIT = "SWITCH_SPLIT"
@@ -66,34 +69,44 @@ class TravelDetailMemberAdapter(context: Context, memberData: List<DetailWithMem
             EventBus.getDefault().register(this)
             if (!isIn){
                 outCheckBox = itemView.findViewById(R.id.out_checkbox)
+                outCheckBox?.isEnabled = !isShow
                 outCheckBox?.checkCallback = {
                     memberMoney?.isEnabled = it && !isSplit
                     if (!it){
                         memberMoney?.setText("0")
                     }
-                    mCheckCallback(index,isIn,it)
+                    mCheckCallback?.let{callback ->
+                        callback(index,isIn,it)
+                    }
                 }
                 memberMoney = itemView.findViewById(R.id.detail_member_money)
+                memberMoney?.isEnabled = !isShow
                 memberMoney?.addTextChangedListener(object : TextWatcher{
                     var beforeText = ""
                     override fun afterTextChanged(s: Editable?) {
 
                         var text = s.toString().replace(",","")
                         var isTwo = false
-                        if(text.isEmpty()){
+                        if(text.isEmpty() || text.startsWith(".")){
                             text = "0"
                         }else if(text.split(".").size > 1 && text.split(".")[1].length > 1){
                             text = text.substring(0,text.length - 1)
                             isTwo = true
                         }
-                        if(text.toFloat() > BuildConfig.MAX_MONEY){
-                            text = beforeText.replace(",","")
+
+                        val beforeNumberStr =  beforeText.replace(",","")
+                        if(text.toFloat() > BuildConfig.MAX_MONEY || (mContext.assignMoney - (if (beforeNumberStr == "") 0f else beforeNumberStr.toFloat()) + text.toFloat())  > mContext.walletMoney && !isShow){
+                            text = beforeNumberStr
                             isTwo = true
+                        }
+
+                        if(text.isEmpty()){
+                            text = "0"
                         }
                         val money = Utils.instance().transMoneyToString(text.toFloat())
                         HLogger.instance().e("afterTextChanged",money)
                         HLogger.instance().e("afterTextChanged beforeText",beforeText)
-                        if((!beforeText.equals(money) && beforeText.length <= money.length) || isTwo) {
+                        if((!beforeText.equals(money) && beforeText.length <= money.length) || isTwo || beforeText.length > money.length) {
                             memberMoney?.setText(money)
                             memberMoney?.setSelection(memberMoney?.text?.length ?: 0)
                         }
@@ -123,8 +136,11 @@ class TravelDetailMemberAdapter(context: Context, memberData: List<DetailWithMem
                 })
             }else{
                 inCheckBox = itemView.findViewById(R.id.in_checkbox)
+                inCheckBox?.isEnabled = !isShow
                 inCheckBox?.checkCallback = {
-                    mCheckCallback(index,mIsIn,it)
+                    mCheckCallback?.let{callback ->
+                        callback(index,isIn,it)
+                    }
                     if(it){
                         val message = EventBusMessage()
                         message.message = EVENTBUS_MESSAGE_REFRESH

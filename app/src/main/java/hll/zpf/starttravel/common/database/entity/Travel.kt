@@ -21,8 +21,6 @@ data class Travel (
     var startDate : String?,
     @ColumnInfo(name ="end_date")
     var endDate : String?,
-    @ColumnInfo(name ="money")
-    var money : Float?,
     /**
      * 0:未启程 1：旅途中 2：结束未清算完成 3：结束并且清算完成
      */
@@ -31,7 +29,7 @@ data class Travel (
     @ColumnInfo(name ="image")
     var image : ByteArray?,
     /**
-     * タイプ　０：普通　１：情報なし
+     * タイプ　０：记录花销　1: 随心旅行 2：情報なし
      */
     @ColumnInfo(name ="type")
     var type :Int,
@@ -40,14 +38,16 @@ data class Travel (
     @Ignore
     var memberCount:Int?,
     @Ignore
-    var outMoney:Float?
+    var outMoney:Float?,
+    @Ignore
+    var inMoney:Float?
 ) {
-    constructor():this("",null,null,null,null,null,0,null,0,null,0,0f)
+    constructor():this("",null,null,null,null,0,null,0,null,0,0f,0f)
 
     companion object {
         fun createTravel():Travel{
             val userId = "T${Utils.instance().getDateStringByFormat("", null)}"
-            return Travel(userId,null,null,null,null,null,0,null,0,null,0,0f)
+            return Travel(userId,null,null,null,null,0,null,0,null,0,0f,0f)
         }
     }
 
@@ -73,7 +73,6 @@ data class Travel (
         if (memo != other.memo) return false
         if (startDate != other.startDate) return false
         if (endDate != other.endDate) return false
-        if (money != other.money) return false
         if (state != other.state) return false
         if (type != other.type) return false
         if (userId != other.userId) return false
@@ -87,7 +86,6 @@ data class Travel (
         result = 31 * result + (memo?.hashCode() ?: 0)
         result = 31 * result + (startDate?.hashCode() ?: 0)
         result = 31 * result + (endDate?.hashCode() ?: 0)
-        result = 31 * result + (money?.hashCode() ?: 0)
         result = 31 * result + state
         result = 31 * result + (image?.contentHashCode() ?: 0)
         result = 31 * result + type

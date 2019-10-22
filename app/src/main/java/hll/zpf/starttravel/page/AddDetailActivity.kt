@@ -1,6 +1,7 @@
 package hll.zpf.starttravel.page
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
@@ -21,12 +22,14 @@ import hll.zpf.starttravel.common.database.entity.Detail
 import hll.zpf.starttravel.common.database.entity.DetailWithMember
 import hll.zpf.starttravel.common.database.entity.Member
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
+import hll.zpf.starttravel.common.model.TravelModel
 import kotlinx.android.synthetic.main.activity_add_detail.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
+@SuppressLint("SetTextI18n")
 class AddDetailActivity : BaseActivity() {
     private lateinit var inDetailMembers:MutableList<DetailWithMember>
     private lateinit var outDetailMembers:MutableList<DetailWithMember>
@@ -39,6 +42,11 @@ class AddDetailActivity : BaseActivity() {
 
     var notAssignMoney:Float = 0f
     var assignMoney:Float = 0f
+
+    private var travelModel: TravelModel? = null
+
+    var walletMoney:Float = 0f
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +65,8 @@ class AddDetailActivity : BaseActivity() {
             }
         }
 
+        money_title.text = "${getString(R.string.add_detail_005)}${getString(R.string.add_detail_003)}"
+
         split_type_switch.switchAction = {
             not_assign_money.visibility = if(it) View.GONE else View.VISIBLE
             switchSplit(it)
@@ -69,23 +79,28 @@ class AddDetailActivity : BaseActivity() {
             override fun afterTextChanged(s: Editable?) {
                 var text = s.toString().replace(",","")
                 var isTwo = false
-                if(text.isEmpty()){
+                if(text.isEmpty() || text.startsWith(".")){
                     text = "0"
                 }else if(text.split(".").size > 1 && text.split(".")[1].length > 1){
                     text = text.substring(0,text.length - 1)
                     isTwo = true
                 }
-                if(text.toFloat() > BuildConfig.MAX_MONEY){
+
+                val bound = if(in_checkbox.isChecked) BuildConfig.MAX_MONEY - walletMoney else walletMoney
+
+                if(text.toFloat() > bound){
                     text = beforeText.replace(",","")
                     isTwo = true
+                    showMessageAlertDialog("","${if(in_checkbox.isChecked) getString(R.string.add_detail_E08) else getString(R.string.add_detail_E07)}")
                 }
                 val money = Utils.instance().transMoneyToString(text.toFloat())
-                HLogger.instance().e("afterTextChanged",money)
-                HLogger.instance().e("afterTextChanged beforeText",beforeText)
-                if((!beforeText.equals(money) && beforeText.length <= money.length) || isTwo) {
+                HLogger.instance().e("detail_money afterTextChanged",money)
+                HLogger.instance().e("detail_money afterTextChanged beforeText",beforeText)
+                if((!beforeText.equals(money) && beforeText.length <= money.length) || isTwo || beforeText.length > money.length) {
                     detail_money.setText(money)
                     detail_money.setSelection(detail_money.text.length)
                 }
+
                 inputMoney = text.toFloat()
                 detail.money = inputMoney
                 switchSplit(split_type_switch.isLeft)
@@ -94,7 +109,6 @@ class AddDetailActivity : BaseActivity() {
                 val notAssignStr = Utils.instance().transMoneyToString(notAssignMoney)
                 not_assign_money.text =
                     String.format(getString(R.string.add_detail_012),notAssignStr)
-                detail_money.requestFocus()
             }
 
             override fun beforeTextChanged(
@@ -104,7 +118,7 @@ class AddDetailActivity : BaseActivity() {
                 after: Int
             ) {
                 beforeText = s.toString()
-                HLogger.instance().e("beforeTextChanged",beforeText)
+                HLogger.instance().e("detail_money beforeTextChanged",beforeText)
             }
 
             override fun onTextChanged(
@@ -142,47 +156,54 @@ class AddDetailActivity : BaseActivity() {
         EventBus.getDefault().post(eventBusMessage)
     }
 
+    @SuppressLint("SetTextI18n")
     @Subscribe(threadMode = org.greenrobot.eventbus.ThreadMode.MAIN, sticky = true)
     fun initData(message: EventBusMessage){
-        if(message.message.equals(ADD_DETAIL)){
-            val detail = message.detail
-            val travel = message.travel
-            var isIn = false
-            if(detail == null){
-                isIn = false
+
+        when(message.message){
+            ADD_DETAIL -> {
+                travelModel = message.travel
+                var isIn = false
                 in_checkbox.check(false)
                 out_checkbox.check(true)
-            }else {
-                when (detail.type) {
-                    0 -> {
-                        isIn = true
-                        in_checkbox.check(true)
-                        out_checkbox.check(false)
-                    }
-                    1 -> {
-                        isIn = false
-                        in_checkbox.check(false)
-                        out_checkbox.check(true)
+                walletMoney = (travelModel?.getTravelData()?.value?.inMoney ?: 0f) - (travelModel?.getTravelData()?.value?.outMoney ?: 0f)
+                wallet_money_text.text = "(${getString(R.string.add_detail_014)}$walletMoney)"
+
+                initPlatform(isIn,travelModel?.getTravelData()?.value?.id)
+                val title = travelModel?.getTravelData()?.value?.name ?: ""
+                setTitle(
+                    title,
+                    true,
+                    getString(R.string.add_detail_011),
+                    R.drawable.back_button_background){
+                    when(it.id){
+                        R.id.left_button -> {//返回
+                            finish()
+                            baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
+                        }
+                        R.id.right_button -> {//添加
+                            commit()
+                        }
                     }
                 }
             }
-
-            initPlatform(isIn,travel?.getTravelData()?.value?.id)
-            val title = travel?.getTravelData()?.value?.name ?: ""
-            setTitle(
-                title,
-                true,
-                getString(R.string.add_detail_011),
-                R.drawable.back_button_background){
-                when(it.id){
-                    R.id.left_button -> {//返回
-                        finish()
-                        baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
-                    }
-                    R.id.right_button -> {//添加
-                        commit()
+            SHOW_DETAIL -> {
+                val detail = message.detail
+                travelModel = message.travel
+                setTitle(
+                    travelModel?.getTravelData()?.value?.name ?: "",
+                    false,
+                    "",
+                    R.drawable.back_button_background){
+                    when(it.id){
+                        R.id.left_button -> {//返回
+                            finish()
+                            baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
+                        }
                     }
                 }
+                wallet_money_text.visibility = View.GONE
+                initShowPlatform(detail!!)
             }
         }
     }
@@ -196,7 +217,7 @@ class AddDetailActivity : BaseActivity() {
             showMessageAlertDialog("",getString(R.string.add_detail_E04))
             return
         }
-
+        val travel = travelModel?.getTravelData()?.value
         val detailWithMembers = mutableListOf<DetailWithMember>()
         if(in_checkbox.isChecked){
             var isChecked = false
@@ -212,6 +233,7 @@ class AddDetailActivity : BaseActivity() {
                 showMessageAlertDialog("",getString(R.string.add_detail_E02))
                 return
             }
+            travel?.inMoney = (travel?.inMoney ?: 0f) + inputMoney
         }else{
             var isChecked = false
             detail.type = 1
@@ -221,6 +243,11 @@ class AddDetailActivity : BaseActivity() {
                     detailWithMembers.add(member)
                 }
             }
+
+            if(walletMoney < inputMoney) {
+                showMessageAlertDialog("",getString(R.string.add_detail_E07))
+            }
+
             if(!split_type_switch.isLeft && notAssignMoney != 0f){
                 showMessageAlertDialog("",getString(R.string.add_detail_E01))
                 return
@@ -230,9 +257,14 @@ class AddDetailActivity : BaseActivity() {
                     return
                 }
             }
+            travel?.outMoney = (travel?.outMoney ?: 0f) + inputMoney
         }
        dataManager?.insertDetail(listOf(detail),detailWithMembers){
            if(it == BuildConfig.NORMAL_CODE){
+               travelModel?.getTravelData()?.value = travel
+               val event = EventBusMessage.instance(REFRESH_TRAVEL_DETAIL)
+               event.travel = travelModel
+               EventBus.getDefault().post(event)
                showMessageAlertDialog("",getString(R.string.add_detail_E06)){_,_ ->
                    finish()
                    baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
@@ -244,6 +276,9 @@ class AddDetailActivity : BaseActivity() {
     }
 
     private fun changeMemberPlatform(isIn:Boolean){
+
+        money_title.text = "${if(!isIn) getString(R.string.add_detail_005) else getString(R.string.add_detail_006)}${getString(R.string.add_detail_003)}"
+
         val moveDistance = Utils.instance().getScreenWidth() - Utils.instance().DPToPX(24f)
         val inMoveDistance = if (isIn) 0f else moveDistance
         val outMoveDistance = if (isIn) -moveDistance else 0f
@@ -295,25 +330,114 @@ class AddDetailActivity : BaseActivity() {
             assignMoney += detailMember.money
         }
         notAssignMoney = inputMoney - assignMoney
-        val notAssignStr = Utils.instance().transMoneyToString(notAssignMoney)
-        not_assign_money.text =
-            String.format(getString(R.string.add_detail_012),notAssignStr)
+
+        if(notAssignMoney < 0){
+            detail_money.setText(Utils.instance().transMoneyToString(assignMoney))
+        }else {
+            val notAssignStr = Utils.instance().transMoneyToString(notAssignMoney)
+            not_assign_money.text =
+                String.format(getString(R.string.add_detail_012), notAssignStr)
+        }
     }
 
+    private fun initShowPlatform(detail:Detail){
+        var isIn = true
+        when (detail!!.type) {
+            0 -> {
+                isIn = true
+                in_checkbox.check(true)
+                out_checkbox.check(false)
+            }
+            1 -> {
+                isIn = false
+                in_checkbox.check(false)
+                out_checkbox.check(true)
+            }
+        }
 
+        detail_money.setText(Utils.instance().transMoneyToString(detail.money ?: 0f))
+        detail_memo.setText(detail.memo)
+
+        out_checkbox.isEnabled = false
+        in_checkbox.isEnabled = false
+        detail_money.isEnabled = false
+        detail_memo.isEnabled = false
+        split_type_switch.visibility = View.GONE
+
+        dataManager = DataManager()
+        inDetailMembers = mutableListOf()
+        outDetailMembers = mutableListOf()
+
+        detail_out_member_list.layoutManager = LinearLayoutManager(context)
+        detail_in_member_list.layoutManager =  LinearLayoutManager(context)
+        dataManager?.getDetailWithMemberByDetail(detail.id) { resultCode, data ->
+            if (resultCode == BuildConfig.NORMAL_CODE) {
+
+                var detailMemberAdapter:TravelDetailMemberAdapter?
+                if(isIn) {
+                    val moveDistance = Utils.instance().getScreenWidth() - Utils.instance().DPToPX(24f)
+                    val objectAnimator = ObjectAnimator.ofFloat(
+                        out_detail_platform,
+                        "translationX",
+                        out_detail_platform.translationX,
+                        -moveDistance
+                    )
+                    objectAnimator.duration = 0
+                    objectAnimator.start()
+                }else{
+                    val moveDistance = Utils.instance().getScreenWidth() - Utils.instance().DPToPX(24f)
+                    val objectAnimator = ObjectAnimator.ofFloat(
+                        in_detail_platform,
+                        "translationX",
+                        in_detail_platform.translationX,
+                        moveDistance
+                    )
+                    objectAnimator.duration = 0
+                    objectAnimator.start()
+                }
+                if(isIn) {
+                    inDetailMembers.addAll(data)
+                    detailMemberAdapter = TravelDetailMemberAdapter(this,inDetailMembers,isIn)
+                    detailMemberAdapter.isShow = true
+                    detail_in_member_list.adapter = detailMemberAdapter
+                    val inLayout = detail_in_member_list.layoutParams as ConstraintLayout.LayoutParams
+                    inLayout.height =
+                        Utils.instance().DPToPX((20f + 1f + 16f + 16f + 2f) * inDetailMembers.size)
+                            .toInt()
+                    inLayout.width =
+                        Utils.instance().getScreenWidth() - Utils.instance().DPToPX(24 * 2f).toInt()
+                    detail_in_member_list.layoutParams = inLayout
+                }else{
+                    outDetailMembers.addAll(data)
+                    detailMemberAdapter = TravelDetailMemberAdapter(this,outDetailMembers,isIn)
+                    detailMemberAdapter.isShow = true
+                    detail_out_member_list.adapter = detailMemberAdapter
+                    val outLayout = detail_out_member_list.layoutParams as ConstraintLayout.LayoutParams
+                    outLayout.height =
+                        Utils.instance().DPToPX((20f + 1f + 16f + 16f + 2f) * outDetailMembers.size)
+                            .toInt()
+                    outLayout.width =
+                        Utils.instance().getScreenWidth() - Utils.instance().DPToPX(24 * 2f).toInt()
+                    detail_out_member_list.layoutParams = outLayout
+                }
+                detailMemberAdapter.notifyDataSetChanged()
+            }else{
+                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)")
+            }
+        }
+
+
+    }
+
+    /**
+     * 添加明细时的初始化
+     */
     private fun initPlatform(isIn:Boolean,travelId:String?) {
         dataManager = DataManager()
         detail  = Detail.createDetail()
         detail.travelId = travelId ?: ""
         inDetailMembers = mutableListOf()
         outDetailMembers = mutableListOf()
-//        val self = DetailWithMember.createDetailWithMember()
-//        self.memberId = UserData.instance().getLoginUserId()
-//        self.memberName = getString(R.string.add_detail_013)
-//        self.travelId = travelId ?: ""
-//        self.detailId = detail.id
-//        inDetailMembers.add(0,self)
-//        outDetailMembers.add(0,self.copy())
         mInMemberAdapter = TravelDetailMemberAdapter(this,inDetailMembers,true){ index, mIsIn, isChecked ->
             memberCheck(index,mIsIn,isChecked)
         }

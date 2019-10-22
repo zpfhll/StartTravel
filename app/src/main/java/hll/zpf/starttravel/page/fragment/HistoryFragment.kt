@@ -197,7 +197,7 @@ class HistoryFragment : Fragment(),View.OnClickListener {
             info.name = "旅行$i"
             info.startDate = "20190213123334123"
             info.memo = "メモ$i"
-            info.money = i * 200f
+            info.outMoney = i * 200f
             datas.add(info)
         }
         return datas

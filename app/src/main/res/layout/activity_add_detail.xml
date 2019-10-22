@@ -21,7 +21,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/textView29"
+                android:id="@+id/money_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -43,7 +43,7 @@
                 android:background="@drawable/edit_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView29" />
+                app:layout_constraintTop_toBottomOf="@+id/money_title" />
 
             <TextView
                 android:id="@+id/textView31"
@@ -96,15 +96,15 @@
                 android:id="@+id/in_checkbox"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="132dp"
                 app:checkbox_image_height="30dp"
                 app:checkbox_image_width="30dp"
                 app:checkbox_text="@string/add_detail_006"
                 app:checked_image="@mipmap/checkbox_checked_green"
                 app:layout_constraintBottom_toBottomOf="@+id/out_checkbox"
-                app:layout_constraintStart_toEndOf="@+id/out_checkbox"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/out_checkbox"
-                app:uncheck_image="@mipmap/checkbox_green"/>
+                app:uncheck_image="@mipmap/checkbox_green" />
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/in_detail_platform"
                 android:layout_width="0dp"
@@ -229,6 +229,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView32" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/wallet_money_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:textColor="@color/light_red"
+                android:textSize="@dimen/font_size_s3"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/money_title"
+                app:layout_constraintStart_toEndOf="@+id/money_title"
+                app:layout_constraintTop_toTopOf="@+id/money_title" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

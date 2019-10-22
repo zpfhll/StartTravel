@@ -150,6 +150,8 @@ class TravelFragment : Fragment() {
     fun refreshData(message: EventBusMessage){
         if(message.message.equals((activity as BaseActivity).REFRESH_TRAVEL_DATA)){
             initData()
+        }else if(message.message.equals((activity as BaseActivity).REFRESH_TRAVEL_DETAIL)) {//添加明细后，刷新支出与结余的情报
+            currentTravelModel?.getTravelData()?.value = message.travel?.getTravelData()?.value
         }
     }
 
@@ -174,9 +176,6 @@ class TravelFragment : Fragment() {
             }
 
         }
-//        val message = Message()
-//        message.what = REFRESH_DATA
-//        refreshHandler.sendMessage(message)
     }
 
 

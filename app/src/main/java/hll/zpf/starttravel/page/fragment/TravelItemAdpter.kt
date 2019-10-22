@@ -12,7 +12,7 @@ class TravelItemAdapter(manager:FragmentManager):FragmentStatePagerAdapter(manag
     init {
         val fragment = TravelItemFragment()
         val travel = Travel.createTravel()
-        travel.type = 1
+        travel.type = 2
         fragment.initDate = travel
         mDatas.add(fragment)
     }
@@ -69,9 +69,9 @@ class TravelItemAdapter(manager:FragmentManager):FragmentStatePagerAdapter(manag
             }
         }else{
             if(mDatas[0].travelModel?.getTravelData()?.value == null
-                || mDatas[0].travelModel?.getTravelData()?.value?.type != 1 ){
+                || mDatas[0].travelModel?.getTravelData()?.value?.type != 2 ){
                 val travel = Travel.createTravel()
-                travel.type = 1
+                travel.type = 2
                 mDatas[0].initDate = travel
             }
         }

@@ -9,6 +9,7 @@ import hll.zpf.starttravel.R
 import hll.zpf.starttravel.base.BaseActivity
 import hll.zpf.starttravel.common.EventBusMessage
 import hll.zpf.starttravel.common.HLogger
+import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.database.DataManager
 import hll.zpf.starttravel.common.database.entity.Detail
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
@@ -22,9 +23,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 class TravelDetailActivity : BaseActivity() {
 
-    private var travelModel:TravelModel? = null
-
-    private lateinit var detailAdapter :TravelDetailAdapter
+    private var detailAdapter :TravelDetailAdapter? = null
     private lateinit var details :List<Detail>
 
 
@@ -37,9 +36,8 @@ class TravelDetailActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun initData(message: EventBusMessage){
         if(message.message.equals(TRAVEL_DETAIL)){
-            travelModel =  message.travel
             setTitle(
-                travelModel!!.getTravelData().value!!.name!!,
+                message.travel!!.getTravelData().value!!.name!!,
                 true,
                 getString(R.string.travel_detail_001),
                 R.drawable.back_button_background){
@@ -49,28 +47,55 @@ class TravelDetailActivity : BaseActivity() {
                         baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
                     }
                     R.id.right_button -> {//添加
-                        val event = EventBusMessage.instance(ADD_DETAIL)
-                        event.travel = travelModel
-                        EventBus.getDefault().postSticky(event)
+                        message.message = ADD_DETAIL
+                        EventBus.getDefault().postSticky(message)
                         val moneyIntent = Intent(this,AddDetailActivity::class.java)
                         baseStartActivity(moneyIntent, ActivityMoveEnum.START_FROM_RIGHT)
                     }
                 }
             }
+            refreshData(message.travel)
+        }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun refreshDetail(message: EventBusMessage){
+        if(message.message.equals(REFRESH_TRAVEL_DETAIL)) {
+            refreshData(message.travel)
+        }
+    }
+
+    private fun refreshData(travel:TravelModel?){
+        if(dataManager == null){
             dataManager = DataManager()
-            dataManager?.getDetailByTravelId(travelModel?.getTravelData()?.value?.id ?: ""){resultCode, data ->
-                if(resultCode == BuildConfig.NORMAL_CODE) {
-                    details = data
+        }
+
+        travel?.let {
+            consume_text.text  = Utils.instance().transMoneyToString(it.getTravelData().value?.outMoney ?: 0f)
+            input_text.text = Utils.instance().transMoneyToString(it.getTravelData().value?.inMoney ?: 0f)
+            wallet_text.text = Utils.instance().transMoneyToString((it.getTravelData().value?.inMoney ?: 0f) - (it.getTravelData().value?.outMoney ?: 0f))
+        }
+
+        dataManager?.getDetailByTravelId(travel?.getTravelData()?.value?.id ?: ""){resultCode, data ->
+            if(resultCode == BuildConfig.NORMAL_CODE) {
+                details = data
+                if(detailAdapter == null){
                     detailAdapter = TravelDetailAdapter(this, details){
                         HLogger.instance().e("TravelDetailAdapter--->","item $it")
+                        val message = EventBusMessage.instance(SHOW_DETAIL)
+                        message.detail = details[it]
+                        message.travel = travel
+                        EventBus.getDefault().postSticky(message)
+                        val moneyIntent = Intent(this,AddDetailActivity::class.java)
+                        baseStartActivity(moneyIntent, ActivityMoveEnum.START_FROM_RIGHT)
                     }
                     detail_list.adapter = detailAdapter
                     detail_list.layoutManager = LinearLayoutManager(context)
                 }else{
-                    showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)")
+                    detailAdapter?.refreshData(data)
                 }
+            }else{
+                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)")
             }
-
         }
     }
 

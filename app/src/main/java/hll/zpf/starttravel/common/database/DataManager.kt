@@ -91,13 +91,13 @@ class DataManager : CoroutineScope by MainScope(){
                         travel.startDate = cursor.getString(cursor.getColumnIndex("start_date"))
                         travel.endDate = cursor.getString(cursor.getColumnIndex("end_date"))
                         travel.endDate = cursor.getString(cursor.getColumnIndex("end_date"))
-                        travel.money = cursor.getFloat(cursor.getColumnIndex("money"))
                         travel.state = cursor.getInt(cursor.getColumnIndex("state"))
                         travel.image = cursor.getBlob(cursor.getColumnIndex("image"))
                         travel.type = cursor.getInt(cursor.getColumnIndex("type"))
                         travel.userId = cursor.getString(cursor.getColumnIndex("user_id"))
                         travel.memberCount = cursor.getInt(cursor.getColumnIndex("memberCount"))
                         travel.outMoney = cursor.getFloat(cursor.getColumnIndex("outMoney"))
+                        travel.inMoney = cursor.getFloat(cursor.getColumnIndex("inMoney"))
                         travels?.add(travel)
                     }
                 }catch (e:Exception){
@@ -138,6 +138,9 @@ class DataManager : CoroutineScope by MainScope(){
                         }
                     }catch (e:Exception){
                         errorCode = "E00008"
+                        daoSession?.let { travelDao ->
+                            travelDao.deleteTravel(travel)
+                        }
                         HLogger.instance().e("insertMembers","insert members fail : ${e.message}")
                     }
                 }
@@ -271,6 +274,7 @@ class DataManager : CoroutineScope by MainScope(){
                             }
                         } catch (e: Exception) {
                             errorCode = "E00011"
+                            daoSession?.deleteDetail(*details.toTypedArray())
                             HLogger.instance().e(
                                 "insertDetailWithMembers",
                                 "insert DetailWithMembers fail : ${e.message}"
@@ -312,4 +316,43 @@ class DataManager : CoroutineScope by MainScope(){
             callBack(it.resultCode,it.data as MutableList<Detail>)
         })
     }
+
+    //-------------  DetailWithMember -------------
+    /**
+     * 明细与用户查询
+     */
+    fun getDetailWithMemberByDetail(detailId : String?,callBack: (resultCode:String,data:MutableList<DetailWithMember>) -> Unit){
+        runTaskByAsyn("getDetailWithMemberByDetail",task = {
+            val detailWithMembers = mutableListOf<DetailWithMember>()
+            var errorCode = BuildConfig.NORMAL_CODE
+            if(detailId != null) {
+                val daoSession = BaseApplication.application?.travelDatabase?.detailWithMemberDao()
+                daoSession?.let {
+                    try {
+                        val cursor = it.loadDetailMemberByDetail(detailId)
+                        while (cursor.moveToNext()) {
+                            val detailWithMember = DetailWithMember.createDetailWithMember()
+                            detailWithMember.id = cursor.getString(cursor.getColumnIndex("id"))
+                            detailWithMember.memberId = cursor.getString(cursor.getColumnIndex("member_id"))
+                            detailWithMember.memberType = cursor.getInt(cursor.getColumnIndex("member_type"))
+                            detailWithMember.detailId = cursor.getString(cursor.getColumnIndex("detail_id"))
+                            detailWithMember.money = cursor.getFloat(cursor.getColumnIndex("money"))
+                            detailWithMember.travelId = cursor.getString(cursor.getColumnIndex("travel_id"))
+                            detailWithMember.memberName = cursor.getString(cursor.getColumnIndex("memberName"))
+                            detailWithMember.isSelected = true
+                            detailWithMembers.add(detailWithMember)
+                        }
+                    } catch (e: Exception) {
+                        errorCode  = "E00013"
+                        HLogger.instance()
+                            .e("getDetailWithMemberByDetail", "get DetailWithMember fail : ${e.message}")
+                    }
+                }
+            }
+            ResultData(errorCode,detailWithMembers)
+        },callBack = {
+            callBack(it.resultCode,it.data as MutableList<DetailWithMember>)
+        })
+    }
+
 }

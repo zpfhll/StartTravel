@@ -9,4 +9,5 @@
 	<dimen name="font_size_s3">15sp</dimen>
 	<dimen name="font_size_s4">13sp</dimen>
 	<dimen name="font_size_s5">12sp</dimen>
+	<dimen name="font_size_s6">10sp</dimen>
 </resources>
