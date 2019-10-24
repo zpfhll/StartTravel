@@ -79,8 +79,7 @@ class AddTravelActivity : BaseActivity() {
             getString(R.string.add_travel_002)){
             when(it.id){
                 R.id.left_button -> {//返回
-                    finish()
-                    baseStartActivity(null,ActivityMoveEnum.BACK_FROM_LEFT)
+                    onKeyCodeBackListener()
                 }
                 R.id.right_button -> {//提交
                     commitTravel()
@@ -516,6 +515,13 @@ class AddTravelActivity : BaseActivity() {
             }
         }
     }
+
+    override fun onKeyCodeBackListener() {
+        super.onKeyCodeBackListener()
+        finish()
+        baseStartActivity(null,ActivityMoveEnum.BACK_FROM_LEFT)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)

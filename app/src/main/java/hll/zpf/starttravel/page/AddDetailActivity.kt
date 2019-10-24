@@ -178,8 +178,7 @@ class AddDetailActivity : BaseActivity() {
                     R.drawable.back_button_background){
                     when(it.id){
                         R.id.left_button -> {//返回
-                            finish()
-                            baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
+                            onKeyCodeBackListener()
                         }
                         R.id.right_button -> {//添加
                             commit()
@@ -197,8 +196,7 @@ class AddDetailActivity : BaseActivity() {
                     R.drawable.back_button_background){
                     when(it.id){
                         R.id.left_button -> {//返回
-                            finish()
-                            baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
+                            onKeyCodeBackListener()
                         }
                     }
                 }
@@ -266,8 +264,7 @@ class AddDetailActivity : BaseActivity() {
                event.travel = travelModel
                EventBus.getDefault().post(event)
                showMessageAlertDialog("",getString(R.string.add_detail_E06)){_,_ ->
-                   finish()
-                   baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
+                   onKeyCodeBackListener()
                }
            }else{
                showMessageAlertDialog("","${getString(R.string.add_detail_E05)}($it)")
@@ -423,8 +420,7 @@ class AddDetailActivity : BaseActivity() {
                 detailMemberAdapter.notifyDataSetChanged()
             }else{
                 showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)"){_,_ ->
-                    finish()
-                    baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
+                    onKeyCodeBackListener()
                 }
             }
         }
@@ -514,12 +510,17 @@ class AddDetailActivity : BaseActivity() {
                 mInMemberAdapter.notifyDataSetChanged()
             }else{
                 showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)"){_,_ ->
-                    finish()
-                    baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
+                    onKeyCodeBackListener()
                 }
             }
         }
 
+    }
+
+    override fun onKeyCodeBackListener() {
+        super.onKeyCodeBackListener()
+        finish()
+        baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
     }
 
     override fun onDestroy() {

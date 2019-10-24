@@ -144,12 +144,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:text="@string/travel_detail_008"
         android:textColor="@color/orange"
         android:textSize="@dimen/font_size_s3"
         app:layout_constraintStart_toEndOf="@+id/imageView10"
-        app:layout_constraintTop_toBottomOf="@+id/title_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/textView36" />
 
     <ImageView
         android:id="@+id/imageView5"
@@ -178,10 +178,10 @@
         android:id="@+id/imageView10"
         android:layout_width="15dp"
         android:layout_height="15dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="28dp"
         android:src="@mipmap/wallet1"
         app:layout_constraintBottom_toBottomOf="@+id/textView38"
-        app:layout_constraintStart_toEndOf="@+id/input_text"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textView38" />
 
     <TextView

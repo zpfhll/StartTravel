@@ -39,12 +39,10 @@ class TravelDetailActivity : BaseActivity() {
             setTitle(
                 message.travel!!.getTravelData().value!!.name!!,
                 true,
-                getString(R.string.travel_detail_001),
-                R.drawable.back_button_background){
+                getString(R.string.travel_detail_001)){
                 when(it.id){
                     R.id.left_button -> {//返回
-                        finish()
-                        baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
+                        onKeyCodeBackListener()
                     }
                     R.id.right_button -> {//添加
                         message.message = ADD_DETAIL
@@ -94,9 +92,17 @@ class TravelDetailActivity : BaseActivity() {
                     detailAdapter?.refreshData(data)
                 }
             }else{
-                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)")
+                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)"){_,_ ->
+                    onKeyCodeBackListener()
+                }
             }
         }
+    }
+
+    override fun onKeyCodeBackListener() {
+        super.onKeyCodeBackListener()
+        finish()
+        baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
     }
 
     override fun onDestroy() {
