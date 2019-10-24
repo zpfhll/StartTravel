@@ -54,7 +54,7 @@ class TravelDetailMemberAdapter(context: AddDetailActivity, memberData: List<Det
             holder.outCheckBox?.setText(member.memberName)
             holder.memberMoney?.setText("${member.money}")
             holder.outCheckBox?.check(member.isSelected)
-            holder.memberMoney?.isEnabled = member.isSelected
+            holder.memberMoney?.isEnabled = !isShow && member.isSelected
         }
     }
 

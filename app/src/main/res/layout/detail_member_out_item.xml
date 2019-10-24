@@ -9,20 +9,22 @@
 		android:id="@+id/root_view">
 
 	<hll.zpf.starttravel.common.components.CustomCheckboxView
-			android:layout_width="100dp"
-			android:layout_height="wrap_content"
-			app:checkbox_image_width="20dp"
-			app:checkbox_image_height="20dp"
-			app:checked_image="@mipmap/checkbox_checked_red"
-			app:uncheck_image="@mipmap/checkbox_red"
-			app:checkbox_text="name"
-			app:layout_constraintStart_toStartOf="parent"
-			android:layout_marginStart="24dp"
-			android:id="@+id/out_checkbox"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			android:layout_marginTop="16dp"
-			android:layout_marginBottom="16dp"/>
+		android:id="@+id/out_checkbox"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="24dp"
+		android:layout_marginTop="16dp"
+		android:layout_marginEnd="4dp"
+		android:layout_marginBottom="16dp"
+		app:checkbox_image_height="20dp"
+		app:checkbox_image_width="20dp"
+		app:checkbox_text="name"
+		app:checked_image="@mipmap/checkbox_checked_red"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toStartOf="@+id/detail_member_money"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:uncheck_image="@mipmap/checkbox_red" />
 	<TextView
 			android:layout_width="0dp"
 			android:layout_height="1dp"

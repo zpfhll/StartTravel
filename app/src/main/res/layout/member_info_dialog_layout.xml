@@ -56,7 +56,7 @@
 			android:hint="@string/member_info_dialog_003"
 			android:textSize="@dimen/font_size_s2"
 			android:textColor="@color/title_color"
-			android:maxLength="20"
+			android:maxLength="6"
 			android:background="@drawable/edit_background"
 			android:id="@+id/member_name"
 			app:layout_constraintEnd_toEndOf="@+id/view2"
