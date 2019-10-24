@@ -105,6 +105,10 @@ class TravelItemFragment : Fragment() {
                     //图片设定
                     it.getImageBitmap()?.let { bitmap ->
                         travelImage.setImageBitmap(bitmap)
+                        activity?.let {tempContext ->
+                            view.findViewById<CRImageView>(R.id.travel_item_background).setImageBitmap(Utils.instance().blurBitmap(tempContext,bitmap,25f,0.4f))
+                        }
+
                     }
 
 
