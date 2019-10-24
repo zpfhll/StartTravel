@@ -2,6 +2,7 @@ package hll.zpf.starttravel.common.database.entity
 
 import androidx.room.*
 import hll.zpf.starttravel.common.Utils
+import java.util.*
 
 @Entity(tableName = "detail_member_join",
         foreignKeys = [ForeignKey(entity = Member::class,
@@ -31,8 +32,14 @@ data class DetailWithMember(
     var isSelected :Boolean = false
 
     companion object {
+        private var oldDataStr = ""
         fun createDetailWithMember():DetailWithMember{
-            val dateString = Utils.instance().getDateStringByFormat("", null)
+            val utils = Utils.instance()
+            var dateString = utils.getDateStringByFormat("", null)
+            if(oldDataStr == dateString){
+                dateString = utils.dateCalculate(dateString,1,Calendar.MILLISECOND) ?: "20190711000000000"
+            }
+            oldDataStr = dateString
             val detailWithMemberId = "DM$dateString"
             return DetailWithMember(detailWithMemberId,"",0,"",0f,"")
         }

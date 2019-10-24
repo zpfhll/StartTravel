@@ -6,6 +6,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import hll.zpf.starttravel.common.Utils
+import java.util.*
 
 @Entity(tableName = "user")
 data class User (
@@ -25,8 +26,15 @@ data class User (
 ) {
 
     companion object {
+        private var oldDataStr = ""
         fun createUser():User{
-            val userId = "U${Utils.instance().getDateStringByFormat("", null)}"
+            val utils = Utils.instance()
+            var dateString = utils.getDateStringByFormat("", null)
+            if(oldDataStr == dateString){
+                dateString = utils.dateCalculate(dateString,1, Calendar.MILLISECOND) ?: "20190711000000000"
+            }
+            oldDataStr = dateString
+            val userId = "U$dateString"
             return User(userId,null,null,null,null,true)
         }
     }

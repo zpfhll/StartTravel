@@ -16,6 +16,7 @@ import java.util.*
 import android.graphics.PixelFormat
 import android.graphics.drawable.Drawable
 import android.graphics.Canvas
+import java.text.ParseException
 
 
 class Utils {
@@ -158,6 +159,39 @@ class Utils {
             dateString = dateFormat.format(Date())
         }
         return dateString
+    }
+
+    /**
+     * 日期的简单计算
+     *
+     * @param dateStr 计算前的日期
+     * @param time 向前或向后计算的时间间隔  负数向过去，正数向将来
+     * @param field Calendar的指定单位 例：Calendar.HOUR
+     * @param format 指定的日期格式 (默认：yyyyMMddHHmmssSSS)
+     *
+     *@return
+     * 计算后的日期，日期格式错误或转换失败时，返回NULL
+     *
+     */
+    fun dateCalculate(dateStr:String,time:Int,field:Int,format:String? = null) : String?{
+        var mFormat  = format
+        if(mFormat == null || mFormat.equals("")){
+            mFormat = "yyyyMMddHHmmssSSS"
+        }
+
+        val dateFormat = SimpleDateFormat(mFormat, Locale.CHINESE)
+        val date:Date?
+        return try {
+            date = dateFormat.parse(dateStr)
+            val calendar = Calendar.getInstance()
+            calendar.time = date
+            calendar.add(field,time)
+            val resultDate = dateFormat.format(calendar.time)
+            resultDate
+        }catch (e:ParseException){
+            HLogger.instance().e("dateCalculate",e.message ?: "")
+            null
+        }
     }
 
     /**

@@ -422,7 +422,10 @@ class AddDetailActivity : BaseActivity() {
                 }
                 detailMemberAdapter.notifyDataSetChanged()
             }else{
-                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)")
+                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)"){_,_ ->
+                    finish()
+                    baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
+                }
             }
         }
 
@@ -510,7 +513,10 @@ class AddDetailActivity : BaseActivity() {
                 mOutMemberAdapter.notifyDataSetChanged()
                 mInMemberAdapter.notifyDataSetChanged()
             }else{
-                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)")
+                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)"){_,_ ->
+                    finish()
+                    baseStartActivity(null, ActivityMoveEnum.BACK_FROM_LEFT)
+                }
             }
         }
 

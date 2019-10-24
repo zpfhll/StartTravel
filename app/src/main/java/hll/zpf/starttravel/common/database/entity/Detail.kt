@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import hll.zpf.starttravel.common.Utils
+import java.util.*
 
 @Entity(tableName = "detail")
 data class Detail(
@@ -27,8 +28,14 @@ data class Detail(
 
 
     companion object {
+        private var oldDataStr = ""
         fun createDetail():Detail{
-            val dateString = Utils.instance().getDateStringByFormat("", null)
+            val utils = Utils.instance()
+            var dateString = utils.getDateStringByFormat("", null)
+            if(oldDataStr == dateString){
+                dateString = utils.dateCalculate(dateString,1, Calendar.MILLISECOND) ?: "20190711000000000"
+            }
+            oldDataStr = dateString
             val detailId = "D$dateString"
             return Detail(detailId,"",dateString,1,0f,"")
         }

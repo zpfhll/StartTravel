@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.room.*
 import hll.zpf.starttravel.common.Utils
+import java.util.*
 
 @Entity(tableName = "travel",
         foreignKeys = [ForeignKey(entity = User::class,
@@ -45,8 +46,15 @@ data class Travel (
     constructor():this("",null,null,null,null,0,null,0,null,0,0f,0f)
 
     companion object {
+        private var oldDataStr =""
         fun createTravel():Travel{
-            val userId = "T${Utils.instance().getDateStringByFormat("", null)}"
+            val utils = Utils.instance()
+            var dateString = utils.getDateStringByFormat("", null)
+            if(oldDataStr == dateString){
+                dateString = utils.dateCalculate(dateString,1, Calendar.MILLISECOND) ?: "20190711000000000"
+            }
+            oldDataStr = dateString
+            val userId = "T$dateString}"
             return Travel(userId,null,null,null,null,0,null,0,null,0,0f,0f)
         }
     }
