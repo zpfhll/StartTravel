@@ -41,7 +41,7 @@ class TravelDetailAdapter(context: Context, detailData: List<Detail>, callback: 
                 holder.detailMoney.setTextColor(mContext.getColor(R.color.baseColor))
             }
             1 -> {
-                holder.detailType.setBackgroundResource(R.drawable.circle_red)
+                holder.detailType.setBackgroundResource(R.drawable.circle_light_red)
                 holder.detailMoney.setTextColor(mContext.getColor(R.color.red))
             }
         }

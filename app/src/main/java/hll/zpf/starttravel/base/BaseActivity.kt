@@ -156,11 +156,11 @@ open class BaseActivity: AppCompatActivity() {
     /**
      * 设定标题
      *
-     * title：标题文本
-     * isShowRightButton：是否表示右侧按钮
-     * rightButtonText：右侧按钮的文本
-     * leftButtonBackground：左侧按钮的背景
-     * clickBlock：按钮的点击事件
+     * @param title 标题文本
+     * @param isShowRightButton 是否表示右侧按钮
+     * @param rightButtonText 右侧按钮的文本
+     * @param leftButtonBackground 左侧按钮的背景
+     * @param clickBlock 按钮的点击事件
      */
     open fun setTitle(title:String,
                       isShowRightButton:Boolean,
@@ -190,6 +190,33 @@ open class BaseActivity: AppCompatActivity() {
             clickBlock(it)
         }
 
+    }
+
+    /**
+     * 设定标题
+     *
+     * @param title 标题文本
+     * @param isShowRightButton 是否表示右侧按钮
+     * @param rightButtonText 右侧按钮的文本
+     * @param leftButtonBackground 左侧按钮的背景
+     * @param backgroundColor 背景颜色
+     * @param titleColor 标题颜色
+     * @param clickBlock 按钮的点击事件
+     */
+    open fun setTitleWithColor(title:String,
+                      isShowRightButton:Boolean,
+                      rightButtonText:String? = null,
+                      leftButtonBackground:Int? = null,
+                      backgroundColor:Int,
+                      titleColor:Int,
+                      clickBlock:(View) -> Unit){
+        setTitle(title,isShowRightButton,rightButtonText,leftButtonBackground,clickBlock)
+
+        val titleText:TextView = findViewById(R.id.title_text)
+        titleText.setTextColor(getColor(titleColor))
+
+        val titleBackground:View = findViewById(R.id.title_background)
+        titleBackground.setBackgroundColor(getColor(backgroundColor))
     }
 
 

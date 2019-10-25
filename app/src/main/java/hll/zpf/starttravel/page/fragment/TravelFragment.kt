@@ -34,6 +34,8 @@ import hll.zpf.starttravel.BuildConfig
 import hll.zpf.starttravel.common.database.entity.Travel
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
 import hll.zpf.starttravel.common.enums.TravelTypeEnum
+import hll.zpf.starttravel.page.TimeLineActivity
+import hll.zpf.starttravel.page.TimeLineAdapter
 import hll.zpf.starttravel.page.TravelDetailActivity
 
 
@@ -82,7 +84,8 @@ class TravelFragment : Fragment() {
                     }
                 }
                 1 ->{//1：标记
-
+                    val stepIntent = Intent(activity,TimeLineActivity::class.java)
+                    (activity as BaseActivity).baseStartActivity(stepIntent, ActivityMoveEnum.START_FROM_RIGHT)
                 }
                 2 ->{//2：编辑
 

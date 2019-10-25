@@ -7,6 +7,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import hll.zpf.starttravel.common.Utils
+import java.util.*
 
 @Entity(tableName = "step",
     foreignKeys = [ForeignKey(entity = Travel::class,
@@ -31,6 +32,22 @@ data class Step (
     @ColumnInfo(name = "travel_id")
     var  travelId :String
 ) {
+
+    companion object {
+        private var oldDataStr = ""
+        fun createStep():Step{
+            val utils = Utils.instance()
+            var dateString = utils.getDateStringByFormat("", null)
+            if(oldDataStr == dateString){
+                dateString = utils.dateCalculate(dateString,1, Calendar.MILLISECOND) ?: "20190711000000000"
+            }
+            oldDataStr = dateString
+            val steoId = "M$dateString"
+            return Step(steoId,"",null,"",0f,0f,null,"")
+        }
+    }
+
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
