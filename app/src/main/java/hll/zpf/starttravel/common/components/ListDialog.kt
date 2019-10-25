@@ -68,7 +68,7 @@ class ListDialog(context: Context) : Dialog(context) {
             }
         }
         contentList.onItemClickListener =
-            AdapterView.OnItemClickListener{ adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
+            AdapterView.OnItemClickListener{ _: AdapterView<*>, _: View, i: Int, _: Long ->
                 callback?.let {
                     it(i)
                     dismiss()
@@ -76,18 +76,18 @@ class ListDialog(context: Context) : Dialog(context) {
             }
         setContentView(rootView)
 
-        window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val winPa = window.attributes
-        window.attributes = winPa
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val winPa = window?.attributes
+        window?.attributes = winPa
     }
 
 
     private fun makeList() : List<Map<String,String>>{
-        var list = ArrayList<Map<String,String>>()
-        data?.let {
+        val list = ArrayList<Map<String,String>>()
+        data.let {
             for (item in it){
-                var map = HashMap<String,String>()
-                map.put("content",item)
+                val map = HashMap<String,String>()
+                map["content"] = item
                 list.add(map)
             }
         }

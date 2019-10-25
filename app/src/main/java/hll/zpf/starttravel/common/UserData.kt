@@ -51,7 +51,7 @@ class UserData {
     fun getLoginUserId() : String{
         var userId = ""
         sharedPreferences?.let {
-            userId = it.getString(currentUser!!,"")
+            userId = it.getString(currentUser,"") ?: ""
             return userId
         }
         return userId
