@@ -39,7 +39,8 @@ class TravelDetailActivity : BaseActivity() {
             setTitle(
                 message.travel!!.getTravelData().value!!.name!!,
                 true,
-                getString(R.string.travel_detail_001)){
+                getString(R.string.travel_detail_001),
+                R.drawable.back_button_background){
                 when(it.id){
                     R.id.left_button -> {//返回
                         onKeyCodeBackListener()

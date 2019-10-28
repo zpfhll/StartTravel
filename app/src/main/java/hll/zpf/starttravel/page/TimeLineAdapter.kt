@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import hll.zpf.starttravel.R
 import hll.zpf.starttravel.common.components.CRImageView
@@ -39,12 +40,9 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
             var textColor = R.color.baseColor
             var isLeft = false
 
-
             if(index == mStepData.size - 1){
-                holder.mainLineCircle.visibility = View.GONE
                 holder.addTimeLineButton.visibility = View.VISIBLE
             }else{
-                holder.mainLineCircle.visibility = View.VISIBLE
                 holder.addTimeLineButton.visibility = View.GONE
             }
 
@@ -52,13 +50,17 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
                 holder.leftFootImage.visibility = View.GONE
                 holder.rightFootImage.visibility = View.GONE
                 holder.firstLine.visibility =View.GONE
+
+                val layout = holder.mainLineCircle.layoutParams as ConstraintLayout.LayoutParams
+                layout.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+                layout.bottomMargin = 0
+                holder.mainLineCircle.layoutParams = layout
+
             }else{
                 holder.leftFootImage.visibility = View.VISIBLE
                 holder.rightFootImage.visibility = View.VISIBLE
                 holder.firstLine.visibility =View.VISIBLE
             }
-
-
             when (index % 4) {
                 0 -> {
                     themeId = R.drawable.circle_green
@@ -103,8 +105,6 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
             holder.rightTimeLineName.visibility = rightVisibility
             holder.rightTimeLineDetailButton.visibility = rightVisibility
 
-
-
             holder.mainLine.setBackgroundResource(themeId)
             holder.mainLineCircle.setBackgroundResource(themeId)
             if(leftVisibility == View.VISIBLE) {
@@ -122,11 +122,6 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
 
 
     }
-
-
-
-
-
 
 
     inner class StepItemViewHandler(itemView: View): RecyclerView.ViewHolder(itemView){

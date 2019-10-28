@@ -84,6 +84,9 @@ class TravelFragment : Fragment() {
                     }
                 }
                 1 ->{//1：标记
+                    val event = EventBusMessage.instance((activity as BaseActivity).TIME_LINE)
+                    event.travel = travelModel
+                    EventBus.getDefault().postSticky(event)
                     val stepIntent = Intent(activity,TimeLineActivity::class.java)
                     (activity as BaseActivity).baseStartActivity(stepIntent, ActivityMoveEnum.START_FROM_RIGHT)
                 }

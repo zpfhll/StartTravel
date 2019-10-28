@@ -66,6 +66,11 @@ open class BaseActivity: AppCompatActivity() {
      */
     val SHOW_DETAIL = "show_detail"
 
+    /**
+     * TimeLine一览页面(EventBus 消息)
+     */
+    val TIME_LINE = "time_line"
+
     val CODE_FOR_WRITE_PERMISSION = 1
     val CODE_FOR_LOCATION_PERMISSION = 2
     val CODE_FOR_READ_PHONE_STATE_PERMISSION = 3

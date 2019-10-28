@@ -76,7 +76,8 @@ class AddTravelActivity : BaseActivity() {
         setTitle(
             getString(R.string.add_travel_001),
             true,
-            getString(R.string.add_travel_002)){
+            getString(R.string.add_travel_002),
+            R.drawable.back_button_background){
             when(it.id){
                 R.id.left_button -> {//返回
                     onKeyCodeBackListener()

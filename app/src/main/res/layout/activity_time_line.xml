@@ -11,17 +11,11 @@
     android:background="@color/background_color"
     tools:context=".page.TimeLineActivity">
 
-    <hll.zpf.starttravel.common.components.CRImageView
-        android:id="@+id/travel_image"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="44dp"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/default_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:radius="10dp" />
+    <ImageView
+            android:id="@+id/background_image"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,13 +28,13 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/time_line"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/travel_image" />
+            android:id="@+id/time_line"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title_layout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
