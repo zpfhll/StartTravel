@@ -48,19 +48,9 @@ class MapFragment : Fragment(),GeocodeSearch.OnGeocodeSearchListener,AMap.OnMyLo
 
     private var city: String? = null
 
-    private lateinit var tipView:ListView
-
-    private var tips: ArrayList<Tip>? = null
-
-    private lateinit var adapter: MapTipAdapter
-
-    private var isShowTipsView = true
-
     private var isInitedMyLocation = false
 
     private lateinit  var  myLatLng: LatLng
-
-    private  var selectTip:Tip? = null
 
     /**
      * 0:显示标记点 1：添加标记点时使用
@@ -96,50 +86,6 @@ class MapFragment : Fragment(),GeocodeSearch.OnGeocodeSearchListener,AMap.OnMyLo
         mSearchContent = rootView.findViewById(R.id.search_content)
         mGeocoderSearch = GeocodeSearch(this.context)
         mGeocoderSearch.setOnGeocodeSearchListener(this)
-        tipView = rootView.findViewById(R.id.tips_list)
-        tips = ArrayList()
-        adapter = MapTipAdapter(tips!!, this.context!!){ _, tip ->
-            isShowTipsView = false
-            selectTip = tip
-            mSearchContent.setText(tip.name)
-        }
-        tipView.adapter = adapter
-        tipView.visibility = View.GONE
-        mSearchBtn.setOnClickListener {
-            val query = GeocodeQuery(mSearchContent.text.toString(),city)
-            mGeocoderSearch.getFromLocationNameAsyn(query)
-        }
-        mSearchContent.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable) {
-                selectTip = null
-                if (s.toString() == "" || !isShowTipsView) {
-                    tipView.visibility = View.GONE
-                    isShowTipsView = true
-                } else {
-                    //第二个参数传入null或者“”代表在全国进行检索，否则按照传入的city进行检索
-                    val inputquery = InputtipsQuery(s.toString(), city)
-                    inputquery.cityLimit = true//限制在当前城市
-                    val inputTips = Inputtips(context, inputquery)
-                    inputTips.setInputtipsListener { list, i ->
-                        tips?.clear()
-                        if (list.size < 1) {
-                            tipView.visibility = View.GONE
-                        } else {
-                            tips?.addAll(list)
-                            tipView.visibility = View.VISIBLE
-                            adapter.notifyDataSetChanged()
-                        }
-                    }
-                    inputTips.requestInputtipsAsyn()
-                }
-            }
-        })
         return rootView
     }
 

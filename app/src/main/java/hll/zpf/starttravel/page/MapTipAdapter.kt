@@ -1,4 +1,4 @@
-package hll.zpf.starttravel.page.fragment
+package hll.zpf.starttravel.page
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,30 +7,30 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.amap.api.services.help.Tip
+import com.amap.api.services.core.PoiItem
 import hll.zpf.starttravel.R
 
 
-class MapTipAdapter internal constructor(datas: ArrayList<Tip>, context: Context,callback:((Int,Tip)->Unit)? = null) : BaseAdapter() {
+class MapTipAdapter internal constructor(data: ArrayList<PoiItem>, context: Context, callback:((Int, PoiItem)->Unit)? = null) : BaseAdapter() {
 
-    private var mDatas = ArrayList<Tip>()
+    private var mData = ArrayList<PoiItem>()
 
     private var mContext:Context
 
-    private var mCallback:((Int,Tip)->Unit)?
+    private var mCallback:((Int,PoiItem)->Unit)?
 
     init {
-        mDatas = datas
+        mData = data
         mContext = context
         mCallback = callback
     }
 
     override fun getCount(): Int {
-        return mDatas.size
+        return mData.size
     }
 
-    override fun getItem(position: Int): Tip {
-        return mDatas[position]
+    override fun getItem(position: Int): PoiItem {
+        return mData[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -49,12 +49,12 @@ class MapTipAdapter internal constructor(datas: ArrayList<Tip>, context: Context
         } else {
             holder = convertView.tag as ViewHolder
         }
-        holder.tipLocation.text = "${mDatas[position].district} ${mDatas[position].address}"
-        holder.tipName.text = mDatas[position].name
+        holder.tipLocation.text = "${mData[position].adName} ${mData[position].snippet}"
+        holder.tipName.text = mData[position].title
 
         convertView.setOnClickListener{
             mCallback?.let {
-                it(position,mDatas[position])
+                it(position,mData[position])
             }
         }
 

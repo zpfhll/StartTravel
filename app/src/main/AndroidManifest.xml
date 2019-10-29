@@ -69,11 +69,12 @@
         <activity
             android:name=".page.TimeLineActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".page.AddTimeLineActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|stateUnchanged|adjustPan" />
         <activity
             android:name=".page.AddDetailActivity"
             android:exported="false"
@@ -82,7 +83,8 @@
         <activity
             android:name=".page.LocationSelectActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|stateUnchanged"/>
     </application>
 
 </manifest>

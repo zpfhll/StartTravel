@@ -139,6 +139,36 @@ open class BaseActivity: AppCompatActivity() {
     }
 
     /**
+     * 画面结果の遷移
+     * @param intent 遷移の情報
+     * @param requestCode 请求CODE
+     * @param options アニメーションのタイプ
+     */
+    fun baseStartActivityForResult(intent: Intent?,requestCode:Int,anim:ActivityMoveEnum){
+        if (intent != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY)
+            startActivityForResult(intent,requestCode)
+        }
+        when (anim){
+            ActivityMoveEnum.START_FROM_RIGHT -> overridePendingTransition(R.anim.in_from_right,R.anim.out_to_left)
+            ActivityMoveEnum.START_FROM_BOTTOM -> overridePendingTransition(R.anim.in_from_bottom,R.anim.out_to_top)
+            ActivityMoveEnum.BACK_FROM_LEFT -> overridePendingTransition(R.anim.out_to_right,R.anim.in_from_left)
+            ActivityMoveEnum.BACK_FROM_TOP -> overridePendingTransition(R.anim.out_to_bottom,R.anim.in_from_top)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        baseActivityResult(requestCode,resultCode,data)
+    }
+    /**
+     * 画面结果返回の挙動
+     */
+    open fun baseActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
+
+    }
+
+    /**
      * 端末のボタンの挙動
      */
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
