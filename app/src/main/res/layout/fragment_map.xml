@@ -57,23 +57,26 @@
 			app:layout_constraintBottom_toBottomOf="@+id/search_view"/>
 
 	<ListView
-			android:layout_height="150dp"
-			android:id="@+id/tips_list"
-			android:background="@drawable/circle_round_edge_white"
-			app:layout_constraintStart_toStartOf="parent"
-			android:layout_marginEnd="8dp"
-			app:layout_constraintEnd_toEndOf="parent"
-			android:layout_marginStart="8dp"
-			app:layout_constraintHorizontal_bias="0.0"
-			app:layout_constraintTop_toBottomOf="@+id/search_view"
-			android:layout_marginTop="3dp" android:layout_width="0dp"/>
+		android:layout_height="150dp"
+		android:id="@+id/tips_list"
+		android:background="@drawable/circle_round_edge_white"
+		app:layout_constraintStart_toStartOf="parent"
+		android:layout_marginEnd="8dp"
+		app:layout_constraintEnd_toEndOf="parent"
+		android:layout_marginStart="8dp"
+		app:layout_constraintHorizontal_bias="0.0"
+		app:layout_constraintTop_toBottomOf="@+id/search_view"
+		android:layout_marginTop="3dp"
+		android:layout_width="0dp"/>
 	<Button
-			android:layout_width="40dp"
-			android:layout_height="40dp"
-			android:id="@+id/my_location_button"
-			android:background="@drawable/my_location_button_background"
-			app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp" android:layout_marginBottom="32dp"
-			app:layout_constraintBottom_toBottomOf="parent"/>
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:id="@+id/my_location_button"
+		android:background="@drawable/my_location_button_background"
+		app:layout_constraintEnd_toEndOf="parent"
+		android:layout_marginEnd="16dp"
+		android:layout_marginBottom="32dp"
+		app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

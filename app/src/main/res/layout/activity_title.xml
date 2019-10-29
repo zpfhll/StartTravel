@@ -11,7 +11,7 @@
             android:id="@+id/left_button"
             android:layout_width="44dp"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="@color/transparent"
             android:clickable="true"
             android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
@@ -19,8 +19,8 @@
             app:layout_constraintBottom_toTopOf="@+id/bottom_line"
             android:focusable="true">
         <TextView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:background="@drawable/close_button_background"
                 android:id="@+id/left_button_item"/>
     </LinearLayout>

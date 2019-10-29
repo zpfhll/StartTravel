@@ -113,6 +113,21 @@
     <string name="add_detail_E08"> 太富有了，贫穷限制了本程序的想象，我承认我没能力存这么多钱！</string>
 
 
+    <string name="add_step_001">添加标记</string>
+    <string name="add_step_002">标记简称:</string>
+    <string name="add_step_003">例:杜甫草堂</string>
+    <string name="add_step_004">位置:</string>
+    <string name="add_step_005">小记:</string>
+    <string name="add_step_006">记录心中的旅程</string>
+    <string name="add_step_007">确定</string>
+    <string name="add_step_008">删除</string>
+    <string name="add_step_009">编辑标记</string>
+    <string name="add_step_010">位置选择</string>
+
+    <string name="location_select_001">位置检索</string>
+    <string name="location_select_002">确定</string>
+
+
     <string name="list_dialog_001">取消</string>
 
     <string name="member_info_dialog_001">伙伴信息</string>
@@ -130,6 +145,7 @@
     <string name="money_label">￥%1$s</string>
 
     <string name="common_001">权限请求</string>
+    <string name="data_format_1">yyyy年MM月dd日 HH:mm</string>
 
 
     <!--错误信息-->
@@ -137,4 +153,5 @@
     <string name="E00002">服务器出小差了，请您稍后再试！</string>
     <string name="E00003">服务器出小差了，请您稍后再试！</string>
     <string name="DATABASE_ERROR">刚才有点走神儿，请再来一遍吧！</string>
+
 </resources>

@@ -1,5 +1,6 @@
 package hll.zpf.starttravel.page
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import hll.zpf.starttravel.R
@@ -19,30 +20,40 @@ class TimeLineActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_time_line)
         EventBus.getDefault().register(this)
-        setTitle(
-            "心路历程",
-            false,
-            null,
-            R.drawable.back_button_background){
-            when(it.id){
-                R.id.left_button -> {//返回
-                    onKeyCodeBackListener()
-                }
-            }
-        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun initData(message: EventBusMessage){
         if(message.message == TIME_LINE){
+            setTitleWithColor(
+                message.travel?.getTravelData()?.value?.name ?: "",
+                false,
+                null,
+                R.drawable.back_white_button_background,
+                R.color.transparent,
+                R.color.white,
+                false){
+                when(it.id){
+                    R.id.left_button -> {//返回
+                        onKeyCodeBackListener()
+                    }
+                }
+            }
             message.travel?.getTravelData()?.value?.getImageBitmap()?.let {
-                background_image.setImageBitmap(Utils.instance().blurBitmap(this,it,25f,0.4f))
+                background_image.setImageBitmap(it)
             }
             val datas = mutableListOf<Step>()
-            for (index in 0..9){
+            for (index in 0..2){
                 datas.add(Step.createStep())
             }
             val stepAdapter = TimeLineAdapter(this, datas){type,index ->
+                when(type){
+                    TimeLineAdapter.TIME_LINE_ADD -> {
+                        val addTimeLineIntent = Intent(this,AddTimeLineActivity::class.java)
+                        baseStartActivity(addTimeLineIntent, ActivityMoveEnum.START_FROM_RIGHT)
+                    }
+                }
             }
             time_line.adapter = stepAdapter
             val linearLayoutManager = LinearLayoutManager(context)

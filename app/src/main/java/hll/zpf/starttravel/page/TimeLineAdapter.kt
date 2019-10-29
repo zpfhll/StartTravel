@@ -20,6 +20,12 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
     var mContext:Context = context
     var mCallback:((Int,Int) -> Unit) = callback
 
+    companion object{
+        val TIME_LINE_ADD = 0
+        val TIME_LINE_MEMO = 1
+        val TIME_LINE_DETAIL = 2
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StepItemViewHandler {
         val view = LayoutInflater.from(mContext).inflate(R.layout.time_line_item,parent,false)
@@ -42,6 +48,10 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
 
             if(index == mStepData.size - 1){
                 holder.addTimeLineButton.visibility = View.VISIBLE
+                holder.addTimeLineButton.setOnClickListener{
+                    mCallback(TIME_LINE_ADD,0)
+                }
+
             }else{
                 holder.addTimeLineButton.visibility = View.GONE
             }
@@ -88,6 +98,18 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
 
             var leftVisibility = if (isLeft) View.VISIBLE else View.GONE
             var rightVisibility = if (!isLeft) View.VISIBLE else View.GONE
+
+
+            if(mStepData.size == 1 && mStepData[0].name.isEmpty()){
+                leftVisibility = View.GONE
+                rightVisibility = View.GONE
+                holder.mainLineCircle.visibility = View.GONE
+                holder.mainLine.visibility = View.GONE
+            }else {
+                holder.mainLineCircle.visibility = View.VISIBLE
+                holder.mainLine.visibility = View.VISIBLE
+            }
+
 
             holder.leftTimeLine.visibility = leftVisibility
             holder.leftLineCircle.visibility = leftVisibility

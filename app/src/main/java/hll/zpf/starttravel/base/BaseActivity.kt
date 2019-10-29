@@ -88,7 +88,7 @@ open class BaseActivity: AppCompatActivity() {
     /**
      *　クリックの挙動
      */
-    fun baseClickAction(view: View){
+    open fun baseClickAction(view: View){
 
     }
 
@@ -206,6 +206,7 @@ open class BaseActivity: AppCompatActivity() {
      * @param leftButtonBackground 左侧按钮的背景
      * @param backgroundColor 背景颜色
      * @param titleColor 标题颜色
+     * @param isShowBottomLine 是否显示下部线
      * @param clickBlock 按钮的点击事件
      */
     open fun setTitleWithColor(title:String,
@@ -214,6 +215,7 @@ open class BaseActivity: AppCompatActivity() {
                       leftButtonBackground:Int? = null,
                       backgroundColor:Int,
                       titleColor:Int,
+                       isShowBottomLine:Boolean,
                       clickBlock:(View) -> Unit){
         setTitle(title,isShowRightButton,rightButtonText,leftButtonBackground,clickBlock)
 
@@ -222,6 +224,8 @@ open class BaseActivity: AppCompatActivity() {
 
         val titleBackground:View = findViewById(R.id.title_background)
         titleBackground.setBackgroundColor(getColor(backgroundColor))
+
+        findViewById<View>(R.id.bottom_line).visibility = if (isShowBottomLine) View.VISIBLE else View.GONE
     }
 
 
