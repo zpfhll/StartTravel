@@ -3,10 +3,13 @@ package hll.zpf.starttravel.page
 import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import hll.zpf.starttravel.BuildConfig
 import hll.zpf.starttravel.R
 import hll.zpf.starttravel.base.BaseActivity
 import hll.zpf.starttravel.common.EventBusMessage
+import hll.zpf.starttravel.common.HLogger
 import hll.zpf.starttravel.common.Utils
+import hll.zpf.starttravel.common.database.DataManager
 import hll.zpf.starttravel.common.database.entity.Step
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
 import kotlinx.android.synthetic.main.activity_time_line.*
@@ -16,11 +19,16 @@ import org.greenrobot.eventbus.ThreadMode
 
 class TimeLineActivity : BaseActivity() {
 
+    private var data = mutableListOf<Step>()
+
+    private var stepAdapter:TimeLineAdapter? = null
+
+    private var travelId:String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_time_line)
         EventBus.getDefault().register(this)
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -43,14 +51,14 @@ class TimeLineActivity : BaseActivity() {
             message.travel?.getTravelData()?.value?.getImageBitmap()?.let {
                 background_image.setImageBitmap(it)
             }
-            val datas = mutableListOf<Step>()
-            for (index in 0..2){
-                datas.add(Step.createStep())
-            }
-            val stepAdapter = TimeLineAdapter(this, datas){type,index ->
+            data.add(Step.createStep())
+            stepAdapter = TimeLineAdapter(this, data){type,index ->
+                HLogger.instance()
+                    .e("TimeLineAdapter", "type: $type index:$index")
                 when(type){
                     TimeLineAdapter.TIME_LINE_ADD -> {
                         val addTimeLineIntent = Intent(this,AddTimeLineActivity::class.java)
+                        addTimeLineIntent.putExtra("travelId",travelId)
                         baseStartActivity(addTimeLineIntent, ActivityMoveEnum.START_FROM_RIGHT)
                     }
                 }
@@ -61,6 +69,32 @@ class TimeLineActivity : BaseActivity() {
             linearLayoutManager.reverseLayout = true//布局反向
 
             time_line.layoutManager = linearLayoutManager
+            dataManager = DataManager()
+            travelId = message.travel?.getTravelData()?.value?.id
+            refreshTimeLine(travelId)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun evenBusRefresh(message: EventBusMessage){
+        if(message.message == TIME_LINE_REFRESH) {
+            refreshTimeLine(travelId)
+        }
+    }
+
+    /**
+     * 刷新页面数据
+     */
+    private fun refreshTimeLine(travelId:String?){
+        dataManager?.getStepByTravelId(travelId){resultCode, resultData ->
+            if(resultCode == BuildConfig.NORMAL_CODE) {
+                data = resultData
+                stepAdapter?.refreshData(resultData)
+            }else{
+                showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)"){_,_ ->
+                    onKeyCodeBackListener()
+                }
+            }
         }
     }
 

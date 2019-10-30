@@ -10,13 +10,15 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import hll.zpf.starttravel.R
+import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.components.CRImageView
 import hll.zpf.starttravel.common.database.entity.Step
+import okhttp3.internal.Util
 
 class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,Int) -> Unit)) :
     RecyclerView.Adapter<TimeLineAdapter.StepItemViewHandler>() {
 
-    var mStepData:List<Step> = stepData
+    var mStepData:ArrayList<Step> = arrayListOf(*stepData.toTypedArray())
     var mContext:Context = context
     var mCallback:((Int,Int) -> Unit) = callback
 
@@ -24,6 +26,12 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
         val TIME_LINE_ADD = 0
         val TIME_LINE_MEMO = 1
         val TIME_LINE_DETAIL = 2
+    }
+
+    fun refreshData(data:List<Step>){
+        mStepData.clear()
+        mStepData.addAll(data)
+        notifyDataSetChanged()
     }
 
 
@@ -134,12 +142,36 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
                 holder.leftLineCircle.setBackgroundResource(themeId)
                 holder.leftTimeLineItemBackground.setBackgroundResource(itemBackgroundThemeId)
                 holder.leftTimeLineTime.setTextColor(mContext.getColor(textColor))
+
+                mStepData[index].getImageBitmap()?.let {
+                    holder.leftTimeLineImage.setImageBitmap(it)
+                }
+                holder.leftTimeLineName.text = mStepData[index].name
+                holder.leftTimeLineTime.text = Utils.instance().getDateStringByFormatAndDateString(mStepData[index].startDate,mContext.getString(R.string.time_line_001))
+                holder.leftTimeLineDetailButton.setOnClickListener{
+                    mCallback(TIME_LINE_MEMO,index)
+                }
+                holder.leftTimeLineItemBackground.setOnClickListener{
+                    mCallback(TIME_LINE_DETAIL,index)
+                }
             }
             if(rightVisibility == View.VISIBLE) {
                 holder.rightTimeLine.setBackgroundResource(themeId)
                 holder.rightLineCircle.setBackgroundResource(themeId)
                 holder.rightTimeLineItemBackground.setBackgroundResource(itemBackgroundThemeId)
                 holder.rightTimeLineTime.setTextColor(mContext.getColor(textColor))
+
+                mStepData[index].getImageBitmap()?.let {
+                    holder.rightTimeLineImage.setImageBitmap(it)
+                }
+                holder.rightTimeLineName.text = mStepData[index].name
+                holder.rightTimeLineTime.text = Utils.instance().getDateStringByFormatAndDateString(mStepData[index].startDate,mContext.getString(R.string.time_line_001))
+                holder.rightTimeLineDetailButton.setOnClickListener{
+                    mCallback(TIME_LINE_MEMO,index)
+                }
+                holder.rightTimeLineItemBackground.setOnClickListener{
+                    mCallback(TIME_LINE_DETAIL,index)
+                }
             }
 
 

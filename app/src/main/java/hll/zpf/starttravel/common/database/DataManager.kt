@@ -355,4 +355,53 @@ class DataManager : CoroutineScope by MainScope(){
         })
     }
 
+
+    //-------------  DetailWithMember -------------
+    /**
+     * 标记查询
+     */
+    fun getStepByTravelId(travelId : String?,callBack: (resultCode:String,data:MutableList<Step>) -> Unit){
+        runTaskByAsyn("getStepByTravelId",task = {
+            val details = mutableListOf<Step>()
+            var errorCode = BuildConfig.NORMAL_CODE
+            if(travelId != null) {
+                val daoSession = BaseApplication.application?.travelDatabase?.stepDao()
+                daoSession?.let {
+                    try {
+                        val result = it.getStepByTravelId(travelId)
+                        if (result != null) {
+                            details.addAll(result)
+                        }
+                    } catch (e: Exception) {
+                        errorCode  = "E00014"
+                        HLogger.instance()
+                            .e("getStepByTravelId", "get steps fail : ${e.message}")
+                    }
+                }
+            }
+            ResultData(errorCode,details)
+        },callBack = {
+            callBack(it.resultCode,it.data as MutableList<Step>)
+        })
+    }
+
+    fun insertStep(step: Step , callBack:(resultCode:String) -> Unit){
+        runTaskByAsyn("insertStep",task = {
+            val daoSession = BaseApplication.application?.travelDatabase?.stepDao()
+            var errorCode = BuildConfig.NORMAL_CODE
+
+            daoSession?.let {
+                try {
+                    it.insertStep(step)
+                }catch (e:Exception){
+                    errorCode = "E00015"
+                    HLogger.instance().e("insertStep","insert step fail : ${e.message}")
+                }
+            }
+            ResultData(errorCode)
+        },callBack = {
+            callBack(it.resultCode)
+        })
+    }
+
 }

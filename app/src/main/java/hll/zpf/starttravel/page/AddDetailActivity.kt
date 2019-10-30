@@ -28,6 +28,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 @SuppressLint("SetTextI18n")
 class AddDetailActivity : BaseActivity() {
@@ -157,9 +158,8 @@ class AddDetailActivity : BaseActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    @Subscribe(threadMode = org.greenrobot.eventbus.ThreadMode.MAIN, sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun initData(message: EventBusMessage){
-
         when(message.message){
             ADD_DETAIL -> {
                 travelModel = message.travel

@@ -71,6 +71,11 @@ open class BaseActivity: AppCompatActivity() {
      */
     val TIME_LINE = "time_line"
 
+    /**
+     * 刷新TimeLine一览页面(EventBus 消息)
+     */
+    val TIME_LINE_REFRESH = "time_line_refresh"
+
     val CODE_FOR_WRITE_PERMISSION = 1
     val CODE_FOR_LOCATION_PERMISSION = 2
     val CODE_FOR_READ_PHONE_STATE_PERMISSION = 3
