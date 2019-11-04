@@ -362,7 +362,7 @@ class DataManager : CoroutineScope by MainScope(){
      */
     fun getStepByTravelId(travelId : String?,callBack: (resultCode:String,data:MutableList<Step>) -> Unit){
         runTaskByAsyn("getStepByTravelId",task = {
-            val details = mutableListOf<Step>()
+            val steps = mutableListOf<Step>()
             var errorCode = BuildConfig.NORMAL_CODE
             if(travelId != null) {
                 val daoSession = BaseApplication.application?.travelDatabase?.stepDao()
@@ -370,7 +370,7 @@ class DataManager : CoroutineScope by MainScope(){
                     try {
                         val result = it.getStepByTravelId(travelId)
                         if (result != null) {
-                            details.addAll(result)
+                            steps.addAll(result)
                         }
                     } catch (e: Exception) {
                         errorCode  = "E00014"
@@ -379,9 +379,34 @@ class DataManager : CoroutineScope by MainScope(){
                     }
                 }
             }
-            ResultData(errorCode,details)
+            ResultData(errorCode,steps)
         },callBack = {
             callBack(it.resultCode,it.data as MutableList<Step>)
+        })
+    }
+
+    /**
+     * 标记查询
+     */
+    fun getStepById(stepId : String?,callBack: (resultCode:String,data:Step?) -> Unit){
+        runTaskByAsyn("getStepById",task = {
+            var errorCode = BuildConfig.NORMAL_CODE
+            var step:Step? = null
+            if(stepId != null) {
+                val daoSession = BaseApplication.application?.travelDatabase?.stepDao()
+                daoSession?.let {
+                    try {
+                        step = it.getStepByStepId(stepId)
+                    } catch (e: Exception) {
+                        errorCode  = "E00016"
+                        HLogger.instance()
+                            .e("getStepById", "get step fail : ${e.message}")
+                    }
+                }
+            }
+            ResultData(errorCode,step)
+        },callBack = {
+            callBack(it.resultCode,it.data as Step)
         })
     }
 

@@ -20,7 +20,6 @@ import hll.zpf.starttravel.common.database.entity.Step
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
 import kotlinx.android.synthetic.main.activity_add_time_line.*
 import org.greenrobot.eventbus.EventBus
-import java.io.File
 import java.util.*
 
 class AddTimeLineActivity : BaseActivity() {
@@ -38,12 +37,50 @@ class AddTimeLineActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_time_line)
-        val date = Date()
+        dataManager = DataManager()
+        val stepId = intent.getStringExtra("stepId")
         utils = Utils.instance()
-        step = Step.createStep()
-        step.startDate = utils.getDateStringByFormat(getString(R.string.data_format_2), date)
-        step.travelId = intent.getStringExtra("travelId")
-        step_time.text = utils.getDateStringByFormat(getString(R.string.data_format_1), date)
+        if(stepId.isNullOrEmpty()){
+            val date = Date()
+            step = Step.createStep()
+            step.startDate = utils.getDateStringByFormat(getString(R.string.data_format_2), date)
+            step.travelId = intent.getStringExtra("travelId")
+            step_time.text = utils.getDateStringByFormat(getString(R.string.data_format_1), date)
+        }else{
+            dataManager?.getStepById(stepId) { resultCode, data ->
+                if (resultCode == BuildConfig.NORMAL_CODE) {
+                    if (data != null) {
+                        step = data
+                        step_time.text = utils.getDateStringByFormatAndDateString(
+                            data.startDate,
+                            getString(R.string.data_format_1)
+                        )
+                        step_name_editText.setText(data.name)
+                        step_memo_editText.setText(data.memo)
+                        location_name.text = data.locationName
+                        data.image?.let {
+                            background_image.setImageBitmap(data.getImageBitmap())
+                        }
+                    } else {
+                        val date = Date()
+                        step = Step.createStep()
+                        step.startDate =
+                            utils.getDateStringByFormat(getString(R.string.data_format_2), date)
+                        step.travelId = intent.getStringExtra("travelId")
+                        step_time.text =
+                            utils.getDateStringByFormat(getString(R.string.data_format_1), date)
+                    }
+
+                } else {
+                    showMessageAlertDialog(
+                        "",
+                        "${getString(R.string.DATABASE_ERROR)}($resultCode)"
+                    ) { _, _ ->
+                        onKeyCodeBackListener()
+                    }
+                }
+            }
+        }
         setTitle(
             getString(R.string.add_step_001),
             true,
@@ -64,7 +101,7 @@ class AddTimeLineActivity : BaseActivity() {
                     if(step.name.isNullOrBlank()){
                         showMessageAlertDialog("",getString(R.string.time_line_E01))
                     }else {
-                        dataManager = DataManager()
+
                         dataManager?.insertStep(step) { resultCode ->
                             if (resultCode == BuildConfig.NORMAL_CODE) {
                                 val eventBusMessage = EventBusMessage()
@@ -121,10 +158,12 @@ class AddTimeLineActivity : BaseActivity() {
         when(requestCode){
             SELECT_LOCATION -> {
                 data?.let {
-                    location_name.text = data.getStringExtra("locationName")
+                    val locationName = data.getStringExtra("locationName")
+                    location_name.text = locationName
                     val latLng = data.getParcelableExtra("location") as LatLng
                     step.latitude = latLng.latitude.toFloat()
                     step.longitude = latLng.longitude.toFloat()
+                    step.locationName = locationName
                 }
             }
             IMAGE_CODE -> {

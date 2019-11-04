@@ -61,6 +61,11 @@ class TimeLineActivity : BaseActivity() {
                         addTimeLineIntent.putExtra("travelId",travelId)
                         baseStartActivity(addTimeLineIntent, ActivityMoveEnum.START_FROM_RIGHT)
                     }
+                    TimeLineAdapter.TIME_LINE_DETAIL -> {
+                        val modifyTimeLineIntent = Intent(this,AddTimeLineActivity::class.java)
+                        modifyTimeLineIntent.putExtra("stepId",data[index].id)
+                        baseStartActivity(modifyTimeLineIntent, ActivityMoveEnum.START_FROM_RIGHT)
+                    }
                 }
             }
             time_line.adapter = stepAdapter

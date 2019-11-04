@@ -26,6 +26,8 @@ data class Step (
     @ColumnInfo(name = "latitude")
     var latitude:Float,
     @ColumnInfo(name = "longitude")
+    var locationName:String,
+    @ColumnInfo(name = "location_name")
     var longitude:Float,
     @ColumnInfo(name = "image")
     var image : ByteArray?,
@@ -43,7 +45,7 @@ data class Step (
             }
             oldDataStr = dateString
             val steoId = "M$dateString"
-            return Step(steoId,"",null,"",0f,0f,null,"")
+            return Step(steoId,"",null,"",0f,"",0f,null,"")
         }
     }
 

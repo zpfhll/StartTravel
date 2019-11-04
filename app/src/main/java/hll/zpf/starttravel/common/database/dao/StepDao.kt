@@ -14,6 +14,9 @@ interface StepDao {
     @Query(value = "select * from step")
     fun loadAllStep(): List<Step>?
 
+    @Query(value = "select * from step where id = :stepId")
+    fun getStepByStepId(stepId:String): Step?
+
     @Query(value = "select * from step where travel_id = :travelId")
     fun getStepByTravelId(travelId:String): List<Step>?
 }
