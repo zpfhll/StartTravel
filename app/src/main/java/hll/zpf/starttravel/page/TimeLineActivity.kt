@@ -76,20 +76,24 @@ class TimeLineActivity : BaseActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun evenBusRefresh(message: EventBusMessage){
+    fun eventBusRefresh(message: EventBusMessage){
         if(message.message == TIME_LINE_REFRESH) {
             refreshTimeLine(travelId)
         }
     }
 
     /**
-     * 刷新页面数据
+     * 刷新页面数
      */
     private fun refreshTimeLine(travelId:String?){
         dataManager?.getStepByTravelId(travelId){resultCode, resultData ->
             if(resultCode == BuildConfig.NORMAL_CODE) {
                 data = resultData
+                if(resultData.isNullOrEmpty()){
+                    data.add(Step.createStep())
+                }
                 stepAdapter?.refreshData(resultData)
+                time_line.scrollToPosition(data.size-1)
             }else{
                 showMessageAlertDialog("","${getString(R.string.DATABASE_ERROR)}($resultCode)"){_,_ ->
                     onKeyCodeBackListener()

@@ -184,39 +184,6 @@ class TravelFragment : Fragment() {
         }
     }
 
-
-    /**
-     * 裁剪
-     * @param w 输出宽
-     * @param h 输出高
-     * @param aspectX 宽比例
-     * @param aspectY 高比例
-     */
-    private fun crop(uri: Uri, w: Int, h: Int, aspectX: Int, aspectY: Int): Intent {
-        val intent = Intent("com.android.camera.action.CROP")
-        // 照片URL地址
-        intent.setDataAndType(uri, "image/*")
-        intent.putExtra("crop", "true")
-        intent.putExtra("aspectX", aspectX)
-        intent.putExtra("aspectY", aspectY)
-        intent.putExtra("outputX", w)
-        intent.putExtra("outputY", h)
-        // 输出路径
-        intent.putExtra(
-            MediaStore.EXTRA_OUTPUT, Uri.fromFile(
-                File(activity?.externalCacheDir, "travel-cropped")
-            )
-        )
-        // 输出格式
-        intent.putExtra("outputFormat", "JPEG")
-        // 不启用人脸识别
-        intent.putExtra("noFaceDetection", true)
-        intent.putExtra("return-data", false)
-        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        return intent
-    }
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when(requestCode){
             IMAGE_CODE -> {
@@ -226,7 +193,7 @@ class TravelFragment : Fragment() {
                        val height = Utils.instance().DPToPX(150f).toInt()
                        val aspectX = 7
                        val aspectY = 5
-                       startActivityForResult(crop(data.data!!,width,height,aspectX,aspectY), CROP_REQUEST_CODE)
+                       startActivityForResult(Utils.instance().crop(activity?.externalCacheDir,data.data!!,width,height,aspectX,aspectY), CROP_REQUEST_CODE)
 
                    }catch (e:Exception){
                        e.printStackTrace()

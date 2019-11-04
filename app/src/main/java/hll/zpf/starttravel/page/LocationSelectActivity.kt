@@ -253,6 +253,9 @@ class LocationSelectActivity : BaseActivity(),GeocodeSearch.OnGeocodeSearchListe
             }
         }else{
             HLogger.instance().e("------->onRegeocodeSearched","获取业务地址失败")
+            showMessageAlertDialog("",getString(R.string.LOCATION_ERROR)){_,_ ->
+                onKeyCodeBackListener()
+            }
         }
     }
 

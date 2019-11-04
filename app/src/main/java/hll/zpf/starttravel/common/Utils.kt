@@ -3,6 +3,7 @@ package hll.zpf.starttravel.common
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.util.DisplayMetrics
 import android.view.WindowManager
@@ -16,11 +17,14 @@ import java.util.*
 import android.graphics.PixelFormat
 import android.graphics.drawable.Drawable
 import android.graphics.Canvas
+import android.net.Uri
+import android.provider.MediaStore
 import java.text.ParseException
 import android.renderscript.Allocation
 import android.renderscript.Element.U8_4
 import android.renderscript.ScriptIntrinsicBlur
 import android.renderscript.RenderScript
+import java.io.File
 import kotlin.math.roundToInt
 
 class Utils {
@@ -218,6 +222,39 @@ class Utils {
         }
         return dateString
     }
+
+    /**
+     * 裁剪
+     * @param file 输入文件
+     * @param w 输出宽
+     * @param h 输出高
+     * @param aspectX 宽比例
+     * @param aspectY 高比例
+     */
+    fun crop(file:File?,uri: Uri, w: Int, h: Int, aspectX: Int, aspectY: Int): Intent {
+        val intent = Intent("com.android.camera.action.CROP")
+        // 照片URL地址
+        intent.setDataAndType(uri, "image/*")
+        intent.putExtra("crop", "true")
+        intent.putExtra("aspectX", aspectX)
+        intent.putExtra("aspectY", aspectY)
+        intent.putExtra("outputX", w)
+        intent.putExtra("outputY", h)
+        // 输出路径
+        intent.putExtra(
+            MediaStore.EXTRA_OUTPUT, Uri.fromFile(
+                File(file, "travel-cropped")
+            )
+        )
+        // 输出格式
+        intent.putExtra("outputFormat", "JPEG")
+        // 不启用人脸识别
+        intent.putExtra("noFaceDetection", true)
+        intent.putExtra("return-data", false)
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        return intent
+    }
+
 
     fun getMessageByCode(code:String?):String{
         var message:String? = null
