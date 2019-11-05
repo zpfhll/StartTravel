@@ -3,6 +3,7 @@ package hll.zpf.starttravel.page
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
@@ -180,13 +181,18 @@ class AddTimeLineActivity : BaseActivity() {
                 }
             }
             CROP_REQUEST_CODE -> {
-                if(data != null && data.data != null) {
-                    val parcelFileDescriptor = this.contentResolver.openFileDescriptor(data.data!!, "r")
+                var  image = data?.extras?.getParcelable<Bitmap>("data")
+                if(image == null && data?.data != null) {
+                    val parcelFileDescriptor = contentResolver.openFileDescriptor(data.data!!, "r")
                     val fileDescriptor = parcelFileDescriptor?.fileDescriptor
-                    val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+                    image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+                }
+                image?.let {
                     step.setImageBitmap(image)
                     background_image.setImageBitmap(step.getImageBitmap())
                 }
+
+
             }
         }
     }

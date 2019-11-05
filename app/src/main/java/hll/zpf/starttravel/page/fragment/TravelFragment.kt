@@ -4,6 +4,7 @@ package hll.zpf.starttravel.page.fragment
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -201,10 +202,13 @@ class TravelFragment : Fragment() {
                 }
             }
             CROP_REQUEST_CODE -> {
-                if(data != null && data.data != null) {
+                var  image = data?.extras?.getParcelable<Bitmap>("data")
+                if(image == null && data?.data != null) {
                    val parcelFileDescriptor = activity!!.contentResolver.openFileDescriptor(data.data!!, "r")
                    val fileDescriptor = parcelFileDescriptor?.fileDescriptor
-                   val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+                    image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+                }
+                image?.let {
                     currentTravelModel?.let {
                         val travel = it.getTravelData().value
                         travel?.setImageBitmap(image)
@@ -219,6 +223,7 @@ class TravelFragment : Fragment() {
                         }
                     }
                 }
+
             }
         }
     }

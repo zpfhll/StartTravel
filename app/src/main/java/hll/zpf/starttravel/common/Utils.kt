@@ -240,7 +240,8 @@ class Utils {
         intent.putExtra("aspectY", aspectY)
         intent.putExtra("outputX", w)
         intent.putExtra("outputY", h)
-        // 输出路径
+//        // 输出路径
+
         intent.putExtra(
             MediaStore.EXTRA_OUTPUT, Uri.fromFile(
                 File(file, "travel-cropped")
@@ -250,8 +251,8 @@ class Utils {
         intent.putExtra("outputFormat", "JPEG")
         // 不启用人脸识别
         intent.putExtra("noFaceDetection", true)
-        intent.putExtra("return-data", false)
-        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        intent.putExtra("return-data", true)
+//        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
         return intent
     }
 

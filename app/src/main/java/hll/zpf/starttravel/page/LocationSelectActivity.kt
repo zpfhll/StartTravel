@@ -78,7 +78,7 @@ class LocationSelectActivity : BaseActivity(),GeocodeSearch.OnGeocodeSearchListe
         mAMap.setOnPOIClickListener{
             HLogger.instance().e("------->setOnPOIClickListener","poi : ${it.name}")
             searchLatLng = it.coordinate
-            mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchLatLng, 18f))
+            mAMap.animateCamera(CameraUpdateFactory.newLatLngZoom(searchLatLng, 18f))
             val poiSearch = PoiSearch(context,null)
             poiSearch.setOnPoiSearchListener(object:PoiSearch.OnPoiSearchListener{
                 override fun onPoiItemSearched(poiItem: PoiItem?, p1: Int) {

@@ -143,8 +143,11 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
                 holder.leftTimeLineItemBackground.setBackgroundResource(itemBackgroundThemeId)
                 holder.leftTimeLineTime.setTextColor(mContext.getColor(textColor))
 
-                mStepData[index].getImageBitmap()?.let {
-                    holder.leftTimeLineImage.setImageBitmap(it)
+                val timeLineImage = mStepData[index].getImageBitmap()
+                if(timeLineImage != null) {
+                    holder.leftTimeLineImage.setImageBitmap(timeLineImage)
+                }else{
+                    holder.leftTimeLineImage.setImageResource(R.mipmap.default_image)
                 }
                 holder.leftTimeLineName.text = mStepData[index].name
                 holder.leftTimeLineTime.text = Utils.instance().getDateStringByFormatAndDateString(mStepData[index].startDate,mContext.getString(R.string.time_line_001))
@@ -161,9 +164,13 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
                 holder.rightTimeLineItemBackground.setBackgroundResource(itemBackgroundThemeId)
                 holder.rightTimeLineTime.setTextColor(mContext.getColor(textColor))
 
-                mStepData[index].getImageBitmap()?.let {
-                    holder.rightTimeLineImage.setImageBitmap(it)
+                val timeLineImage = mStepData[index].getImageBitmap()
+                if(timeLineImage != null) {
+                    holder.rightTimeLineImage.setImageBitmap(timeLineImage)
+                }else{
+                    holder.rightTimeLineImage.setImageResource(R.mipmap.default_image)
                 }
+
                 holder.rightTimeLineName.text = mStepData[index].name
                 holder.rightTimeLineTime.text = Utils.instance().getDateStringByFormatAndDateString(mStepData[index].startDate,mContext.getString(R.string.time_line_001))
                 holder.rightTimeLineDetailButton.setOnClickListener{
