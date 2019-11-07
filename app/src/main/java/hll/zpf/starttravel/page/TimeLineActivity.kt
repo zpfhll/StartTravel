@@ -2,6 +2,11 @@ package hll.zpf.starttravel.page
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import hll.zpf.starttravel.BuildConfig
 import hll.zpf.starttravel.R
@@ -52,7 +57,7 @@ class TimeLineActivity : BaseActivity() {
                 background_image.setImageBitmap(it)
             }
             data.add(Step.createStep())
-            stepAdapter = TimeLineAdapter(this, data){type,index ->
+            stepAdapter = TimeLineAdapter(this, data){type,index,handler ->
                 HLogger.instance()
                     .e("TimeLineAdapter", "type: $type index:$index")
                 when(type){
@@ -62,6 +67,9 @@ class TimeLineActivity : BaseActivity() {
                         baseStartActivity(addTimeLineIntent, ActivityMoveEnum.START_FROM_RIGHT)
                     }
                     TimeLineAdapter.TIME_LINE_DETAIL -> {
+                        showTimeLineDetail(index,handler)
+                    }
+                    TimeLineAdapter.TIME_LINE_MODIFY -> {
                         val modifyTimeLineIntent = Intent(this,AddTimeLineActivity::class.java)
                         modifyTimeLineIntent.putExtra("stepId",data[index].id)
                         baseStartActivity(modifyTimeLineIntent, ActivityMoveEnum.START_FROM_RIGHT)
@@ -104,6 +112,64 @@ class TimeLineActivity : BaseActivity() {
                     onKeyCodeBackListener()
                 }
             }
+        }
+    }
+
+    /**
+     * タイムラインの詳細を表示
+     *
+     * @param index データフラグ
+     * @param handler ビューの容器
+     */
+    private fun showTimeLineDetail(index:Int,handler:TimeLineAdapter.StepItemViewHandler?){
+        handler?.let {
+            val location = intArrayOf(0,0)
+            val rootLocation = intArrayOf(0,0)
+            root_view.getLocationInWindow(rootLocation)
+            val copyView = LayoutInflater.from(this).inflate(R.layout.time_line_item_copy,null)
+            if(handler.leftTimeLineItemBackground.visibility == View.VISIBLE) {
+                handler.leftTimeLineItemBackground.getLocationInWindow(location)
+            }else{
+                handler.rightTimeLineItemBackground.getLocationInWindow(location)
+            }
+            val layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,ConstraintLayout.LayoutParams.WRAP_CONTENT)
+            layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+            layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+            layoutParams.marginStart = location[0]
+            layoutParams.topMargin = location[1] - rootLocation[1]
+            data[index].getImageBitmap()?.let {
+                copyView.findViewById<ImageView>(R.id.time_line_image).setImageBitmap(data[index].getImageBitmap())
+            }
+            copyView.findViewById<TextView>(R.id.time_line_name).text = data[index].name
+            copyView.findViewById<TextView>(R.id.time_line_time).text = Utils.instance().getDateStringByFormatAndDateString(data[index].startDate,getString(R.string.time_line_001))
+            var textColor = R.color.baseColor
+            val itemBackgroundThemeId = when (index % 4) {
+                0 -> {
+                    textColor = R.color.baseColor
+                    R.drawable.circle_round_edge_green_15
+                }
+                1 -> {
+                    textColor = R.color.orange
+                    R.drawable.circle_round_edge_orange_15
+                }
+                2 -> {
+                    textColor = R.color.title_color
+                    R.drawable.circle_round_edge_dark_gray_15
+                }
+                3 -> {
+                    textColor = R.color.red
+                    R.drawable.circle_round_edge_red_15
+                }
+                else ->  R.drawable.circle_round_edge_green_15
+            }
+            copyView.findViewById<View>(R.id.time_line_item_background).setBackgroundResource(itemBackgroundThemeId)
+            copyView.findViewById<TextView>(R.id.time_line_time).setTextColor(getColor(textColor))
+            root_view.addView(copyView,layoutParams)
+
+
+
+
+
         }
     }
 

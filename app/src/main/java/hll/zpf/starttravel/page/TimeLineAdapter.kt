@@ -13,18 +13,17 @@ import hll.zpf.starttravel.R
 import hll.zpf.starttravel.common.Utils
 import hll.zpf.starttravel.common.components.CRImageView
 import hll.zpf.starttravel.common.database.entity.Step
-import okhttp3.internal.Util
 
-class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,Int) -> Unit)) :
+class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,Int,StepItemViewHandler?) -> Unit)) :
     RecyclerView.Adapter<TimeLineAdapter.StepItemViewHandler>() {
 
     var mStepData:ArrayList<Step> = arrayListOf(*stepData.toTypedArray())
     var mContext:Context = context
-    var mCallback:((Int,Int) -> Unit) = callback
+    var mCallback:((Int,Int,StepItemViewHandler?) -> Unit) = callback
 
     companion object{
         val TIME_LINE_ADD = 0
-        val TIME_LINE_MEMO = 1
+        val TIME_LINE_MODIFY = 1
         val TIME_LINE_DETAIL = 2
     }
 
@@ -57,7 +56,7 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
             if(index == mStepData.size - 1){
                 holder.addTimeLineButton.visibility = View.VISIBLE
                 holder.addTimeLineButton.setOnClickListener{
-                    mCallback(TIME_LINE_ADD,0)
+                    mCallback(TIME_LINE_ADD,0,null)
                 }
 
             }else{
@@ -152,10 +151,10 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
                 holder.leftTimeLineName.text = mStepData[index].name
                 holder.leftTimeLineTime.text = Utils.instance().getDateStringByFormatAndDateString(mStepData[index].startDate,mContext.getString(R.string.time_line_001))
                 holder.leftTimeLineDetailButton.setOnClickListener{
-                    mCallback(TIME_LINE_MEMO,index)
+                    mCallback(TIME_LINE_MODIFY,index,null)
                 }
                 holder.leftTimeLineItemBackground.setOnClickListener{
-                    mCallback(TIME_LINE_DETAIL,index)
+                    mCallback(TIME_LINE_DETAIL,index,holder)
                 }
             }
             if(rightVisibility == View.VISIBLE) {
@@ -174,10 +173,10 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
                 holder.rightTimeLineName.text = mStepData[index].name
                 holder.rightTimeLineTime.text = Utils.instance().getDateStringByFormatAndDateString(mStepData[index].startDate,mContext.getString(R.string.time_line_001))
                 holder.rightTimeLineDetailButton.setOnClickListener{
-                    mCallback(TIME_LINE_MEMO,index)
+                    mCallback(TIME_LINE_MODIFY,index,null)
                 }
                 holder.rightTimeLineItemBackground.setOnClickListener{
-                    mCallback(TIME_LINE_DETAIL,index)
+                    mCallback(TIME_LINE_DETAIL,index,holder)
                 }
             }
 

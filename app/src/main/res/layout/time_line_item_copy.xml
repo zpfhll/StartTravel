@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    <View
+            android:id="@+id/time_line_item_background"
+            android:layout_width="150dp"
+            android:layout_height="82dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/circle_round_edge_green_15"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+            android:id="@+id/time_line_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2019年12月17日 12:30"
+            android:textColor="@color/baseColor"
+            android:textSize="@dimen/font_size_s7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    <hll.zpf.starttravel.common.components.CRImageView
+            android:id="@+id/time_line_image"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="8dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/default_image"
+            app:layout_constraintBottom_toBottomOf="@+id/time_line_item_background"
+            app:layout_constraintStart_toStartOf="@+id/time_line_item_background"
+            app:layout_constraintTop_toTopOf="@+id/time_line_item_background"
+            app:radius="15dp" />
+
+    <TextView
+            android:id="@+id/time_line_name"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:text="浅草寺"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_s5"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/time_line_detail_button"
+            app:layout_constraintEnd_toEndOf="@+id/time_line_item_background"
+            app:layout_constraintStart_toEndOf="@+id/time_line_image"
+            app:layout_constraintTop_toTopOf="@+id/time_line_item_background" />
+
+    <Button
+            android:id="@+id/time_line_detail_button"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/detail_button_background"
+            android:stateListAnimator="@null"
+            app:layout_constraintBottom_toBottomOf="@+id/time_line_item_background"
+            app:layout_constraintEnd_toEndOf="@+id/time_line_item_background"
+            app:layout_constraintStart_toEndOf="@+id/time_line_image" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
