@@ -113,6 +113,8 @@
     <string name="add_detail_E08"> 太富有了，贫穷限制了本程序的想象，我承认我没能力存这么多钱！</string>
 
     <string name="time_line_001">yyyy年MM月dd日 HH:mm</string>
+    <string name="time_line_002">未设定</string>
+    <string name="time_line_003">空空如也</string>
     <string name="time_line_E01">请输入标记的名称！</string>
 
     <string name="add_step_001">添加标记</string>

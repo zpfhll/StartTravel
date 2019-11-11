@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -47,7 +46,6 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="2"
@@ -55,7 +53,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/font_size_s5"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/time_line_detail_button"
+            app:layout_constraintBottom_toTopOf="@+id/time_line_location"
             app:layout_constraintEnd_toEndOf="@+id/time_line_item_background"
             app:layout_constraintStart_toEndOf="@+id/time_line_image"
             app:layout_constraintTop_toTopOf="@+id/time_line_item_background" />
@@ -70,6 +68,46 @@
             app:layout_constraintBottom_toBottomOf="@+id/time_line_item_background"
             app:layout_constraintEnd_toEndOf="@+id/time_line_item_background"
             app:layout_constraintStart_toEndOf="@+id/time_line_image" />
+
+    <ImageView
+            android:id="@+id/time_line_location"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:src="@mipmap/location_white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/time_line_memo"
+            app:layout_constraintStart_toStartOf="@+id/time_line_name" />
+
+    <TextView
+            android:id="@+id/time_line_location_name"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:text="@string/time_line_002"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_s5"
+            app:layout_constraintBottom_toBottomOf="@+id/time_line_location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/time_line_location"
+            app:layout_constraintTop_toTopOf="@+id/time_line_location" />
+
+    <TextView
+            android:id="@+id/time_line_memo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/circle_round_edge"
+            android:padding="10dp"
+            android:text="@string/time_line_003"
+            android:textColor="@color/gray"
+            app:layout_constraintBottom_toTopOf="@+id/time_line_detail_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/time_line_location" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package hll.zpf.starttravel.page
 
+import android.app.ActionBar
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -136,6 +137,7 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
 
             holder.mainLine.setBackgroundResource(themeId)
             holder.mainLineCircle.setBackgroundResource(themeId)
+            holder.isLeft = leftVisibility == View.VISIBLE
             if(leftVisibility == View.VISIBLE) {
                 holder.leftTimeLine.setBackgroundResource(themeId)
                 holder.leftLineCircle.setBackgroundResource(themeId)
@@ -205,5 +207,23 @@ class TimeLineAdapter(context: Context, stepData: List<Step>, callback: ((Int,In
         var leftTimeLineDetailButton:Button = itemView.findViewById(R.id.left_time_line_detail_button)
         var rightTimeLineName:TextView = itemView.findViewById(R.id.right_time_line_name)
         var rightTimeLineDetailButton:Button = itemView.findViewById(R.id.right_time_line_detail_button)
+        var isLeft = false
+
+        fun setVisibility(visibility:Int){
+            if (isLeft){
+                leftTimeLineItemBackground.visibility = visibility
+                leftTimeLineTime.visibility = visibility
+                leftTimeLineImage.visibility = visibility
+                leftTimeLineName.visibility = visibility
+                leftTimeLineDetailButton.visibility = visibility
+            }else{
+                rightTimeLineItemBackground.visibility = visibility
+                rightTimeLineTime.visibility = visibility
+                rightTimeLineImage.visibility = visibility
+                rightTimeLineName.visibility = visibility
+                rightTimeLineDetailButton.visibility = visibility
+            }
+        }
+
     }
 }
