@@ -42,6 +42,11 @@ open class BaseActivity: AppCompatActivity() {
     val TRAVEL_TYPE = "travelType"
 
     /**
+     * 修改旅行的类型(EventBus 消息)
+     */
+    val MODIFY_TRAVEL = "modifyTravel"
+
+    /**
      * 刷新旅行一览页面(EventBus 消息)
      */
     val REFRESH_TRAVEL_DATA = "refreshTravel"

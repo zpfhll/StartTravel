@@ -89,7 +89,9 @@ class TravelItemFragment : Fragment() {
                         view.findViewById<TextView>(R.id.travel_balance_money_tv).text =
                             Utils.instance()
                                 .transMoneyToString((it.inMoney ?: 0f) - (it.outMoney ?: 0f))
-                        travelDetail.isEnabled = true
+                        travelEdit.isEnabled = true
+                        travelEdit.visibility = View.VISIBLE
+                        travelDetail.setBackgroundResource(R.drawable.detail_button_background)
                     } else {
                         view.findViewById<TextView>(R.id.travel_money_tv).visibility = View.GONE
                         view.findViewById<TextView>(R.id.travel_money_label_tv).visibility =
@@ -98,8 +100,9 @@ class TravelItemFragment : Fragment() {
                             View.GONE
                         view.findViewById<TextView>(R.id.travel_balance_money_label_tv).visibility =
                             View.GONE
-                        travelDetail.isEnabled = false
-                        travelDetail.setBackgroundResource(R.mipmap.detail_pressed)
+                        travelEdit.isEnabled = false
+                        travelEdit.visibility = View.INVISIBLE
+                        travelDetail.setBackgroundResource(R.drawable.edit1_button_background)
                     }
 
                     //图片设定
@@ -110,7 +113,6 @@ class TravelItemFragment : Fragment() {
                         }
 
                     }
-
 
                     //按钮的显示
                     if (it.state == 0) {
@@ -161,6 +163,8 @@ class TravelItemFragment : Fragment() {
                     -Utils.instance().DPToPX(60f + 34f),
                     travelDetail.translationX
                 )
+
+
                 animatorDetail.duration = 300
 
                 val animatorAction = ObjectAnimator.ofFloat(
@@ -238,7 +242,11 @@ class TravelItemFragment : Fragment() {
 
         travelDetail.setOnClickListener {
             callback?.let {
-                it(travelModel!!, 3)
+                if(travelEdit.isEnabled){
+                    it(travelModel!!, 3)
+                }else{
+                    it(travelModel!!, 2)
+                }
             }
         }
 

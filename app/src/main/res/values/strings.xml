@@ -80,6 +80,8 @@
     <string name="add_travel_e02">启动资金我们只接受人民币,拒绝假币！</string>
     <string name="add_travel_e03">你好像忘记你的伙伴了，没有伙伴的时候就让我们独自勇敢向前吧！</string>
 
+    <string name="modify_travel_001">修改行程</string>
+
     <string name="travel_detail_001">添加</string>
     <string name="travel_detail_002">支出</string>
     <string name="travel_detail_003">汇入</string>

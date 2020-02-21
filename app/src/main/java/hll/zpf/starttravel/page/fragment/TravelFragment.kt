@@ -35,6 +35,7 @@ import hll.zpf.starttravel.BuildConfig
 import hll.zpf.starttravel.common.database.entity.Travel
 import hll.zpf.starttravel.common.enums.ActivityMoveEnum
 import hll.zpf.starttravel.common.enums.TravelTypeEnum
+import hll.zpf.starttravel.page.ModifyTravelActivity
 import hll.zpf.starttravel.page.TimeLineActivity
 import hll.zpf.starttravel.page.TimeLineAdapter
 import hll.zpf.starttravel.page.TravelDetailActivity
@@ -92,7 +93,11 @@ class TravelFragment : Fragment() {
                     (activity as BaseActivity).baseStartActivity(stepIntent, ActivityMoveEnum.START_FROM_RIGHT)
                 }
                 2 ->{//2：编辑
-
+                    val event = EventBusMessage.instance((activity as BaseActivity).MODIFY_TRAVEL)
+                    event.travel = travelModel
+                    EventBus.getDefault().postSticky(event)
+                    val modifyIntent = Intent(activity,ModifyTravelActivity::class.java)
+                    (activity as BaseActivity).baseStartActivity(modifyIntent, ActivityMoveEnum.START_FROM_RIGHT)
                 }
                 3 ->{//3：明细
                     val event = EventBusMessage.instance((activity as BaseActivity).TRAVEL_DETAIL)

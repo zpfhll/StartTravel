@@ -19,4 +19,13 @@
             android:layout_marginTop="258dp"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="150dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/loading"
+        android:background="@color/half_transparent"
+        android:visibility="gone">
+        <include layout="@layout/loading"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
